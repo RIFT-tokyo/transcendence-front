@@ -1,9 +1,10 @@
 import React from 'react';
+import User from './components/User';
 
-function App() {
+const App = () => {
   return (
     <div className="App">
-      Hello ft_transcendence
+      <User />
     </div>
   );
 }
