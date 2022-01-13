@@ -1,4 +1,4 @@
-import { Avatar } from '@mui/material'
+import { Avatar, Box, Card, CardContent, Grid, Typography } from '@mui/material'
 import { useState } from 'react'
 import { user } from '../types/user';
 
@@ -31,15 +31,25 @@ function stringAvatar(name: string) {
   };
 }
 
-const User = () => {
+const UserCard = () => {
   const [userState] = useState<user>({id: 1, name: 'John Doe'});
 
   return (
-    <div>
-      <Avatar {...stringAvatar(userState.name)}/>
-      <div>{userState.name}</div>
-    </div>
+    <Box sx={{ maxWidth: 275 }}>
+      <Card style={{backgroundColor: '#00babc'}}>
+        <CardContent>
+          <Grid container spacing={2}>
+            <Grid item>
+              <Avatar {...stringAvatar(userState.name)}/>
+            </Grid>
+            <Grid item>
+              <Typography variant="h5">{userState.name}</Typography>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+    </Box>
   )
 }
 
-export default User
+export default UserCard

@@ -1,10 +1,10 @@
 import React from 'react';
-import User from './components/User';
+import Top from './components/pages/Top';
 
 const App = () => {
   return (
     <div className="App">
-      <User />
+      <Top />
     </div>
   );
 }
