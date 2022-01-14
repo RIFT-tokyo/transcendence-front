@@ -1,38 +1,16 @@
-import { Avatar, Box, Card, CardContent, Grid, Typography } from '@mui/material'
-import { useState } from 'react'
-import { user } from '../types/user';
-
-function stringToColor(string: string) {
-  let hash = 0;
-  let i;
-
-  /* eslint-disable no-bitwise */
-  for (i = 0; i < string.length; i += 1) {
-    hash = string.charCodeAt(i) + ((hash << 5) - hash);
-  }
-
-  let color = '#';
-
-  for (i = 0; i < 3; i += 1) {
-    const value = (hash >> (i * 8)) & 0xff;
-    color += `00${value.toString(16)}`.substr(-2);
-  }
-  /* eslint-enable no-bitwise */
-
-  return color;
-}
-
-function stringAvatar(name: string) {
-  return {
-    sx: {
-      bgcolor: stringToColor(name),
-    },
-    children: `${name[0]}`,
-  };
-}
+import { Box, Card, CardContent, Grid, Typography } from '@mui/material'
+import { useEffect, useState } from 'react'
+import { userType } from '../types/user';
+import TextAvatar from '../ui/TextAvatar';
 
 const UserCard = () => {
-  const [userState] = useState<user>({id: 1, name: 'John Doe'});
+  const [user, setUser] = useState<userType|null>(null);
+
+  useEffect(() => {
+    fetch("http://localhost:3100/users/1")
+      .then(res => res.json())
+      .then(data => setUser(data))
+  }, [])
 
   return (
     <Box sx={{ maxWidth: 275 }}>
@@ -40,10 +18,10 @@ const UserCard = () => {
         <CardContent>
           <Grid container spacing={2}>
             <Grid item>
-              <Avatar {...stringAvatar(userState.name)}/>
+              {user && <TextAvatar text={user.name} />}
             </Grid>
             <Grid item>
-              <Typography variant="h5">{userState.name}</Typography>
+              <Typography variant="h5">{user?.name}</Typography>
             </Grid>
           </Grid>
         </CardContent>

@@ -1,10 +1,9 @@
-import React from 'react';
-import Top from './components/pages/Top';
+import UserDetail from './components/pages/UserDetail';
 
 const App = () => {
   return (
     <div className="App">
-      <Top />
+      <UserDetail />
     </div>
   );
 }
