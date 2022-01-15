@@ -1,15 +1,18 @@
 import { Container, Grid, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
-import { userType } from '../types/user'
 import TextAvatar from '../ui/TextAvatar'
+import { User, UserApi } from '../../api/generated/api';
 
 const UserDetail = () => {
-  const [user, setUser] = useState<userType|null>(null)
+  const [user, setUser] = useState<User|null>(null)
+  const userApi = new UserApi()
 
   useEffect(() => {
-    fetch("http://localhost:3100/users/1")
-      .then(res => res.json())
-      .then(data => setUser(data))
+    (async () => {
+      const user = await userApi.getUsersUserId(1)
+      setUser(user.data)
+    })()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
