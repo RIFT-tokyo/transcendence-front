@@ -21,7 +21,7 @@ const UserCard = () => {
         <CardContent>
           <Grid container spacing={2}>
             <Grid item>
-              {user && <TextAvatar text={user.name} />}
+              <TextAvatar text={user ? user?.name : ""} />
             </Grid>
             <Grid item>
               <Typography variant="h5">{user?.name}</Typography>

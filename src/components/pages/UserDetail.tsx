@@ -19,7 +19,7 @@ const UserDetail = () => {
     <Container maxWidth="md">
       <Grid container spacing={2}>
         <Grid item>
-          <TextAvatar text={user ? user?.name as string : ""} />
+          <TextAvatar text={user ? user?.name : ""} />
         </Grid>
         <Grid item>
           <Typography variant="subtitle1">ID: {user?.id}</Typography>
