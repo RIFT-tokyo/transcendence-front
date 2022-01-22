@@ -1,10 +1,10 @@
 import { Container, } from '@mui/material'
 import { useEffect, useState } from 'react'
-import { User, UserApi } from '../../api/generated/api';
+import { ResponseUser, UserApi } from '../../api/generated/api';
 import UserCard from '../model/UserCard';
 
 const UserProfile = () => {
-  const [user, setUser] = useState<User|null>(null)
+  const [user, setUser] = useState<ResponseUser|null>(null)
   const userApi = new UserApi()
 
   useEffect(() => {

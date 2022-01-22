@@ -1,7 +1,7 @@
 import { Avatar, Card, CardContent, Typography } from '@mui/material'
-import { User } from '../../api/generated/api';
+import { ResponseUser } from '../../api/generated/api';
 
-const UserCard: React.VFC<{user: User | null}> = ({user}) => {
+const UserCard: React.VFC<{user: ResponseUser | null}> = ({user}) => {
   return (
     <Card sx={{ width: 320, height: 384 }}>
       <CardContent>
