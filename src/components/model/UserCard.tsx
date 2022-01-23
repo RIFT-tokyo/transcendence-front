@@ -9,7 +9,7 @@ const UserCard: React.VFC<{user: ResponseUser | null}> = ({user}) => {
       margin: '20px',
     }}>
       <CardContent>
-        <Avatar sx={{ width: 256, height: 256 }} />
+        <Avatar sx={{ width: 256, height: 256, margin: 'auto' }} />
         <Typography sx={{fontWeight: "bold"}} variant="h4">{user?.name}</Typography>
         <Typography variant="body1">{user?.created_at}</Typography>
         <Typography variant="body1">{user?.updated_at}</Typography>
