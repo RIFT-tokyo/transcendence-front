@@ -11,15 +11,22 @@ const UserProfile = () => {
 
   useEffect(() => {
     (async () => {
-      const user = await userApi.getUsersUserId(1)
-      setUser(user.data)
+      if (username) {
+        const user = await userApi.getUsersUsername(username)
+        setUser(user.data)
+      } else {
+        // 本当はここでログインユーザー情報を取得する
+        // const me = await userApi.getMe()
+        // setUser(me.data)
+        const user = await userApi.getUsersUserId(1)
+        setUser(user.data)
+      }
     })()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
     <Container maxWidth="md">
-      {username}
       <UserCard user={user} />
     </Container>
   )
