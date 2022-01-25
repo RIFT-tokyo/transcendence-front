@@ -12,6 +12,9 @@ const App = () => {
           <Route path="/" element={<AppBarWithMenu/>} >
             <Route index element={<Navigate to="/home"/>} />
             <Route path="home" element={<UserProfile/>} />
+            <Route path="users">
+              <Route path=":username" element={<UserProfile/>} />
+            </Route>
             <Route path="chat" element={<div>Chat</div>} />
             <Route path="pong" element={<div>Pong</div>} />
             <Route path="settings" element={<div>Settings</div>} />
