@@ -1,5 +1,0 @@
-export const PRIMARY_COLOR: string = '#448FA3'
-export const SECONDARY_COLOR: string = '#9A031E'
-export const BLACK: string = '#02182B'
-export const WHITE: string = '#FCF7F8'
-export const BACKGROUND_COLOR: string = '#EBEBD3'

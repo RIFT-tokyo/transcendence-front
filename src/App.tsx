@@ -1,6 +1,11 @@
 import { ThemeProvider } from '@mui/material';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import theme from './components/config/theme';
+import Chat from './components/pages/Chat';
+import InternalServerError from './components/pages/InternalServerError';
+import NotFound from './components/pages/NotFound';
+import Pong from './components/pages/Pong';
+import Settings from './components/pages/Settings';
 import UserProfile from './components/pages/UserProfile';
 import AppBarWithMenu from './components/ui/AppBarWithMenu';
 
@@ -15,12 +20,12 @@ const App = () => {
             <Route path="users">
               <Route path=":username" element={<UserProfile/>} />
             </Route>
-            <Route path="chat" element={<div>Chat</div>} />
-            <Route path="pong" element={<div>Pong</div>} />
-            <Route path="settings" element={<div>Settings</div>} />
-            <Route path="404" element={<div>404 Not found</div>} />
-            <Route path="500" element={<div>500 Internal server error</div>} />
-            <Route path="*" element={<Navigate to="/404"/>} />
+            <Route path="chat" element={<Chat/>} />
+            <Route path="pong" element={<Pong/>} />
+            <Route path="settings" element={<Settings/>} />
+            <Route path="404" element={<NotFound/>} />
+            <Route path="500" element={<InternalServerError/>} />
+            <Route path="*" element={<Navigate to="404"/>} />
           </Route>
         </Routes>
       </ThemeProvider>
