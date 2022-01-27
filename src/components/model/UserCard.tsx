@@ -9,10 +9,10 @@ const UserCard: React.VFC<{user: ResponseUser | null}> = ({user}) => {
       margin: '20px',
     }}>
       <CardContent>
-        <Avatar sx={{ width: 256, height: 256, margin: 'auto' }} />
-        <Typography sx={{fontWeight: "bold"}} variant="h4">{user?.name}</Typography>
-        <Typography variant="body1">{user?.created_at}</Typography>
-        <Typography variant="body1">{user?.updated_at}</Typography>
+        { user?.profile_image ? <Avatar sx={{ width: 256, height: 256, margin: 'auto' }} src={user.profile_image}/> : <Avatar sx={{ width: 256, height: 256, margin: 'auto' }} /> }
+        <Typography sx={{fontWeight: "bold"}} variant="h4">{user?.display_name ? user?.display_name : user?.username}</Typography>
+        <Typography variant="subtitle1">{user?.username}</Typography>
+        <Typography variant="body2">{user?.status_message}</Typography>
       </CardContent>
     </Card>
   )
