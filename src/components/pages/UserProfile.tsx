@@ -2,6 +2,8 @@ import { Container, } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useParams, Navigate } from 'react-router-dom';
 import { ResponseUser, UserApi } from '../../api/generated/api';
+import FriendList from '../model/FriendList';
+import GameResult from '../model/GameResult';
 import UserCard from '../model/UserCard';
 
 const UserProfile = () => {
@@ -32,8 +34,14 @@ const UserProfile = () => {
   }, [])
 
   return (
-    <Container maxWidth="md">
-      { !error ? <UserCard user={user}/> : <Navigate to="404"/> }
+    <Container>
+      <Container sx={{width: 328}}>
+        { !error ? <UserCard user={user}/> : <Navigate to="404"/> }
+        <FriendList />
+      </Container>
+      <Container>
+        <GameResult/>
+      </Container>
     </Container>
   )
 }

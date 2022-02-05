@@ -1,6 +1,14 @@
+import { Card } from '@mui/material'
+
 const FriendList = () => {
   return (
-    <div></div>
+    <Card sx={{
+      width: 328,
+      height: 384,
+      margin: '20px',
+    }}>
+      Frinend List
+    </Card>
   )
 }
 

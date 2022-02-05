@@ -1,8 +1,9 @@
-import { AppBar, Toolbar, IconButton, Typography, Box,  Menu, MenuItem } from '@mui/material'
+import { AppBar, Toolbar, IconButton, Typography, Box,  Menu, MenuItem, Link } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
 import { AccountCircle } from '@mui/icons-material';
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 const AppBarWithMenu = () => {
   const [auth] = useState(true);
@@ -60,8 +61,19 @@ const AppBarWithMenu = () => {
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={handleClose}>Profile</MenuItem>
-                  <MenuItem onClick={handleClose}>My account</MenuItem>
+                  <MenuItem onClick={handleClose}>
+                    <Link component={NavLink} color='inherit' underline='none' to='/home'>
+                      Profile
+                    </Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleClose}>
+                    <Link component={NavLink} color='inherit' underline='none' to='/settings'>
+                      Settings
+                    </Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleClose}>
+                    Logout
+                  </MenuItem>
                 </Menu>
               </div>
             )}
