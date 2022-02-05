@@ -1,4 +1,4 @@
-import { Container, } from '@mui/material'
+import { Container, Stack, } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useParams, Navigate } from 'react-router-dom';
 import { ResponseUser, UserApi } from '../../api/generated/api';
@@ -35,13 +35,15 @@ const UserProfile = () => {
 
   return (
     <Container>
-      <Container sx={{width: 328}}>
-        { !error ? <UserCard user={user}/> : <Navigate to="404"/> }
-        <FriendList />
-      </Container>
-      <Container>
-        <GameResult/>
-      </Container>
+      <Stack direction='row' margin={2} spacing={2}>
+        <Stack direction='column' spacing={2}>
+          { !error ? <UserCard user={user}/> : <Navigate to="404"/> }
+          <FriendList />
+        </Stack>
+        <Stack spacing={2}>
+          <GameResult/>
+        </Stack>
+      </Stack>
     </Container>
   )
 }

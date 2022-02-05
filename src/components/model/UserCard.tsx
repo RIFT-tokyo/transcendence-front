@@ -6,7 +6,6 @@ const UserCard: React.VFC<{user: ResponseUser | null}> = ({user}) => {
     <Card
       sx={{
         width: 328,
-        margin: '20px',
       }}
     >
       <CardContent>
