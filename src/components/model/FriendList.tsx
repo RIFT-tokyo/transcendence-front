@@ -6,7 +6,7 @@ const FriendList = () => {
       width: 328,
       height: 384,
     }}>
-      Frinend List
+      Friend List
     </Card>
   )
 }
