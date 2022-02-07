@@ -1,6 +1,13 @@
+import { Card } from '@mui/material'
+
 const GameResult = () => {
   return (
-    <div></div>
+    <Card sx={{
+      width: 810,
+      height: 790,
+    }}>
+      Game Result
+    </Card>
   )
 }
 
