@@ -1,8 +1,15 @@
-import { Typography } from '@mui/material'
+import { Grid, Stack } from '@mui/material'
+import AccountSetting from '../model/AccountSetting'
+import SettingTab from '../ui/SettingTab'
 
 const Settings = () => {
   return (
-    <Typography variant="h2">This page is for Settings</Typography>
+    <Grid container justifyContent='center'>
+      <Stack direction='row' margin={2} spacing={2}>
+        <SettingTab />
+        <AccountSetting />
+      </Stack>
+    </Grid>
   )
 }
 
