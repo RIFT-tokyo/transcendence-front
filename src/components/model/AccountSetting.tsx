@@ -1,9 +1,15 @@
 import { Avatar, Divider, Stack, TextField, Typography } from '@mui/material'
+// import { useState } from 'react'
+import { ResponseUser } from '../../api/generated/api'
 
-const AccountSetting = () => {
+const AccountSetting: React.VFC<{user: ResponseUser}> = ({ user }) => {
+  // const [username, setUsername] = useState(user.username)
+  // const [displayName, setDisplayName] = useState(user.display_name)
+  // const [statusMessage, setStatusMessage] = useState(user.status_message)
+
   return (
     <Stack bgcolor='background.paper' width={500}>
-      <Stack padding={1} direction='column' spacing={1}>
+      <Stack padding={2} direction='column' spacing={1}>
         <Typography variant='h4'>Account</Typography>
         <Divider />
         <Typography variant='h6'>Profile Image</Typography>
