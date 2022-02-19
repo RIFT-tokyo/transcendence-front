@@ -6,7 +6,7 @@ const SettingTab: React.VFC<{ actions: string[] }> = ({ actions }) => {
   let settings = actions.map(item => {
     const link = '/settings/' + item.toLowerCase();
     return (
-      <Link component={NavLink} color='inherit' underline='none' to={link}>
+      <Link key={item.toLowerCase()} component={NavLink} color='inherit' underline='none' to={link}>
         <Stack direction='row' spacing={2}>
           <PersonIcon />
           <Typography variant='h5'>{item}</Typography>
