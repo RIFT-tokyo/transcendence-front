@@ -1,20 +1,29 @@
 import { Avatar, Divider, Stack, TextField, Typography } from '@mui/material'
-import { useState } from 'react'
 import { ResponseUser } from '../../api/generated/api'
 
-const AccountSetting: React.VFC<{user: ResponseUser}> = ({ user }) => {
-  const [username, setUsername] = useState(user.username)
-  const [displayName, setDisplayName] = useState(user.display_name)
-  const [statusMessage, setStatusMessage] = useState(user.status_message)
+type Props = {
+  user: ResponseUser,
+  setUser: (user: ResponseUser) => void
+}
 
+const AccountSetting: React.VFC<Props> = ({ user, setUser }) => {
   const usernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value)
+    setUser({
+      ...user,
+      username: e.target.value
+    })
   }
   const displayNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDisplayName(e.target.value)
+    setUser({
+      ...user,
+      display_name: e.target.value
+    })
   }
   const statusMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setStatusMessage(e.target.value)
+    setUser({
+      ...user,
+      status_message: e.target.value
+    })
   }
 
   return (
@@ -25,11 +34,11 @@ const AccountSetting: React.VFC<{user: ResponseUser}> = ({ user }) => {
         <Typography variant='h6'>Profile Image</Typography>
         <Avatar sx={{ width: 296, height: 296 }} src={user.profile_image}/>
         <Typography variant='h6'>Username</Typography>
-        <TextField size='small' variant='outlined' value={username} onChange={usernameChange} />
+        <TextField size='small' variant='outlined' value={user.username} onChange={usernameChange} />
         <Typography variant='h6'>Display Name</Typography>
-        <TextField size='small' variant='outlined' value={displayName} onChange={displayNameChange} />
+        <TextField size='small' variant='outlined' value={user.display_name} onChange={displayNameChange} />
         <Typography variant='h6'>Bio</Typography>
-        <TextField size='small' variant='outlined' value={statusMessage} onChange={statusMessageChange} />
+        <TextField size='small' variant='outlined' value={user.status_message} onChange={statusMessageChange} />
       </Stack>
     </Stack>
   )
