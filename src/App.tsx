@@ -17,8 +17,7 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <Routes>
           <Route path="/" element={<AppBarWithMenu/>} >
-            <Route index element={<Navigate to="/home"/>} />
-            <Route path="signup" element={<SignUp/>} />
+            <Route index element={<SignUp/>} />
             <Route path="signin" element={<SignIn/>} />
             <Route path="home" element={<UserProfile/>} />
             <Route path="users">
