@@ -37,7 +37,7 @@ const UserProfile = () => {
     <Container>
       <Stack direction='row' margin={2} spacing={2}>
         <Stack direction='column' spacing={2}>
-          { !error ? <UserCard user={user}/> : <Navigate to="404"/> }
+          { !error ? <UserCard user={user}/> : <Navigate to="/signin"/> }
           <FriendList />
         </Stack>
         <Stack spacing={2}>

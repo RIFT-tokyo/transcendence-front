@@ -5,6 +5,8 @@ import Chat from './components/pages/Chat';
 import InternalServerError from './components/pages/InternalServerError';
 import NotFound from './components/pages/NotFound';
 import Pong from './components/pages/Pong';
+import SignIn from './components/pages/SignIn';
+import SignUp from './components/pages/SignUp';
 import Settings from './components/pages/Settings';
 import UserProfile from './components/pages/UserProfile';
 import AppBarWithMenu from './components/ui/AppBarWithMenu';
@@ -16,6 +18,8 @@ const App = () => {
         <Routes>
           <Route path="/" element={<AppBarWithMenu/>} >
             <Route index element={<Navigate to="/home"/>} />
+            <Route path="signup" element={<SignUp/>} />
+            <Route path="signin" element={<SignIn/>} />
             <Route path="home" element={<UserProfile/>} />
             <Route path="users">
               <Route path=":username" element={<UserProfile/>} />
