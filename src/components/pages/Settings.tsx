@@ -1,7 +1,8 @@
-import { CircularProgress, Grid, Stack } from '@mui/material'
+import { Button, CircularProgress, Grid, Stack, Typography } from '@mui/material'
 import { useState, useEffect } from 'react';
 import { ResponseUser, UserApi } from '../../api/generated/api';
 import AccountSetting from '../model/AccountSetting'
+import Footer from '../ui/Footer';
 import SettingTab from '../ui/SettingTab'
 
 const Settings = () => {
@@ -23,12 +24,20 @@ const Settings = () => {
 
   return (
     statusCode ? <div>{statusCode}</div> :
-    <Grid container justifyContent='center'>
-      <Stack direction='row' margin={2} spacing={2}>
-        <SettingTab actions={actions} />
-        { user ? <AccountSetting user={user} /> : <CircularProgress /> }
-      </Stack>
-    </Grid>
+    <>
+      <Grid container justifyContent='center'>
+        <Stack direction='row' margin={2} spacing={2}>
+          <SettingTab actions={actions} />
+          { user ? <AccountSetting user={user} /> : <CircularProgress /> }
+        </Stack>
+      </Grid>
+      <Footer>
+        <Stack direction='row' margin={2} spacing={2}>
+          <Button variant='contained' color='inherit' size='large'>reset</Button>
+          <Button variant='contained' color='primary' size='large'>save</Button>
+        </Stack>
+      </Footer>
+    </>
   )
 }
 
