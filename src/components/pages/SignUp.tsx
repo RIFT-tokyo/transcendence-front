@@ -1,10 +1,8 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
 
@@ -14,9 +12,8 @@ export default function SignUp() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
     console.log({
-      email: data.get("email"),
+      username: data.get("username"),
       password: data.get("password"),
     });
   };
@@ -35,8 +32,8 @@ export default function SignUp() {
           alignItems: "center",
         }}
       >
-        <img src="/auth/signup.svg" alt="Sign Up" width="480" />
-        <Grid container sm={11}>
+        <img src="/auth/signup.svg" alt="Sign Up" height="320" />
+        <Grid container item sm={11}>
           <Button
             type="submit"
             fullWidth
@@ -82,7 +79,6 @@ export default function SignUp() {
             </Grid>
             <Grid item xs={12} sm={6}>
               <Button
-                type="submit"
                 fullWidth
                 variant="contained"
                 sx={{

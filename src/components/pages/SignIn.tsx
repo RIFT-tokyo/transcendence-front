@@ -1,10 +1,8 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
 
@@ -35,8 +33,8 @@ export default function SignIn() {
           alignItems: "center",
         }}
       >
-        <img src="/auth/signin.svg" alt="Sign Up" width="480" />
-        <Grid container sm={11}>
+        <img src="/auth/signin.svg" alt="Sign Up" width="400" />
+        <Grid container item sm={11}>
           <Button
             type="submit"
             fullWidth
@@ -83,7 +81,6 @@ export default function SignIn() {
             </Grid>
             <Grid item xs={12} sm={6}>
               <Button
-                type="submit"
                 fullWidth
                 variant="contained"
                 sx={{
