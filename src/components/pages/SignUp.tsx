@@ -6,6 +6,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import { useNavigate } from "react-router-dom";
 
 function Copyright(props: any) {
   return (
@@ -26,6 +27,8 @@ function Copyright(props: any) {
 }
 
 export default function SignUp() {
+  const navigate = useNavigate();
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -34,6 +37,10 @@ export default function SignUp() {
       email: data.get("email"),
       password: data.get("password"),
     });
+  };
+
+  const handleClick = () => {
+    navigate("/signin");
   };
 
   return (
@@ -47,17 +54,16 @@ export default function SignUp() {
         }}
       >
         <img src="/auth/signup.svg" alt="Sign Up" width="480" />
-
-        <Button
-          type="submit"
-          fullWidth
-          style={{ color: "white", backgroundColor: "#00BABC" }}
-          sx={{ mt: 3, mb: 2 }}
-        >
-          SIGN UP WITH{" "}
-          <img src="/auth/42.svg" alt="42" style={{ marginLeft: "24px" }} />
-        </Button>
-		
+        <Grid container sm={11}>
+          <Button
+            type="submit"
+            fullWidth
+            sx={{ mt: 3, mb: 2, color: "white", backgroundColor: "#00BABC" }}
+          >
+            SIGN UP WITH{" "}
+            <img src="/auth/42.svg" alt="42" style={{ marginLeft: "24px" }} />
+          </Button>
+        </Grid>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -87,7 +93,7 @@ export default function SignUp() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ mt: 3, mb: 2, backgroundColor: "#448FA3" }}
               >
                 SIGN UP
               </Button>
@@ -97,18 +103,16 @@ export default function SignUp() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  color: "#1f3242",
+                  backgroundColor: "#e4dfe0",
+                }}
+                onClick={handleClick}
               >
                 SIGN IN
               </Button>
-            </Grid>
-          </Grid>
-
-          <Grid container justifyContent="flex-end">
-            <Grid item>
-              <Link href="#" variant="body2">
-                Already have an account? Sign in
-              </Link>
             </Grid>
           </Grid>
         </Box>
