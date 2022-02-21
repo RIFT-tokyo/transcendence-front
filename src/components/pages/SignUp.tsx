@@ -28,6 +28,10 @@ export default function SignUp() {
       });
   };
 
+  const handleOauthLogin = () => {
+    window.location.href = "http://localhost:4211/api/auth/login";
+  };
+
   const handleClick = () => {
     navigate("/signin");
   };
@@ -48,6 +52,7 @@ export default function SignUp() {
             type="submit"
             fullWidth
             sx={{ mt: 3, mb: 2, color: "white", backgroundColor: "#00BABC" }}
+            onClick={handleOauthLogin}
           >
             SIGN UP WITH{" "}
             <img src="/auth/42.svg" alt="42" style={{ marginLeft: "24px" }} />
