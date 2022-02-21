@@ -2,10 +2,15 @@ import { Button, CircularProgress, Grid, Stack } from '@mui/material'
 import { useState, useEffect } from 'react';
 import { ResponseUser, UserApi } from '../../api/generated/api';
 import AccountSetting from '../model/AccountSetting'
+import SecuritySetting from '../model/SecuritySetting';
 import Footer from '../ui/Footer';
 import SettingTab from '../ui/SettingTab'
 
-const Settings = () => {
+type Props = {
+  active: string
+}
+
+const Settings: React.VFC<Props> = ({ active }) => {
   const actions = ['Account', 'Security'];
   const [user, setUser] = useState<ResponseUser | null>(null);
   const userApi = new UserApi();
@@ -41,21 +46,31 @@ const Settings = () => {
     });
   }
 
+  let settingContent = <CircularProgress />;
+  if (active === 'Account' && user) {
+    settingContent = <AccountSetting user={user} setUser={setUser} />;
+  } else if (active === 'Security' && user) {
+    settingContent = <SecuritySetting/>;
+  }
+
+  const isShownFooter = active === 'Account';
+
   return (
     statusCode ? <div>{statusCode}</div> :
     <>
       <Grid container justifyContent='center'>
         <Stack direction='row' margin={2} spacing={2}>
           <SettingTab actions={actions} />
-          { user ? <AccountSetting user={user} setUser={setUser} /> : <CircularProgress /> }
+          {settingContent}
         </Stack>
       </Grid>
-      <Footer>
-        <Stack direction='row' margin={2} spacing={2}>
-          <Button variant='contained' color='inherit' size='large' onClick={reset}>reset</Button>
-          <Button variant='contained' color='primary' size='large' onClick={submit}>save</Button>
-        </Stack>
-      </Footer>
+      { isShownFooter ?
+        <Footer>
+          <Stack direction='row' margin={2} spacing={2}>
+            <Button variant='contained' color='inherit' size='large' onClick={reset}>reset</Button>
+            <Button variant='contained' color='primary' size='large' onClick={submit}>save</Button>
+          </Stack>
+        </Footer> : null }
     </>
   )
 }

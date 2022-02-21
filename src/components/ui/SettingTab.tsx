@@ -2,7 +2,11 @@ import { Link, Stack, Typography } from '@mui/material'
 import PersonIcon from '@mui/icons-material/Person';
 import { NavLink } from 'react-router-dom';
 
-const SettingTab: React.VFC<{ actions: string[] }> = ({ actions }) => {
+type Props = {
+  actions: string[]
+}
+
+const SettingTab: React.VFC<Props> = ({ actions }) => {
   let settings = actions.map(item => {
     const link = '/settings/' + item.toLowerCase();
     return (

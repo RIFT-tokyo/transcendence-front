@@ -23,9 +23,9 @@ const App = () => {
             <Route path="chat" element={<Chat/>} />
             <Route path="pong" element={<Pong/>} />
             <Route path="settings">
-              <Route index element={<Navigate to="/settings/account"/>} />
-              <Route path="account" element={<Settings/>} />
-              <Route path="security" element={<Settings/>} />
+              <Route index element={<Settings active="Account"/>} />
+              <Route path="account" element={<Settings active="Account"/>} />
+              <Route path="security" element={<Settings active="Security"/>} />
             </Route>
             <Route path="404" element={<NotFound/>} />
             <Route path="500" element={<InternalServerError/>} />
