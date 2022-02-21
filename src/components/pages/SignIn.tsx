@@ -5,18 +5,25 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
+import { AuthApi } from "../../api/generated/api";
 
 export default function SignIn() {
   const navigate = useNavigate();
+  const authApi = new AuthApi();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const payload = {
+      username: data.get("username")!.toString(),
+      password: data.get("password")!.toString(),
+    };
+    await authApi
+      .postAuthLogin(payload, { withCredentials: true })
+      .then((res) => console.log(res))
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleClick = () => {
