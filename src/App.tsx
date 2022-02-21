@@ -23,7 +23,7 @@ const App = () => {
             <Route path="chat" element={<Chat/>} />
             <Route path="pong" element={<Pong/>} />
             <Route path="settings">
-              <Route index element={<Settings active="Account"/>} />
+              <Route index element={<Navigate to="account"/>} />
               <Route path="account" element={<Settings active="Account"/>} />
               <Route path="security" element={<Settings active="Security"/>} />
             </Route>
