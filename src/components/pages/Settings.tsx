@@ -1,4 +1,4 @@
-import { Button, CircularProgress, Grid, Stack, Typography } from '@mui/material'
+import { Button, CircularProgress, Grid, Stack } from '@mui/material'
 import { useState, useEffect } from 'react';
 import { ResponseUser, UserApi } from '../../api/generated/api';
 import AccountSetting from '../model/AccountSetting'
