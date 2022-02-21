@@ -39,7 +39,11 @@ const Settings: React.VFC<Props> = ({ active }) => {
     if (!user) {
       return;
     }
-    await userApi.putUsersUserId(user.id, user).then((res) => {
+    const data = {
+      ...user,
+      profile_image: undefined
+    }
+    await userApi.putUsersUserId(user.id, data).then((res) => {
       setUser(res.data);
     }).catch((err) => {
       setStatusCode(err.response.status);
