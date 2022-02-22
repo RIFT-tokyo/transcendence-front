@@ -21,9 +21,7 @@ const UserProfile = () => {
           setError(err.message)
         })
       } else {
-        // 本当はここでログインユーザー情報を取得する
-        // await userApi.getMe().then((res) => {
-        await userApi.getUsersUserId(1).then((res) => {
+        await userApi.getMe().then((res) => {
           setUser(res.data)
         }).catch((err) => {
           setError(err.message)
