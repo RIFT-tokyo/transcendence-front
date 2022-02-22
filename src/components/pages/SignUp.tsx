@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
 import { UserApi } from "../../api/generated/api";
+import { useEffect } from "react";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -15,11 +16,11 @@ export default function SignUp() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const payload = {
-      username: data.get("username")?.toString(),
-      password: data.get("password")?.toString(),
+      username: data.get("username")!.toString(),
+      password: data.get("password")!.toString(),
     };
     await userApi
-      .postUsers(payload, { withCredentials: true })
+      .postUsers(payload)
       .then((res) => {
         console.log(res);
       })
@@ -32,9 +33,29 @@ export default function SignUp() {
     window.location.href = "http://localhost:4211/api/auth/login";
   };
 
+  const goHome = () => {
+    navigate("/home");
+  };
+
   const handleClick = () => {
     navigate("/signin");
   };
+
+  useEffect(() => {
+    (async () => {
+      await userApi
+        .getUsers(0, 0, { withCredentials: true }) // getMe()の方が良い
+        .then((res) => {
+          if (res.status === 200) {
+            goHome();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -62,7 +83,6 @@ export default function SignUp() {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                required
                 fullWidth
                 id="username"
                 label="username"
@@ -71,7 +91,6 @@ export default function SignUp() {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                required
                 fullWidth
                 name="password"
                 label="password"

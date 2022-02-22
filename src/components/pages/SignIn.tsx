@@ -5,11 +5,13 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
-import { AuthApi } from "../../api/generated/api";
+import { AuthApi, UserApi } from "../../api/generated/api";
+import { useEffect } from "react";
 
 export default function SignIn() {
   const navigate = useNavigate();
   const authApi = new AuthApi();
+  const userApi = new UserApi();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -19,8 +21,10 @@ export default function SignIn() {
       password: data.get("password")!.toString(),
     };
     await authApi
-      .postAuthLogin(payload, { withCredentials: true })
-      .then((res) => console.log(res))
+      .postAuthLogin(payload)
+      .then((res) => {
+        console.log(res);
+      })
       .catch((err) => {
         console.log(err);
       });
@@ -30,9 +34,29 @@ export default function SignIn() {
     window.location.href = "http://localhost:4211/api/auth/login";
   };
 
+  const goHome = () => {
+    navigate("/home");
+  };
+
   const handleClick = () => {
     navigate("/");
   };
+
+  useEffect(() => {
+    (async () => {
+      await userApi
+        .getUsers(0, 0, { withCredentials: true }) // getMe()の方が良い
+        .then((res) => {
+          if (res.status === 200) {
+            goHome();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -44,7 +68,7 @@ export default function SignIn() {
           alignItems: "center",
         }}
       >
-        <img src="/auth/signin.svg" alt="Sign Up" width="400" />
+        <img src="/auth/signin.svg" alt="Sign Up" width="440" />
         <Grid container item sm={11}>
           <Button
             type="submit"
@@ -61,7 +85,6 @@ export default function SignIn() {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                required
                 fullWidth
                 id="username"
                 label="username"
@@ -70,7 +93,6 @@ export default function SignIn() {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                required
                 fullWidth
                 name="password"
                 label="password"
