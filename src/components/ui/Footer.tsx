@@ -1,7 +1,11 @@
 import { Box, Grid } from '@mui/material';
 import { ReactNode } from 'react';
 
-const Footer: React.FC<{ children: ReactNode }> = ({ children }) => {
+type Props = {
+  children: ReactNode
+}
+
+const Footer: React.FC<Props> = ({ children }) => {
   return (
     <Box
       component="footer"
