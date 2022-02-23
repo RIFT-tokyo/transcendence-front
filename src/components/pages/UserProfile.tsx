@@ -9,25 +9,26 @@ import UserCard from '../model/UserCard';
 const UserProfile = () => {
   const [user, setUser] = useState<ResponseUser|null>(null)
   const [error, setError] = useState<string|null>(null)
+  const [isOwner, setIsOwner] = useState<boolean>(false)
   const userApi = new UserApi()
   const username = useParams().username
 
   useEffect(() => {
     (async () => {
+      await userApi.getMe().then((res) => {
+        setUser(res.data)
+      }).catch((err) => {
+        setError(err.message)
+      })
       if (username) {
         await userApi.getUsersUsername(username).then((res) => {
           setUser(res.data)
+          setIsOwner(res.data.id === user?.id)
         }).catch((err) => {
           setError(err.message)
         })
       } else {
-        // 本当はここでログインユーザー情報を取得する
-        // await userApi.getMe().then((res) => {
-        await userApi.getUsersUserId(1).then((res) => {
-          setUser(res.data)
-        }).catch((err) => {
-          setError(err.message)
-        })
+        setIsOwner(true)
       }
     })()
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -37,7 +38,7 @@ const UserProfile = () => {
     <Container>
       <Stack direction='row' margin={2} spacing={2}>
         <Stack direction='column' spacing={2}>
-          { !error ? <UserCard user={user}/> : <Navigate to="404"/> }
+          { !error ? <UserCard user={user} isOwner={isOwner}/> : <Navigate to="404"/> }
           <FriendList />
         </Stack>
         <Stack spacing={2}>
