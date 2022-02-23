@@ -59,8 +59,8 @@ const Settings: React.VFC<Props> = ({ active }) => {
   }
 
   let settingContent = <CircularProgress />;
-  if (active === 'Account'&& !loading) {
-    settingContent = <AccountSetting user={user!} setUser={setUser} />;
+  if (active === 'Account' && !loading && user) {
+    settingContent = <AccountSetting user={user} setUser={setUser} />;
   } else if (active === 'Security' && !loading) {
     settingContent = <SecuritySetting/>;
   }
