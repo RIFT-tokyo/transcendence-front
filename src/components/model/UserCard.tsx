@@ -10,11 +10,10 @@ const UserCard: React.VFC<{user: ResponseUser | null, isOwner: boolean}> = ({use
           <Button sx={{ width: 296, height: 30 }} color='inherit' variant='contained'>Edit Profile</Button>
         </Link>
       )
-    } else {
-      return (
-        <Button sx={{ width: 296, height: 30 }} color='inherit' variant='contained'>{isOwner ? "Edit Profile" : "Follow"}</Button>
-      )
     }
+    return (
+      <Button sx={{ width: 296, height: 30 }} color='inherit' variant='contained'>Follow</Button>
+    )
   }
 
   return (
