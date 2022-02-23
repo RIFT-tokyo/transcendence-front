@@ -1,52 +1,58 @@
-import { Container, Stack, } from '@mui/material'
-import { useEffect, useState } from 'react'
-import { useParams, Navigate } from 'react-router-dom';
-import { ResponseUser, UserApi } from '../../api/generated/api';
-import FriendList from '../model/FriendList';
-import GameResult from '../model/GameResult';
-import UserCard from '../model/UserCard';
+import { Container, Stack } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useParams, Navigate } from "react-router-dom";
+import { ResponseUser, UserApi } from "../../api/generated/api";
+import FriendList from "../model/FriendList";
+import GameResult from "../model/GameResult";
+import UserCard from "../model/UserCard";
 
 const UserProfile = () => {
-  const [user, setUser] = useState<ResponseUser|null>(null)
-  const [error, setError] = useState<string|null>(null)
-  const [isOwner, setIsOwner] = useState<boolean>(false)
-  const userApi = new UserApi()
-  const username = useParams().username
+  const [user, setUser] = useState<ResponseUser | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isOwner, setIsOwner] = useState<boolean>(false);
+  const userApi = new UserApi();
+  const username = useParams().username;
 
   useEffect(() => {
     (async () => {
-      await userApi.getMe().then((res) => {
-        setUser(res.data)
-      }).catch((err) => {
-        setError(err.message)
-      })
-      if (username) {
-        await userApi.getUsersUsername(username).then((res) => {
-          setUser(res.data)
-          setIsOwner(res.data.id === user?.id)
-        }).catch((err) => {
-          setError(err.message)
+      await userApi
+        .getMe()
+        .then((res) => {
+          setUser(res.data);
         })
+        .catch((err) => {
+          setError(err.message);
+        });
+      if (username) {
+        await userApi
+          .getUsersUsername(username)
+          .then((res) => {
+            setUser(res.data);
+            setIsOwner(res.data.id === user?.id);
+          })
+          .catch((err) => {
+            setError(err.message);
+          });
       } else {
-        setIsOwner(true)
+        setIsOwner(true);
       }
-    })()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Container>
-      <Stack direction='row' margin={2} spacing={2}>
-        <Stack direction='column' spacing={2}>
-          { !error ? <UserCard user={user}/> : <Navigate to="/"/> }
+      <Stack direction="row" margin={2} spacing={2}>
+        <Stack direction="column" spacing={2}>
+          {!error ? <UserCard user={user} /> : <Navigate to="/" />}
           <FriendList />
         </Stack>
         <Stack spacing={2}>
-          <GameResult/>
+          <GameResult />
         </Stack>
       </Stack>
     </Container>
-  )
-}
+  );
+};
 
-export default UserProfile
+export default UserProfile;
