@@ -16,30 +16,36 @@ const Settings: React.VFC<Props> = ({ active }) => {
   const [user, setUser] = useState<ResponseUser | null>(null);
   const userApi = new UserApi();
   const [statusCode, setStatusCode] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
+      setLoading(true)
       await userApi.getMe().then((res) => {
         setUser(res.data);
       }).catch((err) => {
         setStatusCode(err.response.status);
       });
+      setLoading(false)
     })()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const reset = async () => {
+    setLoading(true)
     await userApi.getMe().then((res) => {
       setUser(res.data);
     }).catch((err) => {
       setStatusCode(err.response.status);
     });
+    setLoading(false)
   }
 
   const submit = async () => {
     if (!user) {
       return;
     }
+    setLoading(true)
     const data = {
       ...user,
       profile_image: undefined
@@ -49,12 +55,13 @@ const Settings: React.VFC<Props> = ({ active }) => {
     }).catch((err) => {
       setStatusCode(err.response.status);
     });
+    setLoading(false)
   }
 
   let settingContent = <CircularProgress />;
-  if (active === 'Account' && user) {
-    settingContent = <AccountSetting user={user} setUser={setUser} />;
-  } else if (active === 'Security' && user) {
+  if (active === 'Account'&& !loading) {
+    settingContent = <AccountSetting user={user!} setUser={setUser} />;
+  } else if (active === 'Security' && !loading) {
     settingContent = <SecuritySetting/>;
   }
 
