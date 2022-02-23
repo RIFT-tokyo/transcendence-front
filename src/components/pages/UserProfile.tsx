@@ -17,7 +17,7 @@ const UserProfile = () => {
   useEffect(() => {
     (async () => {
       await userApi
-        .getMe()
+        .getMe({ withCredentials: true })
         .then((res) => {
           setUser(res.data);
         })

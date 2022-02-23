@@ -45,12 +45,11 @@ export default function SignIn() {
       password: values.password,
     };
 
-    console.log(payload);
     await authApi
       .postAuthLogin(payload, { withCredentials: true })
-      .then((res) => {
-        console.log(res);
-        goHome();
+      .then(() => {
+		// 今後204が帰ってくるのでここに入り以下のコメントアウトを外すとリロードせずにhome行ける
+        // goHome();
       })
       .catch((err) => {
         console.log(err);
@@ -73,13 +72,10 @@ export default function SignIn() {
     (async () => {
       await userApi
         .getMe({ withCredentials: true })
-        .then((res) => {
-          console.log(res.status);
-          console.log("まぎまぎまぎまぎ");
+        .then(() => {
           goHome();
         })
         .catch((err) => {
-          console.log("まぎまぎまぎみねみね");
           console.log(err);
         });
     })();

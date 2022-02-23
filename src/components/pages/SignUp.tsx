@@ -44,11 +44,11 @@ export default function SignUp() {
       password: values.password,
     };
 
-    console.log(payload);
     await userApi
       .postUsers(payload)
-      .then((res) => {
-        console.log(res);
+      .then(() => {
+        console.log("ログインしてください。");
+		// このresでset-cookieすればgoHome()していちいちログイン経由せずに済む
       })
       .catch((err) => {
         console.log(err);
@@ -72,7 +72,6 @@ export default function SignUp() {
       await userApi
         .getMe({ withCredentials: true })
         .then((res) => {
-          console.log(res.status);
           goHome();
         })
         .catch((err) => {
