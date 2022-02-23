@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { ResponseUser, UserApi } from '../../api/generated/api';
 import AccountSetting from '../model/AccountSetting'
 import SecuritySetting from '../model/SecuritySetting';
+import ErrorRouter from '../ui/ErrorRouter';
 import Footer from '../ui/Footer';
 import SettingTab from '../ui/SettingTab'
 
@@ -57,25 +58,30 @@ const Settings: React.VFC<Props> = ({ active }) => {
     settingContent = <SecuritySetting/>;
   }
 
-  const isShownFooter = active === 'Account';
+  const getFooter = (active: string) => {
+    if (active === 'Account') {
+      return (
+        <Footer>
+          <Stack direction='row' margin={2} spacing={2}>
+            <Button variant='contained' color='inherit' size='large' onClick={reset}>reset</Button>
+            <Button variant='contained' color='primary' size='large' onClick={submit}>save</Button>
+          </Stack>
+        </Footer>
+      )
+    }
+    return null
+  }
 
   return (
-    statusCode ? <div>{statusCode}</div> :
-    <>
+    <ErrorRouter statusCode={statusCode}>
       <Grid container justifyContent='center'>
         <Stack direction='row' margin={2} spacing={2}>
           <SettingTab actions={actions} />
           {settingContent}
         </Stack>
       </Grid>
-      { isShownFooter ?
-        <Footer>
-          <Stack direction='row' margin={2} spacing={2}>
-            <Button variant='contained' color='inherit' size='large' onClick={reset}>reset</Button>
-            <Button variant='contained' color='primary' size='large' onClick={submit}>save</Button>
-          </Stack>
-        </Footer> : null }
-    </>
+      {getFooter(active)}
+    </ErrorRouter>
   )
 }
 
