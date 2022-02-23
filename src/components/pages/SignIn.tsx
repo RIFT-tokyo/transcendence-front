@@ -11,16 +11,25 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 
 interface State {
+  username: string;
+  password: string;
   showPassword: boolean;
 }
 
 export default function SignIn() {
   const [values, setValues] = React.useState<State>({
+    username: "",
+    password: "",
     showPassword: false,
   });
   const navigate = useNavigate();
   const authApi = new AuthApi();
   const userApi = new UserApi();
+
+  const handleChange =
+    (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      setValues({ ...values, [prop]: event.target.value });
+    };
 
   const handleClickShowPassword = () => {
     setValues({
@@ -31,11 +40,12 @@ export default function SignIn() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
     const payload = {
-      username: data.get("username")!.toString(),
-      password: data.get("password")!.toString(),
+      username: values.username,
+      password: values.password,
     };
+
+    console.log(payload);
     await authApi
       .postAuthLogin(payload)
       .then((res) => {
@@ -105,6 +115,8 @@ export default function SignIn() {
                 id="username"
                 label="username"
                 name="username"
+                value={values.username}
+                onChange={handleChange("username")}
               />
             </Grid>
             <Grid item xs={12}>
@@ -113,6 +125,8 @@ export default function SignIn() {
                 name="password"
                 label="password"
                 id="password"
+                value={values.password}
+                onChange={handleChange("password")}
                 type={values.showPassword ? "text" : "password"}
                 InputProps={{
                   endAdornment: (
