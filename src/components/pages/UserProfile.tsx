@@ -9,6 +9,7 @@ import UserCard from '../model/UserCard';
 const UserProfile = () => {
   const [user, setUser] = useState<ResponseUser|null>(null)
   const [error, setError] = useState<string|null>(null)
+  const [isOwner, setIsOwner] = useState<boolean>(false)
   const userApi = new UserApi()
   const username = useParams().username
 
@@ -35,7 +36,7 @@ const UserProfile = () => {
     <Container>
       <Stack direction='row' margin={2} spacing={2}>
         <Stack direction='column' spacing={2}>
-          { !error ? <UserCard user={user} isOwner={!!!username}/> : <Navigate to="404"/> }
+          { !error ? <UserCard user={user} isOwner={isOwner}/> : <Navigate to="404"/> }
           <FriendList />
         </Stack>
         <Stack spacing={2}>
