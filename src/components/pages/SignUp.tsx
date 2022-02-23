@@ -70,11 +70,10 @@ export default function SignUp() {
   useEffect(() => {
     (async () => {
       await userApi
-        .getUsers(0, 0, { withCredentials: true }) // getMe()の方が良い
+        .getMe({ withCredentials: true })
         .then((res) => {
-          if (res.status === 200) {
-            goHome();
-          }
+          console.log(res.status);
+          goHome();
         })
         .catch((err) => {
           console.log(err);

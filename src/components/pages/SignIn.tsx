@@ -47,9 +47,10 @@ export default function SignIn() {
 
     console.log(payload);
     await authApi
-      .postAuthLogin(payload)
+      .postAuthLogin(payload, { withCredentials: true })
       .then((res) => {
         console.log(res);
+        goHome();
       })
       .catch((err) => {
         console.log(err);
@@ -71,13 +72,14 @@ export default function SignIn() {
   useEffect(() => {
     (async () => {
       await userApi
-        .getUsers(0, 0, { withCredentials: true }) // getMe()の方が良い
+        .getMe({ withCredentials: true })
         .then((res) => {
-          if (res.status === 200) {
-            goHome();
-          }
+          console.log(res.status);
+          console.log("まぎまぎまぎまぎ");
+          goHome();
         })
         .catch((err) => {
+          console.log("まぎまぎまぎみねみね");
           console.log(err);
         });
     })();
