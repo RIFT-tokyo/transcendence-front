@@ -56,7 +56,7 @@ export default function SignUp() {
   };
 
   const handleOauthLogin = () => {
-    window.location.href = "http://localhost:4211/api/auth/login";
+    window.location.href = String(process.env.REACT_APP_OAUTH_LOGIN_URL);
   };
 
   const goHome = () => {
