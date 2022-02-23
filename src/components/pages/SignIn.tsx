@@ -7,11 +7,27 @@ import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
 import { AuthApi, UserApi } from "../../api/generated/api";
 import { useEffect } from "react";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
+
+interface State {
+  showPassword: boolean;
+}
 
 export default function SignIn() {
+  const [values, setValues] = React.useState<State>({
+    showPassword: false,
+  });
   const navigate = useNavigate();
   const authApi = new AuthApi();
   const userApi = new UserApi();
+
+  const handleClickShowPassword = () => {
+    setValues({
+      ...values,
+      showPassword: !values.showPassword,
+    });
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -69,7 +85,7 @@ export default function SignIn() {
         }}
       >
         <img src="/auth/signin.svg" alt="Sign Up" width="440" />
-        <Grid container item sm={11}>
+        <Grid container item>
           <Button
             type="submit"
             fullWidth
@@ -96,8 +112,19 @@ export default function SignIn() {
                 fullWidth
                 name="password"
                 label="password"
-                type="password"
                 id="password"
+                type={values.showPassword ? "text" : "password"}
+                InputProps={{
+                  endAdornment: (
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      edge="end"
+                    >
+                      {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  ),
+                }}
               />
             </Grid>
           </Grid>
