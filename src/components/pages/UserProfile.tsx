@@ -15,18 +15,20 @@ const UserProfile = () => {
 
   useEffect(() => {
     (async () => {
+      await userApi.getMe().then((res) => {
+        setUser(res.data)
+      }).catch((err) => {
+        setError(err.message)
+      })
       if (username) {
         await userApi.getUsersUsername(username).then((res) => {
           setUser(res.data)
+          setIsOwner(res.data.id === user?.id)
         }).catch((err) => {
           setError(err.message)
         })
       } else {
-        await userApi.getMe().then((res) => {
-          setUser(res.data)
-        }).catch((err) => {
-          setError(err.message)
-        })
+        setIsOwner(true)
       }
     })()
   // eslint-disable-next-line react-hooks/exhaustive-deps
