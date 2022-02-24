@@ -14,6 +14,7 @@ interface State {
   username: string;
   password: string;
   showPassword: boolean;
+  error: boolean;
 }
 
 export default function SignUp() {
@@ -21,6 +22,7 @@ export default function SignUp() {
     username: "",
     password: "",
     showPassword: false,
+    error: false,
   });
   const navigate = useNavigate();
   const userApi = new UserApi();
@@ -37,6 +39,13 @@ export default function SignUp() {
     });
   };
 
+  const handleErrorOccured = () => {
+    setValues({
+      ...values,
+      error: true,
+    });
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const payload = {
@@ -47,11 +56,12 @@ export default function SignUp() {
     await userApi
       .postUsers(payload)
       .then(() => {
-        console.log("ログインしてください。");
-		// このresでset-cookieすればgoHome()していちいちログイン経由せずに済む
+        // 204とset-cookie待ち
+        // goHome();
       })
       .catch((err) => {
         console.log(err);
+		handleErrorOccured();
       });
   };
 
@@ -71,7 +81,7 @@ export default function SignUp() {
     (async () => {
       await userApi
         .getMe({ withCredentials: true })
-        .then((res) => {
+        .then(() => {
           goHome();
         })
         .catch((err) => {
@@ -113,6 +123,7 @@ export default function SignUp() {
                 name="username"
                 value={values.username}
                 onChange={handleChange("username")}
+                error={values.error}
               />
             </Grid>
             <Grid item xs={12}>
@@ -135,6 +146,8 @@ export default function SignUp() {
                     </IconButton>
                   ),
                 }}
+                error={values.error}
+                helperText={values.error ? "Sign up failed..." : ""}
               />
             </Grid>
           </Grid>

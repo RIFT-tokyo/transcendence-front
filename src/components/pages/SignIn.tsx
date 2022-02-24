@@ -14,6 +14,7 @@ interface State {
   username: string;
   password: string;
   showPassword: boolean;
+  error: boolean;
 }
 
 export default function SignIn() {
@@ -21,6 +22,7 @@ export default function SignIn() {
     username: "",
     password: "",
     showPassword: false,
+    error: false,
   });
   const navigate = useNavigate();
   const authApi = new AuthApi();
@@ -38,6 +40,13 @@ export default function SignIn() {
     });
   };
 
+  const handleErrorOccured = () => {
+    setValues({
+      ...values,
+      error: true,
+    });
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const payload = {
@@ -48,11 +57,12 @@ export default function SignIn() {
     await authApi
       .postAuthLogin(payload, { withCredentials: true })
       .then(() => {
-		// 今後204が帰ってくるのでここに入り以下のコメントアウトを外すとリロードせずにhome行ける
+        // 204とset-cookie待ち
         // goHome();
       })
       .catch((err) => {
         console.log(err);
+        handleErrorOccured();
       });
   };
 
@@ -115,6 +125,7 @@ export default function SignIn() {
                 name="username"
                 value={values.username}
                 onChange={handleChange("username")}
+                error={values.error}
               />
             </Grid>
             <Grid item xs={12}>
@@ -137,6 +148,8 @@ export default function SignIn() {
                     </IconButton>
                   ),
                 }}
+                error={values.error}
+                helperText={values.error ? "Sign in failed..." : ""}
               />
             </Grid>
           </Grid>
