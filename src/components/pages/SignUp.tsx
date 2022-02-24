@@ -54,7 +54,7 @@ export default function SignUp() {
     };
 
     await userApi
-      .postUsers(payload)
+      .postUsers(payload, { withCredentials: true })
       .then(() => {
         // 204とset-cookie待ち
         // goHome();
