@@ -21,7 +21,7 @@ const Settings: React.VFC<Props> = ({ active }) => {
   useEffect(() => {
     (async () => {
       setLoading(true)
-      await userApi.getMe().then((res) => {
+      await userApi.getMe({ withCredentials: true}).then((res) => {
         setUser(res.data);
       }).catch((err) => {
         setStatusCode(err.response.status);
@@ -33,7 +33,7 @@ const Settings: React.VFC<Props> = ({ active }) => {
 
   const reset = async () => {
     setLoading(true)
-    await userApi.getMe().then((res) => {
+    await userApi.getMe({withCredentials: true}).then((res) => {
       setUser(res.data);
     }).catch((err) => {
       setStatusCode(err.response.status);
