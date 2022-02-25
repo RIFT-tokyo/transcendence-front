@@ -25,7 +25,11 @@ const App = () => {
             </Route>
             <Route path="chat" element={<Chat/>} />
             <Route path="pong" element={<Pong/>} />
-            <Route path="settings" element={<Settings/>} />
+            <Route path="settings">
+              <Route index element={<Navigate to="account"/>} />
+              <Route path="account" element={<Settings active="Account"/>} />
+              <Route path="security" element={<Settings active="Security"/>} />
+            </Route>
             <Route path="404" element={<NotFound/>} />
             <Route path="500" element={<InternalServerError/>} />
             <Route path="*" element={<Navigate to="404"/>} />
