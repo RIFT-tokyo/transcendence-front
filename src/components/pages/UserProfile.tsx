@@ -48,7 +48,7 @@ const UserProfile = () => {
         <Stack direction="row" margin={2} spacing={2}>
           <Stack direction="column" spacing={2}>
             <UserCard user={user} isOwner={isOwner} />
-            <FollowerList />
+            <FollowerList followers={user ? [user, user] : null}/>
           </Stack>
           <Stack spacing={2}>
             <GameResult />

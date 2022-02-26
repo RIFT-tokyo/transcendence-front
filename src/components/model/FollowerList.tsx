@@ -1,12 +1,25 @@
-import { Card } from '@mui/material'
+import { Card, CardContent, Stack, Typography } from "@mui/material"
+import { User } from "../../api/generated/api"
+import FollowerStatus from "./FollowerStatus"
 
-const FollowerList = () => {
+const FollowerList: React.VFC<{ followers: User[] | null }> = ({
+  followers
+}) => {
   return (
     <Card sx={{
       width: 328,
       height: 384,
     }}>
-      Friend List
+      <CardContent>
+        <Stack spacing={1}>
+          <Typography sx={{ fontWeight: "bold" }} variant="h5">
+            Followings
+          </Typography>
+          {followers?.map((follower) => {
+            return <FollowerStatus user={follower} />;
+          })}
+        </Stack>
+      </CardContent>
     </Card>
   )
 }
