@@ -1,6 +1,6 @@
 import { Card } from '@mui/material'
 
-const FriendList = () => {
+const FollowerList = () => {
   return (
     <Card sx={{
       width: 328,
@@ -11,4 +11,4 @@ const FriendList = () => {
   )
 }
 
-export default FriendList
+export default FollowerList

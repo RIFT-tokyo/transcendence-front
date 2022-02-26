@@ -2,7 +2,7 @@ import { Container, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { User, UserApi } from "../../api/generated/api";
-import FriendList from "../model/FriendList";
+import FollowerList from "../model/FollowerList";
 import GameResult from "../model/GameResult";
 import UserCard from "../model/UserCard";
 import ErrorRouter from "../ui/ErrorRouter";
@@ -48,7 +48,7 @@ const UserProfile = () => {
         <Stack direction="row" margin={2} spacing={2}>
           <Stack direction="column" spacing={2}>
             <UserCard user={user} isOwner={isOwner} />
-            <FriendList />
+            <FollowerList />
           </Stack>
           <Stack spacing={2}>
             <GameResult />
