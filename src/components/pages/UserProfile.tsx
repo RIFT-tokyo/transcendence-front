@@ -52,7 +52,8 @@ const UserProfile = () => {
       <Container>
         <Stack direction="row" margin={2} spacing={2}>
           <Stack direction="column" spacing={2}>
-            <UserCard user={user} isOwner={isOwner} />
+          <UserCard user={user} isOwner={isOwner}
+              isFollower={followers?.some((follower) => user?.id === follower.id) ?? false} />
             <FollowerList followers={followers}/>
           </Stack>
           <Stack spacing={2}>
