@@ -1,6 +1,6 @@
 import { Button, CircularProgress, Grid, Stack } from "@mui/material";
 import { useState, useEffect } from "react";
-import { ResponseUser, UserApi } from "../../api/generated/api";
+import { User, UserApi } from "../../api/generated/api";
 import AccountSetting from "../model/AccountSetting";
 import SecuritySetting from "../model/SecuritySetting";
 import ErrorRouter from "../ui/ErrorRouter";
@@ -13,7 +13,7 @@ type Props = {
 
 const Settings: React.VFC<Props> = ({ active }) => {
   const actions = ["Account", "Security"];
-  const [user, setUser] = useState<ResponseUser | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const userApi = new UserApi();
   const [statusCode, setStatusCode] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
@@ -57,7 +57,7 @@ const Settings: React.VFC<Props> = ({ active }) => {
       profile_image: undefined,
     };
     await userApi
-      .putUsersUserId(user.id, data, { withCredentials: true })
+      .putUsersUserId(user.id!, data, { withCredentials: true })
       .then((res) => {
         setUser(res.data);
       })

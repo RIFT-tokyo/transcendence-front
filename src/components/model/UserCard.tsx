@@ -1,8 +1,8 @@
 import { Avatar, Button, Card, CardContent, Typography, Link } from '@mui/material'
 import { NavLink } from 'react-router-dom';
-import { ResponseUser } from '../../api/generated/api';
+import { User } from '../../api/generated/api';
 
-const UserCard: React.VFC<{user: ResponseUser | null, isOwner: boolean}> = ({user, isOwner}) => {
+const UserCard: React.VFC<{user: User | null, isOwner: boolean}> = ({user, isOwner}) => {
   const ActionButton = (isOwner: boolean) => {
     if (isOwner) {
       return (

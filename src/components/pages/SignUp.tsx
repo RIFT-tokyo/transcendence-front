@@ -5,7 +5,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
-import { UserApi } from "../../api/generated/api";
+import { AuthApi, UserApi  } from "../../api/generated/api";
 import { useEffect } from "react";
 import { IconButton } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -26,6 +26,7 @@ export default function SignUp() {
   });
   const navigate = useNavigate();
   const userApi = new UserApi();
+  const authApi = new AuthApi();
 
   const handleChange =
     (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,7 +54,7 @@ export default function SignUp() {
       password: values.password,
     };
 
-    await userApi
+    await authApi
       .postUsers(payload, { withCredentials: true })
       .then(() => {
         // 204とset-cookie待ち

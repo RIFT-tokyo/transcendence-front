@@ -1,14 +1,14 @@
 import { Container, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { ResponseUser, UserApi } from "../../api/generated/api";
+import { User, UserApi } from "../../api/generated/api";
 import FriendList from "../model/FriendList";
 import GameResult from "../model/GameResult";
 import UserCard from "../model/UserCard";
 import ErrorRouter from "../ui/ErrorRouter";
 
 const UserProfile = () => {
-  const [user, setUser] = useState<ResponseUser | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isOwner, setIsOwner] = useState<boolean>(false);
   const [statusCode, setStatusCode] = useState<number>(0);
   const userApi = new UserApi();
