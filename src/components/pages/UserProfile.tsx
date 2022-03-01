@@ -19,6 +19,32 @@ const UserProfile = () => {
   const followApi = new FollowApi()
   const username = useParams().username
 
+  const followUser = async () => {
+    if (loading) {
+      return
+    }
+    setLoading(true)
+    await followApi.putUsersFollowingUserID(ownerId).then((res) => {
+      setIsFollower(true)
+    }).catch((err) => {
+      setStatusCode(err.response.status)
+    })
+    setLoading(false)
+  }
+
+  const unfollowUser = async () => {
+    if (loading) {
+      return
+    }
+    setLoading(true)
+    await followApi.deleteUsersFollowingUserID(ownerId).then((res) => {
+      setIsFollower(false)
+    }).catch((err) => {
+      setStatusCode(err.response.status)
+    })
+    setLoading(false)
+  }
+
   useEffect(() => {
     (async () => {
       await userApi.getMe({ withCredentials: true }).then((res) => {
@@ -67,7 +93,7 @@ const UserProfile = () => {
       <Container>
         <Stack direction="row" margin={2} spacing={2}>
           <Stack direction="column" spacing={2}>
-          <UserCard user={user} isOwner={isOwner} isFollower={isFollower} />
+          <UserCard user={user} isOwner={isOwner} isFollower={isFollower} followUser={followUser} unfollowUser={unfollowUser} />
             <FollowerList followers={followers}/>
           </Stack>
           <Stack spacing={2}>

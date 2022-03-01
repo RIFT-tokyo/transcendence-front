@@ -2,7 +2,8 @@ import { Avatar, Button, Card, CardContent, Typography, Link } from '@mui/materi
 import { NavLink } from 'react-router-dom';
 import { User } from '../../api/generated/api';
 
-const UserCard: React.VFC<{user: User | null, isOwner: boolean, isFollower: boolean}> = ({user, isOwner, isFollower}) => {
+const UserCard: React.VFC<{user: User | null, isOwner: boolean, isFollower: boolean, followUser: () => void, unfollowUser: () => void}> = ({user, isOwner, isFollower, followUser, unfollowUser}) => {
+
   const ActionButton = (isOwner: boolean) => {
     if (isOwner) {
       return (
@@ -11,9 +12,15 @@ const UserCard: React.VFC<{user: User | null, isOwner: boolean, isFollower: bool
         </Link>
       )
     }
-    return (
-      <Button sx={{ width: 296, height: 30 }} color='inherit' variant='contained'>{isFollower ? "Unfollow" : "Follow"}</Button>
-    )
+    if (isFollower) {
+      return (
+        <Button sx={{ width: 296, height: 30 }} color='inherit' variant='contained' onClick={unfollowUser}>Unfollow</Button>
+      )
+    } else {
+      return (
+        <Button sx={{ width: 296, height: 30 }} color='inherit' variant='contained' onClick={followUser}>Follow</Button>
+      )
+    }
   }
 
   return (
