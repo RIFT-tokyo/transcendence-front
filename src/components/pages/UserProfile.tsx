@@ -93,7 +93,7 @@ const UserProfile = () => {
       <Container>
         <Stack direction="row" margin={2} spacing={2}>
           <Stack direction="column" spacing={2}>
-          <UserCard user={user} isOwner={isOwner} isFollower={isFollower} followUser={followUser} unfollowUser={unfollowUser} />
+          <UserCard user={user} isOwner={isOwner} isFollower={isFollower} loading={loading} followUser={followUser} unfollowUser={unfollowUser} />
             <FollowerList followers={followers}/>
           </Stack>
           <Stack spacing={2}>

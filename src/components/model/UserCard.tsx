@@ -2,7 +2,7 @@ import { Avatar, Button, Card, CardContent, Typography, Link } from '@mui/materi
 import { NavLink } from 'react-router-dom';
 import { User } from '../../api/generated/api';
 
-const UserCard: React.VFC<{user: User | null, isOwner: boolean, isFollower: boolean, followUser: () => void, unfollowUser: () => void}> = ({user, isOwner, isFollower, followUser, unfollowUser}) => {
+const UserCard: React.VFC<{user: User | null, isOwner: boolean, isFollower: boolean, loading: boolean, followUser: () => void, unfollowUser: () => void}> = ({user, isOwner, isFollower, loading, followUser, unfollowUser}) => {
 
   const ActionButton = (isOwner: boolean) => {
     if (isOwner) {
@@ -14,11 +14,11 @@ const UserCard: React.VFC<{user: User | null, isOwner: boolean, isFollower: bool
     }
     if (isFollower) {
       return (
-        <Button sx={{ width: 296, height: 30 }} color='inherit' variant='contained' onClick={unfollowUser}>Unfollow</Button>
+        <Button sx={{ width: 296, height: 30 }} color='inherit' variant='contained' disabled={loading} onClick={unfollowUser}>Unfollow</Button>
       )
     } else {
       return (
-        <Button sx={{ width: 296, height: 30 }} color='inherit' variant='contained' onClick={followUser}>Follow</Button>
+        <Button sx={{ width: 296, height: 30 }} color='inherit' variant='contained' disabled={loading} onClick={followUser}>Follow</Button>
       )
     }
   }
