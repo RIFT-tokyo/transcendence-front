@@ -14,6 +14,7 @@ const UserProfile = () => {
   const [isOwner, setIsOwner] = useState<boolean>(false)
   const [isFollower, setIsFollower] = useState<boolean>(false)
   const [statusCode, setStatusCode] = useState<number>(0)
+  const [loading, setLoading] = useState<boolean>(false)
   const userApi = new UserApi()
   const followApi = new FollowApi()
   const username = useParams().username
