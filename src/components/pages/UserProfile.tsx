@@ -85,15 +85,25 @@ const UserProfile = () => {
 
   return (
     <ErrorRouter statusCode={statusCode}>
-      {loading ? <LinearProgress sx={{
-        width: '100%',
-        position: 'absolute'
-      }}
-      /> : null}
+      {loading ? (
+        <LinearProgress
+          sx={{
+            width: '100%',
+            position: 'absolute'
+          }}
+        />
+      ) : null}
       <Container>
         <Stack direction="row" margin={2} spacing={2}>
           <Stack direction="column" spacing={2}>
-          <UserCard user={user} isOwner={isOwner} isFollower={isFollower} loading={loading} followUser={followUser} unfollowUser={unfollowUser} />
+          <UserCard
+              user={user}
+              isOwner={isOwner}
+              isFollower={isFollower}
+              loading={loading}
+              followUser={followUser}
+              unfollowUser={unfollowUser}
+            />
           {isOwner ? <FollowerList followers={followers}/> : null}
           </Stack>
           <Stack spacing={2}>
