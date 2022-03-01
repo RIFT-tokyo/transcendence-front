@@ -59,6 +59,11 @@ const UserProfile = () => {
 
   return (
     <ErrorRouter statusCode={statusCode}>
+      {loading ? <LinearProgress sx={{
+        width: '100%',
+        position: 'absolute'
+      }}
+      /> : null}
       <Container>
         <Stack direction="row" margin={2} spacing={2}>
           <Stack direction="column" spacing={2}>
