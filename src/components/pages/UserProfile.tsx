@@ -12,6 +12,7 @@ const UserProfile = () => {
   const [followers, setFollowers] = useState<User[] | null>(null)
   const [ownerId, setOwnerId] = useState<number>(0)
   const [isOwner, setIsOwner] = useState<boolean>(false)
+  const [isFollower, setIsFollower] = useState<boolean>(false)
   const [statusCode, setStatusCode] = useState<number>(0)
   const userApi = new UserApi()
   const followApi = new FollowApi()
@@ -37,7 +38,11 @@ const UserProfile = () => {
           .getUsersUsername(username)
           .then((res) => {
             setUser(res.data)
-            setIsOwner(res.data.id === user?.id)
+            if (res.data.id === user?.id) {
+              setIsOwner(true)
+            } else {
+              setIsFollower(followers?.some((follower) => user?.id === follower.id) ?? false)
+            }
           }).catch((err) => {
             setStatusCode(err.response.status)
           })
@@ -56,8 +61,7 @@ const UserProfile = () => {
       <Container>
         <Stack direction="row" margin={2} spacing={2}>
           <Stack direction="column" spacing={2}>
-          <UserCard user={user} isOwner={isOwner}
-              isFollower={followers?.some((follower) => user?.id === follower.id) ?? false} />
+          <UserCard user={user} isOwner={isOwner} isFollower={isFollower} />
             <FollowerList followers={followers}/>
           </Stack>
           <Stack spacing={2}>
