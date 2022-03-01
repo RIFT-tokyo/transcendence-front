@@ -1,8 +1,19 @@
 import { Avatar, Badge, Stack, Typography } from "@mui/material";
-import { User } from "../../api/generated/api";
+import { User, UserStatusEnum } from "../../api/generated/api";
 import ChatBubble from "@mui/icons-material/ChatBubble";
 
 const FollowerStatus: React.VFC<{ user: User | null }> = ({ user }) => {
+  const selectBadgeColor = (status?: UserStatusEnum): "success" | "error" | "neutral" => {
+    switch (status) {
+      case UserStatusEnum.Online:
+        return "success"
+      case UserStatusEnum.Game:
+        return "error"
+      default:
+        return "neutral"
+    }
+  }
+
   return (
     <Stack
       direction="row"
@@ -11,7 +22,7 @@ const FollowerStatus: React.VFC<{ user: User | null }> = ({ user }) => {
       justifyContent="space-between"
     >
       <Badge
-        color="success"
+        color={selectBadgeColor(user?.status)}
         overlap="circular"
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         variant="dot"
