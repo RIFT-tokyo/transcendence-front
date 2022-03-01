@@ -45,37 +45,40 @@ const UserProfile = () => {
     setLoading(false)
   }
 
+  const fetchMe = async () => {
+    await userApi.getMe({ withCredentials: true }).then((res) => {
+      setUser(res.data)
+      if (res.data.id) {
+        setOwnerId(res.data.id)
+      }
+      return res.data.id ? followApi.getUsersUserIDFollowing(res.data.id) : null
+    }).then((res) => {
+      if (res) {
+        setFollowers(res.data)
+      }
+    }).catch((err) => {
+      setStatusCode(err.response.status)
+    })
+  }
+
+  const fetchUserFromUsername = async (username: string) => {
+    await userApi.getUsersUsername(username).then((res) => {
+      setUser(res.data)
+      if (res.data.id === user?.id) {
+        setIsOwner(true)
+      } else {
+        setIsFollower(followers?.some((follower) => user?.id === follower.id) ?? false)
+      }
+    }).catch((err) => {
+      setStatusCode(err.response.status)
+    })
+  }
+
   useEffect(() => {
     (async () => {
-      await userApi.getMe({ withCredentials: true }).then((res) => {
-        setUser(res.data)
-        if (res.data.id) {
-          setOwnerId(res.data.id)
-        }
-        return res.data.id ? followApi.getUsersUserIDFollowing(res.data.id) : null
-      }).then((res) => {
-        if (res) {
-          setFollowers(res.data)
-        }
-      }).catch((err) => {
-        setStatusCode(err.response.status)
-      })
+      await fetchMe()
       if (username) {
-        await userApi
-          .getUsersUsername(username)
-          .then((res) => {
-            setUser(res.data)
-            if (res.data.id === user?.id) {
-              setIsOwner(true)
-            } else {
-              setIsFollower(followers?.some((follower) => user?.id === follower.id) ?? false)
-            }
-          }).catch((err) => {
-            setStatusCode(err.response.status)
-          })
-          .catch((err) => {
-            setStatusCode(err.response.status);
-          });
+        await fetchUserFromUsername(username)
       } else {
         setIsOwner(true);
       }
