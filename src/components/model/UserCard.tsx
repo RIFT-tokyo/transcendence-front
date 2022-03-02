@@ -2,14 +2,16 @@ import { Avatar, Button, Card, CardContent, Typography, Link } from '@mui/materi
 import { NavLink } from 'react-router-dom';
 import { User } from '../../api/generated/api';
 
-const UserCard: React.VFC<{
+type Props = {
   user: User | null,
   isOwner: boolean,
   isFollower: boolean,
   loading: boolean,
   followUser: () => void,
   unfollowUser: () => void
-}> = ({ user, isOwner, isFollower, loading, followUser, unfollowUser }) => {
+}
+
+const UserCard: React.VFC<Props> = ({ user, isOwner, isFollower, loading, followUser, unfollowUser }) => {
   const ActionButton = (isOwner: boolean) => {
     if (isOwner) {
       return (
