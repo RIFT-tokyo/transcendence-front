@@ -1,6 +1,7 @@
-import { Avatar, Badge, Stack, styled, Typography } from "@mui/material";
+import { Avatar, Badge, Link, Stack, styled, Typography } from "@mui/material";
 import { User, UserStatusEnum } from "../../api/generated/api";
 import ChatBubble from "@mui/icons-material/ChatBubble";
+import { NavLink } from "react-router-dom";
 
 const FollowerStatus: React.VFC<{ user: User | null }> = ({ user }) => {
   const selectBadgeColor = (status?: UserStatusEnum): "success" | "error" | "neutral" => {
@@ -27,14 +28,16 @@ const FollowerStatus: React.VFC<{ user: User | null }> = ({ user }) => {
       alignItems="center"
       justifyContent="space-between"
     >
-      <StyledBadge
-        color={selectBadgeColor(user?.status)}
-        overlap="circular"
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        variant="dot"
-      >
-        <Avatar sx={{ width: 40, height: 40 }} src={user?.profile_image} />
-      </StyledBadge>
+      <Link component={NavLink} to={`/users/${user?.username}`}>
+        <StyledBadge
+          color={selectBadgeColor(user?.status)}
+          overlap="circular"
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          variant="dot"
+        >
+          <Avatar sx={{ width: 40, height: 40 }} src={user?.profile_image} />
+        </StyledBadge>
+      </Link>
       <Stack sx={{ flexGrow: 1 }} direction="column">
         <Typography sx={{ fontWeight: "bold" }}>
           {user?.display_name ?? user?.username}
