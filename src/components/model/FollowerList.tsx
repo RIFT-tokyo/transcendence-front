@@ -16,7 +16,7 @@ const FollowerList: React.VFC<{ followers: User[] | null }> = ({
             Followings
           </Typography>
           {followers?.map((follower) => {
-            return <FollowerStatus user={follower} />;
+            return <FollowerStatus key={follower.id} user={follower}/>;
           })}
         </Stack>
       </CardContent>
