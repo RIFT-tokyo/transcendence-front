@@ -1,4 +1,4 @@
-import { Avatar, Badge, Stack, Typography } from "@mui/material";
+import { Avatar, Badge, Stack, styled, Typography } from "@mui/material";
 import { User, UserStatusEnum } from "../../api/generated/api";
 import ChatBubble from "@mui/icons-material/ChatBubble";
 
@@ -14,6 +14,12 @@ const FollowerStatus: React.VFC<{ user: User | null }> = ({ user }) => {
     }
   }
 
+  const StyledBadge = styled(Badge)(({ theme }) => ({
+    '& .MuiBadge-badge': {
+      boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+    }
+  }))
+
   return (
     <Stack
       direction="row"
@@ -21,14 +27,14 @@ const FollowerStatus: React.VFC<{ user: User | null }> = ({ user }) => {
       alignItems="center"
       justifyContent="space-between"
     >
-      <Badge
+      <StyledBadge
         color={selectBadgeColor(user?.status)}
         overlap="circular"
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         variant="dot"
       >
         <Avatar sx={{ width: 40, height: 40 }} src={user?.profile_image} />
-      </Badge>
+      </StyledBadge>
       <Stack sx={{ flexGrow: 1 }} direction="column">
         <Typography sx={{ fontWeight: "bold" }}>
           {user?.display_name ?? user?.username}
