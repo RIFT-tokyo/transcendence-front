@@ -43,9 +43,11 @@ const FollowerStatus: React.VFC<Props> = ({ user }) => {
         </StyledBadge>
       </Link>
       <Stack sx={{ flexGrow: 1 }} direction="column">
-        <Typography sx={{ fontWeight: "bold" }}>
-          {user?.display_name ?? user?.username}
-        </Typography>
+        <Link component={NavLink} to={`/users/${user?.username}`} color="inherit" underline="none">
+          <Typography sx={{ fontWeight: "bold" }}>
+            {user?.display_name ?? user?.username}
+          </Typography>
+        </Link>
         <Typography variant="body2">{user?.status_message}</Typography>
       </Stack>
       <ChatBubble sx={{ fontSize: 24 }} color="disabled" />
