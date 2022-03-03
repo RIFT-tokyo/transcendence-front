@@ -44,9 +44,15 @@ declare module '@mui/material/styles' {
   }
 }
 
-// Update the Badge's color prop options
+// Update the Component's color prop options
 declare module '@mui/material/Badge' {
   interface BadgePropsColorOverrides {
+    neutral: true;
+  }
+}
+
+declare module '@mui/material/SvgIcon' {
+  interface SvgIconPropsColorOverrides {
     neutral: true;
   }
 }

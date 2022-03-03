@@ -50,7 +50,7 @@ const FollowerStatus: React.VFC<Props> = ({ user }) => {
         </Link>
         <Typography variant="body2">{user?.status_message}</Typography>
       </Stack>
-      <ChatBubble sx={{ fontSize: 24 }} color="disabled" />
+      <ChatBubble sx={{ fontSize: 24 }} color="neutral" />
     </Stack>
   );
 };
