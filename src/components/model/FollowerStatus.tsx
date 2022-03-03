@@ -3,7 +3,11 @@ import { User, UserStatusEnum } from "../../api/generated/api";
 import ChatBubble from "@mui/icons-material/ChatBubble";
 import { NavLink } from "react-router-dom";
 
-const FollowerStatus: React.VFC<{ user: User | null }> = ({ user }) => {
+type Props = {
+  user: User | null
+}
+
+const FollowerStatus: React.VFC<Props> = ({ user }) => {
   const selectBadgeColor = (status?: UserStatusEnum): "success" | "error" | "neutral" => {
     switch (status) {
       case UserStatusEnum.Online:

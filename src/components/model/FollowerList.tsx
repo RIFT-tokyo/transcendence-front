@@ -2,7 +2,11 @@ import { Card, CardContent, Stack, Typography } from "@mui/material"
 import { User } from "../../api/generated/api"
 import FollowerStatus from "./FollowerStatus"
 
-const FollowerList: React.VFC<{ followers: User[] | null }> = ({
+type Props = {
+  followers: User[] | null
+}
+
+const FollowerList: React.VFC<Props> = ({
   followers
 }) => {
   return (
