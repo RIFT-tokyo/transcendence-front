@@ -1,9 +1,9 @@
 import { Avatar, Divider, Stack, TextField, Typography } from '@mui/material'
-import { ResponseUser } from '../../api/generated/api'
+import { User } from '../../api/generated/api'
 
 type Props = {
-  user: ResponseUser,
-  setUser: (user: ResponseUser) => void
+  user: User,
+  setUser: (user: User) => void
 }
 
 const AccountSetting: React.VFC<Props> = ({ user, setUser }) => {

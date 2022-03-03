@@ -1,95 +1,118 @@
-import { Button, CircularProgress, Grid, Stack } from '@mui/material'
-import { useState, useEffect } from 'react';
-import { ResponseUser, UserApi } from '../../api/generated/api';
-import AccountSetting from '../model/AccountSetting'
-import SecuritySetting from '../model/SecuritySetting';
-import ErrorRouter from '../ui/ErrorRouter';
-import Footer from '../ui/Footer';
-import SettingTab from '../ui/SettingTab'
+import { Button, CircularProgress, Grid, Stack } from "@mui/material";
+import { useState, useEffect } from "react";
+import { User, UserApi } from "../../api/generated/api";
+import AccountSetting from "../model/AccountSetting";
+import SecuritySetting from "../model/SecuritySetting";
+import ErrorRouter from "../ui/ErrorRouter";
+import Footer from "../ui/Footer";
+import SettingTab from "../ui/SettingTab";
 
 type Props = {
-  active: string
-}
+  active: string;
+};
 
 const Settings: React.VFC<Props> = ({ active }) => {
-  const actions = ['Account', 'Security'];
-  const [user, setUser] = useState<ResponseUser | null>(null);
+  const actions = ["Account", "Security"];
+  const [user, setUser] = useState<User | null>(null);
   const userApi = new UserApi();
   const [statusCode, setStatusCode] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
-      setLoading(true)
-      await userApi.getMe().then((res) => {
-        setUser(res.data);
-      }).catch((err) => {
-        setStatusCode(err.response.status);
-      });
-      setLoading(false)
-    })()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+      setLoading(true);
+      await userApi
+        .getMe({ withCredentials: true })
+        .then((res) => {
+          setUser(res.data);
+        })
+        .catch((err) => {
+          setStatusCode(err.response.status);
+        });
+      setLoading(false);
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const reset = async () => {
-    setLoading(true)
-    await userApi.getMe().then((res) => {
-      setUser(res.data);
-    }).catch((err) => {
-      setStatusCode(err.response.status);
-    });
-    setLoading(false)
-  }
+    setLoading(true);
+    await userApi
+      .getMe({ withCredentials: true })
+      .then((res) => {
+        setUser(res.data);
+      })
+      .catch((err) => {
+        setStatusCode(err.response.status);
+      });
+    setLoading(false);
+  };
 
   const submit = async () => {
     if (!user) {
       return;
     }
-    setLoading(true)
+    setLoading(true);
     const data = {
       ...user,
-      profile_image: undefined
-    }
-    await userApi.putUsersUserId(user.id, data).then((res) => {
-      setUser(res.data);
-    }).catch((err) => {
-      setStatusCode(err.response.status);
-    });
-    setLoading(false)
-  }
+      profile_image: undefined,
+    };
+    await userApi
+      .putUsersUserId(user.id!, data, { withCredentials: true })
+      .then((res) => {
+        setUser(res.data);
+      })
+      .catch((err) => {
+        setStatusCode(err.response.status);
+      });
+    setLoading(false);
+  };
 
   let settingContent = <CircularProgress />;
-  if (active === 'Account' && !loading && user) {
+  if (active === "Account" && !loading && user) {
     settingContent = <AccountSetting user={user} setUser={setUser} />;
-  } else if (active === 'Security' && !loading) {
-    settingContent = <SecuritySetting/>;
+  } else if (active === "Security" && !loading) {
+    settingContent = <SecuritySetting />;
   }
 
   const getFooter = (active: string) => {
-    if (active === 'Account') {
+    if (active === "Account") {
       return (
         <Footer>
-          <Stack direction='row' margin={2} spacing={2}>
-            <Button variant='contained' color='inherit' size='large' onClick={reset}>reset</Button>
-            <Button variant='contained' color='primary' size='large' onClick={submit}>save</Button>
+          <Stack direction="row" margin={2} spacing={2}>
+            <Button
+              variant="contained"
+              color="inherit"
+              size="large"
+              onClick={reset}
+            >
+              reset
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={submit}
+            >
+              save
+            </Button>
           </Stack>
         </Footer>
-      )
+      );
     }
-    return null
-  }
+    return null;
+  };
 
   return (
     <ErrorRouter statusCode={statusCode}>
-      <Grid container justifyContent='center'>
-        <Stack direction='row' margin={2} spacing={2}>
+      <Grid container justifyContent="center">
+        <Stack direction="row" margin={2} spacing={2}>
           <SettingTab actions={actions} />
           {settingContent}
         </Stack>
       </Grid>
       {getFooter(active)}
     </ErrorRouter>
-  )
-}
+  );
+};
 
-export default Settings
+export default Settings;
