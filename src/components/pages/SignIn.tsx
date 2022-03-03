@@ -57,8 +57,7 @@ export default function SignIn() {
     await authApi
       .postAuthLogin(payload, { withCredentials: true })
       .then(() => {
-        // 204とset-cookie待ち
-        // goHome();
+        goHome();
       })
       .catch((err) => {
         console.log(err);
