@@ -76,7 +76,7 @@ const UserProfile = () => {
   }
 
   const fetchFollowers = async (ownerId: number) => {
-    await followApi.getUsersUserIDFollowing(ownerId).then((res) => {
+    await followApi.getUsersUserIDFollowing(ownerId, undefined, undefined, { withCredentials: true }).then((res) => {
       setFollowers(res.data)
     }).catch((err) => {
       setStatusCode(err.response.status)
@@ -84,7 +84,7 @@ const UserProfile = () => {
   }
 
   const fetchIsFollower = async (ownerId: number, targetId: number) => {
-    await followApi.getUsersUserIDFollowingTargetUserID(ownerId, targetId).then((res) => {
+    await followApi.getUsersUserIDFollowingTargetUserID(ownerId, targetId, { withCredentials: true }).then((res) => {
       setIsFollower(res.status === 204)
     }).catch((err) => {
       setStatusCode(err.response.status)
