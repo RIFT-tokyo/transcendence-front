@@ -24,7 +24,7 @@ const UserProfile = () => {
       return
     }
     setLoading(true)
-    await followApi.putUsersFollowingUserID(ownerId).then((res) => {
+    await followApi.putUsersFollowingUserID(ownerId, { withCredentials: true }).then((res) => {
       setIsFollower(true)
     }).catch((err) => {
       setStatusCode(err.response.status)
@@ -37,7 +37,7 @@ const UserProfile = () => {
       return
     }
     setLoading(true)
-    await followApi.deleteUsersFollowingUserID(ownerId).then((res) => {
+    await followApi.deleteUsersFollowingUserID(ownerId, { withCredentials: true }).then((res) => {
       setIsFollower(false)
     }).catch((err) => {
       setStatusCode(err.response.status)
@@ -59,7 +59,7 @@ const UserProfile = () => {
   }
 
   const fetchUserFromUsername = async (ownerId: number, username: string) => {
-    await userApi.getUsersUsername(username).then((res) => {
+    await userApi.getUsersUsername(username, { withCredentials: true }).then((res) => {
       if (!res.data.id) {
         return
       }
