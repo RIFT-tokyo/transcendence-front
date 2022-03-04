@@ -87,7 +87,11 @@ const UserProfile = () => {
     await followApi.getUsersUserIDFollowingTargetUserID(ownerId, targetId, { withCredentials: true }).then((res) => {
       setIsFollower(res.status === 204)
     }).catch((err) => {
-      setStatusCode(err.response.status)
+      if (err.response.status === 404) {
+        setIsFollower(false)
+      } else {
+        setStatusCode(err.response.status)
+      }
     })
   }
 
