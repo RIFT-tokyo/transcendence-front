@@ -46,29 +46,46 @@ const UserProfile = () => {
   }
 
   const fetchMe = async () => {
-    await userApi.getMe({ withCredentials: true }).then((res) => {
+    const ownerId = await userApi.getMe({ withCredentials: true }).then((res) => {
       setUser(res.data)
       if (res.data.id) {
         setOwnerId(res.data.id)
       }
-      return res.data.id ? followApi.getUsersUserIDFollowing(res.data.id) : null
-    }).then((res) => {
-      if (res) {
-        setFollowers(res.data)
+      return res.data.id
+    }).catch((err) => {
+      setStatusCode(err.response.status)
+    })
+    return ownerId
+  }
+
+  const fetchUserFromUsername = async (ownerId: number, username: string) => {
+    await userApi.getUsersUsername(username).then((res) => {
+      if (!res.data.id) {
+        return
+      }
+      if (res.data.id === ownerId) {
+        setIsOwner(true)
+        return fetchFollowers(ownerId)
+      } else {
+        setUser(res.data)
+        return fetchIsFollower(ownerId, res.data.id)
       }
     }).catch((err) => {
       setStatusCode(err.response.status)
     })
   }
 
-  const fetchUserFromUsername = async (username: string) => {
-    await userApi.getUsersUsername(username).then((res) => {
-      setUser(res.data)
-      if (res.data.id === user?.id) {
-        setIsOwner(true)
-      } else {
-        setIsFollower(followers?.some((follower) => user?.id === follower.id) ?? false)
-      }
+  const fetchFollowers = async (ownerId: number) => {
+    await followApi.getUsersUserIDFollowing(ownerId).then((res) => {
+      setFollowers(res.data)
+    }).catch((err) => {
+      setStatusCode(err.response.status)
+    })
+  }
+
+  const fetchIsFollower = async (ownerId: number, targetId: number) => {
+    await followApi.getUsersUserIDFollowingTargetUserID(ownerId, targetId).then((res) => {
+      setIsFollower(res.status === 204)
     }).catch((err) => {
       setStatusCode(err.response.status)
     })
@@ -76,11 +93,15 @@ const UserProfile = () => {
 
   useEffect(() => {
     (async () => {
-      await fetchMe()
+      const ownerId = await fetchMe()
+      if (!ownerId) {
+        return
+      }
       if (username) {
-        await fetchUserFromUsername(username)
+        await fetchUserFromUsername(ownerId, username)
       } else {
-        setIsOwner(true);
+        setIsOwner(true)
+        await fetchFollowers(ownerId)
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
