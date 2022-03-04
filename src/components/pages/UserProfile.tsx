@@ -1,4 +1,4 @@
-import { Container, Stack } from "@mui/material";
+import { Container, LinearProgress, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { User, UserApi, FollowApi } from "../../api/generated/api";
