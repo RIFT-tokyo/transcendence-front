@@ -10,7 +10,6 @@ import ErrorRouter from "../ui/ErrorRouter";
 const UserProfile = () => {
   const [user, setUser] = useState<User | null>(null)
   const [followers, setFollowers] = useState<User[] | null>(null)
-  const [ownerId, setOwnerId] = useState<number>(0)
   const [isOwner, setIsOwner] = useState<boolean>(false)
   const [isFollower, setIsFollower] = useState<boolean>(false)
   const [statusCode, setStatusCode] = useState<number>(0)
@@ -48,9 +47,6 @@ const UserProfile = () => {
   const fetchMe = async () => {
     const ownerId = await userApi.getMe({ withCredentials: true }).then((res) => {
       setUser(res.data)
-      if (res.data.id) {
-        setOwnerId(res.data.id)
-      }
       return res.data.id
     }).catch((err) => {
       setStatusCode(err.response.status)
