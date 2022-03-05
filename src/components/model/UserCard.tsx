@@ -7,11 +7,22 @@ type Props = {
   isOwner: boolean,
   isFollower: boolean,
   loading: boolean,
-  followUser: () => void,
-  unfollowUser: () => void
+  followUser: (userId: number) => void,
+  unfollowUser: (userId: number) => void
 }
 
 const UserCard: React.VFC<Props> = ({ user, isOwner, isFollower, loading, followUser, unfollowUser }) => {
+  const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    if (!user?.id) {
+      return
+    }
+    if (isFollower) {
+      unfollowUser(user.id)
+    } else {
+      followUser(user.id)
+    }
+  }
+
   const ActionButton = (isOwner: boolean) => {
     if (isOwner) {
       return (
@@ -26,7 +37,7 @@ const UserCard: React.VFC<Props> = ({ user, isOwner, isFollower, loading, follow
         color='inherit'
         variant='contained'
         disabled={loading}
-        onClick={isFollower ? unfollowUser : followUser}
+        onClick={(e) => handleButtonClick(e)}
       >
         {isFollower ? 'Unfollow' : 'Follow'}
       </Button>

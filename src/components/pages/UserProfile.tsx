@@ -18,12 +18,12 @@ const UserProfile = () => {
   const followApi = new FollowApi()
   const username = useParams().username
 
-  const followUser = async () => {
-    if (loading || !user?.id) {
+  const followUser = async (userId: number) => {
+    if (loading) {
       return
     }
     setLoading(true)
-    await followApi.putUsersFollowingUserID(user.id, { withCredentials: true }).then((res) => {
+    await followApi.putUsersFollowingUserID(userId, { withCredentials: true }).then((res) => {
       setIsFollower(true)
     }).catch((err) => {
       setStatusCode(err.response.status)
@@ -31,12 +31,12 @@ const UserProfile = () => {
     setLoading(false)
   }
 
-  const unfollowUser = async () => {
-    if (loading || !user?.id) {
+  const unfollowUser = async (userId: number) => {
+    if (loading) {
       return
     }
     setLoading(true)
-    await followApi.deleteUsersFollowingUserID(user.id, { withCredentials: true }).then((res) => {
+    await followApi.deleteUsersFollowingUserID(userId, { withCredentials: true }).then((res) => {
       setIsFollower(false)
     }).catch((err) => {
       setStatusCode(err.response.status)
