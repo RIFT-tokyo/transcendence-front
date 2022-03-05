@@ -45,13 +45,12 @@ const UserProfile = () => {
   }
 
   const fetchMe = async () => {
-    const ownerId = await userApi.getMe({ withCredentials: true }).then((res) => {
-      setUser(res.data)
-      return res.data.id
+    const owner = await userApi.getMe({ withCredentials: true }).then((res) => {
+      return res.data
     }).catch((err) => {
       setStatusCode(err.response.status)
     })
-    return ownerId
+    return owner
   }
 
   const fetchUserFromUsername = async (ownerId: number, username: string) => {
@@ -59,13 +58,8 @@ const UserProfile = () => {
       if (!res.data.id) {
         return
       }
-      if (res.data.id === ownerId) {
-        setIsOwner(true)
-        return fetchFollowers(ownerId)
-      } else {
-        setUser(res.data)
-        return fetchIsFollower(ownerId, res.data.id)
-      }
+      setUser(res.data)
+      fetchIsFollower(ownerId, res.data.id)
     }).catch((err) => {
       setStatusCode(err.response.status)
     })
@@ -93,15 +87,16 @@ const UserProfile = () => {
 
   useEffect(() => {
     (async () => {
-      const ownerId = await fetchMe()
-      if (!ownerId) {
+      const owner = await fetchMe()
+      if (!owner || !owner.id || !owner.username) {
         return
       }
-      if (username) {
-        await fetchUserFromUsername(ownerId, username)
+      if (username && owner.username !== username) {
+        await fetchUserFromUsername(owner.id, username)
       } else {
+        setUser(owner)
         setIsOwner(true)
-        await fetchFollowers(ownerId)
+        fetchFollowers(owner.id)
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
