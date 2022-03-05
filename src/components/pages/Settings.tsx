@@ -53,8 +53,9 @@ const Settings: React.VFC<Props> = ({ active }) => {
     }
     setLoading(true);
     const data = {
-      ...user,
-      profile_image: undefined,
+      username: user.username,
+      display_name: user.display_name,
+      status_message: user.status_message,
     };
     await userApi
       .putUsersUserId(user.id!, data, { withCredentials: true })
