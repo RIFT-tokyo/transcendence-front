@@ -3,11 +3,14 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { AccountCircle } from '@mui/icons-material';
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { AuthApi } from '../../api/generated/api';
 
 const AppBarWithMenu = () => {
   const [auth] = useState(true);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const navigate = useNavigate();
+  const authApi = new AuthApi();
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -16,6 +19,28 @@ const AppBarWithMenu = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const goHome = () => {
+    handleClose();
+    navigate('/');
+  };
+
+  const goToSettings = () => {
+    handleClose();
+    navigate('/settings');
+  };
+
+  const logout = async () => {
+    handleClose();
+    await authApi
+      .postAuthLogout({ withCredentials: true })
+      .then(() => {
+        goHome();
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }
 
   return (
     <div>
@@ -61,17 +86,13 @@ const AppBarWithMenu = () => {
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={handleClose}>
-                    <Link component={NavLink} color='inherit' underline='none' to='/home'>
-                      Profile
-                    </Link>
+                  <MenuItem onClick={goHome}>
+                    Profile
                   </MenuItem>
-                  <MenuItem onClick={handleClose}>
-                    <Link component={NavLink} color='inherit' underline='none' to='/settings'>
-                      Settings
-                    </Link>
+                  <MenuItem onClick={goToSettings}>
+                    Settings
                   </MenuItem>
-                  <MenuItem onClick={handleClose}>
+                  <MenuItem onClick={logout}>
                     Logout
                   </MenuItem>
                 </Menu>

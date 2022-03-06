@@ -176,7 +176,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * The first client request by 42 for oauth2.0. After this, you will be redirected to 42\'s confirm browser.
-         * @summary Oauth login request
+         * @summary Login with 42 intra account
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -206,7 +206,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * username and password auth without using auth.
-         * @summary username and password login
+         * @summary Login with username and password
          * @param {Login} [login] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -232,6 +232,38 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(login, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * logout from transcendence
+         * @summary Logout from transcendence
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postAuthLogout: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/auth/logout`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication sessionAuth required
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -294,7 +326,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * The first client request by 42 for oauth2.0. After this, you will be redirected to 42\'s confirm browser.
-         * @summary Oauth login request
+         * @summary Login with 42 intra account
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -304,13 +336,23 @@ export const AuthApiFp = function(configuration?: Configuration) {
         },
         /**
          * username and password auth without using auth.
-         * @summary username and password login
+         * @summary Login with username and password
          * @param {Login} [login] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         async postAuthLogin(login?: Login, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.postAuthLogin(login, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * logout from transcendence
+         * @summary Logout from transcendence
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postAuthLogout(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postAuthLogout(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -345,7 +387,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * The first client request by 42 for oauth2.0. After this, you will be redirected to 42\'s confirm browser.
-         * @summary Oauth login request
+         * @summary Login with 42 intra account
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -354,13 +396,22 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * username and password auth without using auth.
-         * @summary username and password login
+         * @summary Login with username and password
          * @param {Login} [login] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         postAuthLogin(login?: Login, options?: any): AxiosPromise<void> {
             return localVarFp.postAuthLogin(login, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * logout from transcendence
+         * @summary Logout from transcendence
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postAuthLogout(options?: any): AxiosPromise<void> {
+            return localVarFp.postAuthLogout(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -392,7 +443,7 @@ export interface AuthApiInterface {
 
     /**
      * The first client request by 42 for oauth2.0. After this, you will be redirected to 42\'s confirm browser.
-     * @summary Oauth login request
+     * @summary Login with 42 intra account
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApiInterface
@@ -401,13 +452,22 @@ export interface AuthApiInterface {
 
     /**
      * username and password auth without using auth.
-     * @summary username and password login
+     * @summary Login with username and password
      * @param {Login} [login] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApiInterface
      */
     postAuthLogin(login?: Login, options?: AxiosRequestConfig): AxiosPromise<void>;
+
+    /**
+     * logout from transcendence
+     * @summary Logout from transcendence
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApiInterface
+     */
+    postAuthLogout(options?: AxiosRequestConfig): AxiosPromise<void>;
 
     /**
      * 
@@ -441,7 +501,7 @@ export class AuthApi extends BaseAPI implements AuthApiInterface {
 
     /**
      * The first client request by 42 for oauth2.0. After this, you will be redirected to 42\'s confirm browser.
-     * @summary Oauth login request
+     * @summary Login with 42 intra account
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
@@ -452,7 +512,7 @@ export class AuthApi extends BaseAPI implements AuthApiInterface {
 
     /**
      * username and password auth without using auth.
-     * @summary username and password login
+     * @summary Login with username and password
      * @param {Login} [login] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -460,6 +520,17 @@ export class AuthApi extends BaseAPI implements AuthApiInterface {
      */
     public postAuthLogin(login?: Login, options?: AxiosRequestConfig) {
         return AuthApiFp(this.configuration).postAuthLogin(login, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * logout from transcendence
+     * @summary Logout from transcendence
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public postAuthLogout(options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).postAuthLogout(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
