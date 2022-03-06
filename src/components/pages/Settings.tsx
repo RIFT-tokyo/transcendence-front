@@ -48,7 +48,7 @@ const Settings: React.VFC<Props> = ({ active }) => {
   };
 
   const submit = async () => {
-    if (!user) {
+    if (!user?.id) {
       return;
     }
     setLoading(true);

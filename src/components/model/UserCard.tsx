@@ -2,7 +2,27 @@ import { Avatar, Button, Card, CardContent, Typography, Link } from '@mui/materi
 import { NavLink } from 'react-router-dom';
 import { User } from '../../api/generated/api';
 
-const UserCard: React.VFC<{user: User | null, isOwner: boolean}> = ({user, isOwner}) => {
+type Props = {
+  user: User | null,
+  isOwner: boolean,
+  isFollower: boolean,
+  loading: boolean,
+  followUser: (userId: number) => void,
+  unfollowUser: (userId: number) => void
+}
+
+const UserCard: React.VFC<Props> = ({ user, isOwner, isFollower, loading, followUser, unfollowUser }) => {
+  const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    if (!user?.id) {
+      return
+    }
+    if (isFollower) {
+      unfollowUser(user.id)
+    } else {
+      followUser(user.id)
+    }
+  }
+
   const ActionButton = (isOwner: boolean) => {
     if (isOwner) {
       return (
@@ -12,7 +32,15 @@ const UserCard: React.VFC<{user: User | null, isOwner: boolean}> = ({user, isOwn
       )
     }
     return (
-      <Button sx={{ width: 296, height: 30 }} color='inherit' variant='contained'>Follow</Button>
+      <Button
+        sx={{ width: 296, height: 30 }}
+        color='inherit'
+        variant='contained'
+        disabled={loading}
+        onClick={(e) => handleButtonClick(e)}
+      >
+        {isFollower ? 'Unfollow' : 'Follow'}
+      </Button>
     )
   }
 
@@ -23,8 +51,10 @@ const UserCard: React.VFC<{user: User | null, isOwner: boolean}> = ({user, isOwn
       }}
     >
       <CardContent>
-        <Avatar sx={{ width: 296, height: 296 }} src={user?.profile_image}/>
-        <Typography sx={{fontWeight: "bold"}} variant="h4">{user?.display_name ?? user?.username}</Typography>
+        <Avatar sx={{ width: 296, height: 296 }} src={user?.profile_image} />
+        <Typography sx={{ fontWeight: "bold" }} variant="h4">
+          {user?.display_name ?? user?.username}
+        </Typography>
         <Typography variant="subtitle1">{user?.username}</Typography>
         {ActionButton(isOwner)}
         <Typography variant="body2">{user?.status_message}</Typography>

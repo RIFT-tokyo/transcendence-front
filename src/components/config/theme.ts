@@ -11,6 +11,9 @@ const theme = createTheme({
     background: {
       default: '#FCF7F8',
     },
+    neutral: {
+      main: '#BBBBBB',
+    },
   },
   typography: {
     fontSize: 12,
@@ -28,5 +31,30 @@ const theme = createTheme({
     },
   },
 })
+
+
+declare module '@mui/material/styles' {
+  interface Palette {
+    neutral: Palette['primary'];
+  }
+
+  // allow configuration using `createTheme`
+  interface PaletteOptions {
+    neutral?: PaletteOptions['primary'];
+  }
+}
+
+// Update the Component's color prop options
+declare module '@mui/material/Badge' {
+  interface BadgePropsColorOverrides {
+    neutral: true;
+  }
+}
+
+declare module '@mui/material/SvgIcon' {
+  interface SvgIconPropsColorOverrides {
+    neutral: true;
+  }
+}
 
 export default theme
