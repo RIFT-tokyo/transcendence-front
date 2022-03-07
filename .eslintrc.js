@@ -22,5 +22,46 @@ module.exports = {
     '@typescript-eslint',
   ],
   rules: {
+    'react/function-component-definition': [
+      'error',
+      {
+        namedComponents: [
+          'arrow-function',
+          'function-declaration',
+        ],
+      },
+    ],
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        js: 'never',
+        jsx: 'never',
+        ts: 'never',
+        tsx: 'never',
+      },
+    ],
+    'react/jsx-filename-extension': [
+      'error',
+      {
+        extensions: [
+          '.jsx',
+          '.tsx'
+        ],
+      },
+    ],
+    'react/react-in-jsx-scope': 'off',
+  },
+  settings: {
+    'import/resolver': {
+      node: {
+        extensions: [
+          '.js',
+          '.jsx',
+          '.ts',
+          '.tsx'
+        ],
+      },
+    },
   },
 };
