@@ -71,14 +71,13 @@ const UserProfile = () => {
         }
         setUser(res.data);
         fetchIsFollower(ownerId, res.data.id);
-        fetchFollowers(res.data.id);
       })
       .catch((err) => {
         setStatusCode(err.response.status);
       });
   };
 
-  const fetchFollowers = async (ownerId: number) => {
+  const fetchFollowings = async (ownerId: number) => {
     await followApi
       .getUsersUserIDFollowing(ownerId, undefined, undefined, {
         withCredentials: true,
@@ -120,7 +119,7 @@ const UserProfile = () => {
       } else {
         setUser(owner);
         setIsOwner(true);
-        fetchFollowers(owner.id);
+        fetchFollowings(owner.id);
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
