@@ -2,8 +2,8 @@ import { Box, Grid } from '@mui/material';
 import { ReactNode } from 'react';
 
 type Props = {
-  children: ReactNode
-}
+  children: ReactNode;
+};
 
 const Footer: React.FC<Props> = ({ children }) => {
   return (
@@ -19,11 +19,11 @@ const Footer: React.FC<Props> = ({ children }) => {
       //       : theme.palette.grey[800],
       // }}
     >
-      <Grid container justifyContent='center'>
+      <Grid container justifyContent="center">
         {children}
       </Grid>
     </Box>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

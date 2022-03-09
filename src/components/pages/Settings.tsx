@@ -1,18 +1,18 @@
-import { Button, CircularProgress, Grid, Stack } from "@mui/material";
-import { useState, useEffect } from "react";
-import { User, UserApi } from "../../api/generated/api";
-import AccountSetting from "../model/AccountSetting";
-import SecuritySetting from "../model/SecuritySetting";
-import ErrorRouter from "../ui/ErrorRouter";
-import Footer from "../ui/Footer";
-import SettingTab from "../ui/SettingTab";
+import { Button, CircularProgress, Grid, Stack } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { User, UserApi } from '../../api/generated/api';
+import AccountSetting from '../model/AccountSetting';
+import SecuritySetting from '../model/SecuritySetting';
+import ErrorRouter from '../ui/ErrorRouter';
+import Footer from '../ui/Footer';
+import SettingTab from '../ui/SettingTab';
 
 type Props = {
   active: string;
 };
 
 const Settings: React.VFC<Props> = ({ active }) => {
-  const actions = ["Account", "Security"];
+  const actions = ['Account', 'Security'];
   const [user, setUser] = useState<User | null>(null);
   const userApi = new UserApi();
   const [statusCode, setStatusCode] = useState<number>(0);
@@ -69,31 +69,21 @@ const Settings: React.VFC<Props> = ({ active }) => {
   };
 
   let settingContent = <CircularProgress />;
-  if (active === "Account" && !loading && user) {
+  if (active === 'Account' && !loading && user) {
     settingContent = <AccountSetting user={user} setUser={setUser} />;
-  } else if (active === "Security" && !loading) {
+  } else if (active === 'Security' && !loading) {
     settingContent = <SecuritySetting />;
   }
 
   const getFooter = (active: string) => {
-    if (active === "Account") {
+    if (active === 'Account') {
       return (
         <Footer>
           <Stack direction="row" margin={2} spacing={2}>
-            <Button
-              variant="contained"
-              color="inherit"
-              size="large"
-              onClick={reset}
-            >
+            <Button variant="contained" color="inherit" size="large" onClick={reset}>
               reset
             </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              size="large"
-              onClick={submit}
-            >
+            <Button variant="contained" color="primary" size="large" onClick={submit}>
               save
             </Button>
           </Stack>

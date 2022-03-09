@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, IconButton, Typography, Box,  Menu, MenuItem, Link } from '@mui/material'
+import { AppBar, Toolbar, IconButton, Typography, Box, Menu, MenuItem, Link } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { AccountCircle } from '@mui/icons-material';
 import { useState } from 'react';
@@ -39,21 +39,15 @@ const AppBarWithMenu = () => {
       })
       .catch((err) => {
         console.log(err);
-      })
-  }
+      });
+  };
 
   return (
     <div>
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
           <Toolbar>
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2 }}
-            >
+            <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -86,15 +80,9 @@ const AppBarWithMenu = () => {
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={goHome}>
-                    Profile
-                  </MenuItem>
-                  <MenuItem onClick={goToSettings}>
-                    Settings
-                  </MenuItem>
-                  <MenuItem onClick={logout}>
-                    Logout
-                  </MenuItem>
+                  <MenuItem onClick={goHome}>Profile</MenuItem>
+                  <MenuItem onClick={goToSettings}>Settings</MenuItem>
+                  <MenuItem onClick={logout}>Logout</MenuItem>
                 </Menu>
               </div>
             )}
@@ -103,7 +91,7 @@ const AppBarWithMenu = () => {
       </Box>
       <Outlet />
     </div>
-  )
-}
+  );
+};
 
-export default AppBarWithMenu
+export default AppBarWithMenu;

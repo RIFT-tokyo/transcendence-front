@@ -10,34 +10,35 @@ import SignUp from './components/pages/SignUp';
 import Settings from './components/pages/Settings';
 import UserProfile from './components/pages/UserProfile';
 import AppBarWithMenu from './components/ui/AppBarWithMenu';
+import { AuthProvider } from './contexts/AuthContext';
 
-const App = () => {
-  return (
-    <div className="App">
+const App = () => (
+  <div className="App">
+    <AuthProvider>
       <ThemeProvider theme={theme}>
         <Routes>
-          <Route path="/" element={<AppBarWithMenu/>} >
-            <Route index element={<SignUp/>} />
-            <Route path="signin" element={<SignIn/>} />
-            <Route path="home" element={<UserProfile/>} />
+          <Route path="/" element={<AppBarWithMenu />}>
+            <Route index element={<SignUp />} />
+            <Route path="signin" element={<SignIn />} />
+            <Route path="home" element={<UserProfile />} />
             <Route path="users">
-              <Route path=":username" element={<UserProfile/>} />
+              <Route path=":username" element={<UserProfile />} />
             </Route>
-            <Route path="chat" element={<Chat/>} />
-            <Route path="pong" element={<Pong/>} />
+            <Route path="chat" element={<Chat />} />
+            <Route path="pong" element={<Pong />} />
             <Route path="settings">
-              <Route index element={<Navigate to="account"/>} />
-              <Route path="account" element={<Settings active="Account"/>} />
-              <Route path="security" element={<Settings active="Security"/>} />
+              <Route index element={<Navigate to="account" />} />
+              <Route path="account" element={<Settings active="Account" />} />
+              <Route path="security" element={<Settings active="Security" />} />
             </Route>
-            <Route path="404" element={<NotFound/>} />
-            <Route path="500" element={<InternalServerError/>} />
-            <Route path="*" element={<Navigate to="404"/>} />
+            <Route path="404" element={<NotFound />} />
+            <Route path="500" element={<InternalServerError />} />
+            <Route path="*" element={<Navigate to="404" />} />
           </Route>
         </Routes>
       </ThemeProvider>
-    </div>
-  );
-}
+    </AuthProvider>
+  </div>
+);
 
 export default App;

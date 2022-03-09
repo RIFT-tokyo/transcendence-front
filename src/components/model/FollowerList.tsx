@@ -1,31 +1,31 @@
-import { Card, CardContent, Stack, Typography } from "@mui/material"
-import { User } from "../../api/generated/api"
-import FollowerStatus from "./FollowerStatus"
+import { Card, CardContent, Stack, Typography } from '@mui/material';
+import { User } from '../../api/generated/api';
+import FollowerStatus from './FollowerStatus';
 
 type Props = {
-  followers: User[] | null
-}
+  followers: User[] | null;
+};
 
-const FollowerList: React.VFC<Props> = ({
-  followers
-}) => {
+const FollowerList: React.VFC<Props> = ({ followers }) => {
   return (
-    <Card sx={{
-      width: 328,
-      height: 384,
-    }}>
+    <Card
+      sx={{
+        width: 328,
+        height: 384,
+      }}
+    >
       <CardContent>
         <Stack spacing={1}>
-          <Typography sx={{ fontWeight: "bold" }} variant="h5">
+          <Typography sx={{ fontWeight: 'bold' }} variant="h5">
             Followings
           </Typography>
           {followers?.map((follower) => {
-            return <FollowerStatus key={follower.id} user={follower}/>;
+            return <FollowerStatus key={follower.id} user={follower} />;
           })}
         </Stack>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default FollowerList
+export default FollowerList;

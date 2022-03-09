@@ -32,7 +32,7 @@ function stringAvatar(name: string) {
 }
 
 const TextAvatar: React.VFC<{ text: string }> = ({ text }) => {
-  return <Avatar {...stringAvatar(text)} />
-}
+  return <Avatar {...stringAvatar(text)} />;
+};
 
 export default TextAvatar;
