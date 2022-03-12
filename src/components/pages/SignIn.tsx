@@ -5,10 +5,11 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router-dom';
-import { AuthApi, UserApi } from '../../api/generated/api';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
+import { AuthApi } from '../../api/generated/api';
+import { AuthContext } from '../../contexts/AuthContext';
 
 interface State {
   username: string;
@@ -17,7 +18,7 @@ interface State {
   error: boolean;
 }
 
-export default function SignIn() {
+const SignIn = () => {
   const [values, setValues] = React.useState<State>({
     username: '',
     password: '',
@@ -26,7 +27,7 @@ export default function SignIn() {
   });
   const navigate = useNavigate();
   const authApi = new AuthApi();
-  const userApi = new UserApi();
+  const { currentUser, login } = useContext(AuthContext);
 
   const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -55,13 +56,14 @@ export default function SignIn() {
 
     await authApi
       .postAuthLogin(payload, { withCredentials: true })
-      .then(() => {
+      .then(async () => {
+        await login();
         goHome();
       })
       .catch((err) => {
         console.log(err);
         handleErrorOccured();
-      });
+      })
   };
 
   const handleOauthLogin = () => {
@@ -77,18 +79,11 @@ export default function SignIn() {
   };
 
   useEffect(() => {
-    (async () => {
-      await userApi
-        .getMe({ withCredentials: true })
-        .then(() => {
-          goHome();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    })();
+    if (currentUser) {
+      goHome();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [currentUser]);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -182,4 +177,6 @@ export default function SignIn() {
       </Box>
     </Container>
   );
-}
+};
+
+export default SignIn;

@@ -1,7 +1,8 @@
 import { Container, LinearProgress, Stack } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { User, UserApi, FollowApi } from '../../api/generated/api';
+import { AuthContext } from '../../contexts/AuthContext';
 import FollowerList from '../model/FollowerList';
 import GameResult from '../model/GameResult';
 import UserCard from '../model/UserCard';
@@ -17,6 +18,7 @@ const UserProfile = () => {
   const userApi = new UserApi();
   const followApi = new FollowApi();
   const { username } = useParams();
+  const { currentUser } = useContext(AuthContext);
 
   const followUser = async (userId: number) => {
     if (loading) {
@@ -48,16 +50,6 @@ const UserProfile = () => {
         setStatusCode(err.response.status);
       });
     setLoading(false);
-  };
-
-  const fetchMe = async () => {
-    const owner = await userApi
-      .getMe({ withCredentials: true })
-      .then((res) => res.data)
-      .catch((err) => {
-        setStatusCode(err.response.status);
-      });
-    return owner;
   };
 
   const fetchUserFromUsername = async (ownerId: number, username: string) => {
@@ -103,20 +95,18 @@ const UserProfile = () => {
 
   useEffect(() => {
     (async () => {
-      const owner = await fetchMe();
-      if (!owner || !owner.id || !owner.username) {
-        return;
-      }
+      const owner = currentUser!;
       if (username && owner.username !== username) {
-        await fetchUserFromUsername(owner.id, username);
+        await fetchUserFromUsername(owner.id!, username);
+        setIsOwner(false);
       } else {
         setUser(owner);
         setIsOwner(true);
-        fetchFollowers(owner.id);
+        fetchFollowers(owner.id!);
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [username]);
 
   return (
     <ErrorRouter statusCode={statusCode}>
