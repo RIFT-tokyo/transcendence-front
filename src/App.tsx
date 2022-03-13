@@ -41,6 +41,7 @@ const App = () => {
                   <Route path="security" element={<Settings active="Security" />} />
                 </Route>
               </Route>
+
               <Route index element={<SignUp />} />
               <Route path="signin" element={<SignIn />} />
               <Route path="404" element={<NotFound />} />

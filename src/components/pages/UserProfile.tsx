@@ -94,15 +94,7 @@ const UserProfile = () => {
       });
   };
 
-  const goSignIn = () => {
-    navigate('/signin');
-  };
-
   useEffect(() => {
-    console.log("ei");
-    if (!currentUser) {
-      goSignIn();
-    }
     (async () => {
       const owner = currentUser!;
       if (username && owner.username !== username) {

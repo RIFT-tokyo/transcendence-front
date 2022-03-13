@@ -31,8 +31,10 @@ export const AuthProvider: FC = ({ children }) => {
   };
 
   const login = async () => {
+	setLoading(true);
     const owner = await fetchMe();
     setCurrentUser(owner);
+	setLoading(false);
   };
 
   const logout = () => {
@@ -43,7 +45,6 @@ export const AuthProvider: FC = ({ children }) => {
     (async () => {
       await login();
     })();
-    setLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
