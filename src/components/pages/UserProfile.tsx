@@ -82,9 +82,11 @@ const UserProfile = () => {
       });
   };
 
-  const fetchFollowers = async (ownerId: number) => {
+  const fetchFollowings = async (ownerId: number) => {
     await followApi
-      .getUsersUserIDFollowing(ownerId, undefined, undefined, { withCredentials: true })
+      .getUsersUserIDFollowing(ownerId, undefined, undefined, {
+        withCredentials: true,
+      })
       .then((res) => {
         setFollowers(res.data);
       })
@@ -102,7 +104,7 @@ const UserProfile = () => {
       } else {
         setUser(owner);
         setIsOwner(true);
-        fetchFollowers(owner.id!);
+        fetchFollowings(owner.id);
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
