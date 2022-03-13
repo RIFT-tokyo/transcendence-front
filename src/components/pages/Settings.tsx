@@ -1,6 +1,7 @@
 import { Button, CircularProgress, Grid, Stack } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { User, UserApi } from '../../api/generated/api';
+import { AuthContext } from '../../contexts/AuthContext';
 import AccountSetting from '../model/AccountSetting';
 import SecuritySetting from '../model/SecuritySetting';
 import ErrorRouter from '../ui/ErrorRouter';
@@ -17,20 +18,10 @@ const Settings: React.VFC<Props> = ({ active }) => {
   const userApi = new UserApi();
   const [statusCode, setStatusCode] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
+  const { currentUser } = useContext(AuthContext);
 
   useEffect(() => {
-    (async () => {
-      setLoading(true);
-      await userApi
-        .getMe({ withCredentials: true })
-        .then((res) => {
-          setUser(res.data);
-        })
-        .catch((err) => {
-          setStatusCode(err.response.status);
-        });
-      setLoading(false);
-    })();
+    setUser(currentUser);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
