@@ -1,7 +1,6 @@
 import { Card } from '@mui/material';
 
-const GameResult = () => {
-  return (
+const GameResult = () => (
     <Card
       sx={{
         width: 810,
@@ -11,6 +10,5 @@ const GameResult = () => {
       Game Result
     </Card>
   );
-};
 
 export default GameResult;

@@ -31,8 +31,6 @@ function stringAvatar(name: string) {
   };
 }
 
-const TextAvatar: React.VFC<{ text: string }> = ({ text }) => {
-  return <Avatar {...stringAvatar(text)} />;
-};
+const TextAvatar: React.VFC<{ text: string }> = ({ text }) => <Avatar {...stringAvatar(text)} />;
 
 export default TextAvatar;

@@ -5,8 +5,7 @@ type Props = {
   children: ReactNode;
 };
 
-const Footer: React.FC<Props> = ({ children }) => {
-  return (
+const Footer: React.FC<Props> = ({ children }) => (
     <Box
       component="footer"
       // sx={{
@@ -24,6 +23,5 @@ const Footer: React.FC<Props> = ({ children }) => {
       </Grid>
     </Box>
   );
-};
 
 export default Footer;

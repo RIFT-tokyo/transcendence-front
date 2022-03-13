@@ -19,10 +19,16 @@ const SettingTab: React.VFC<Props> = ({ actions }) => {
         return <HelpIcon />;
     }
   };
-  let settings = actions.map((item) => {
-    const link = '/settings/' + item.toLowerCase();
+  const settings = actions.map((item) => {
+    const link = `/settings/${  item.toLowerCase()}`;
     return (
-      <Link key={item.toLowerCase()} component={NavLink} color="inherit" underline="none" to={link}>
+      <Link
+        key={item.toLowerCase()}
+        component={NavLink}
+        color="inherit"
+        underline="none"
+        to={link}
+      >
         <Stack direction="row" spacing={2} alignItems="center">
           {getIcon(item)}
           <Typography variant="h5">{item}</Typography>

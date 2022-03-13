@@ -6,8 +6,7 @@ type Props = {
   followers: User[] | null;
 };
 
-const FollowerList: React.VFC<Props> = ({ followers }) => {
-  return (
+const FollowerList: React.VFC<Props> = ({ followers }) => (
     <Card
       sx={{
         width: 328,
@@ -19,13 +18,10 @@ const FollowerList: React.VFC<Props> = ({ followers }) => {
           <Typography sx={{ fontWeight: 'bold' }} variant="h5">
             Followings
           </Typography>
-          {followers?.map((follower) => {
-            return <FollowerStatus key={follower.id} user={follower} />;
-          })}
+          {followers?.map((follower) => <FollowerStatus key={follower.id} user={follower} />)}
         </Stack>
       </CardContent>
     </Card>
   );
-};
 
 export default FollowerList;

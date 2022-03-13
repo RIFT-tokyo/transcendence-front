@@ -1,4 +1,11 @@
-import { Avatar, Button, Card, CardContent, Typography, Link } from '@mui/material';
+import {
+  Avatar,
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  Link,
+} from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { User } from '../../api/generated/api';
 
@@ -19,7 +26,9 @@ const UserCard: React.VFC<Props> = ({
   followUser,
   unfollowUser,
 }) => {
-  const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleButtonClick = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => {
     if (!user?.id) {
       return;
     }
@@ -33,8 +42,17 @@ const UserCard: React.VFC<Props> = ({
   const ActionButton = (isOwner: boolean) => {
     if (isOwner) {
       return (
-        <Link component={NavLink} color="inherit" underline="none" to="/settings">
-          <Button sx={{ width: 296, height: 30 }} color="inherit" variant="contained">
+        <Link
+          component={NavLink}
+          color="inherit"
+          underline="none"
+          to="/settings"
+        >
+          <Button
+            sx={{ width: 296, height: 30 }}
+            color="inherit"
+            variant="contained"
+          >
             Edit Profile
           </Button>
         </Link>

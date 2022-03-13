@@ -30,12 +30,12 @@ export const DUMMY_BASE_URL = 'https://example.com';
 export const assertParamExists = function (
   functionName: string,
   paramName: string,
-  paramValue: unknown
+  paramValue: unknown,
 ) {
   if (paramValue === null || paramValue === undefined) {
     throw new RequiredError(
       paramName,
-      `Required parameter ${paramName} was null or undefined when calling ${functionName}.`
+      `Required parameter ${paramName} was null or undefined when calling ${functionName}.`,
     );
   }
 };
@@ -47,7 +47,7 @@ export const assertParamExists = function (
 export const setApiKeyToObject = async function (
   object: any,
   keyParamName: string,
-  configuration?: Configuration
+  configuration?: Configuration,
 ) {
   if (configuration && configuration.apiKey) {
     const localVarApiKeyValue =
@@ -62,9 +62,15 @@ export const setApiKeyToObject = async function (
  *
  * @export
  */
-export const setBasicAuthToObject = function (object: any, configuration?: Configuration) {
+export const setBasicAuthToObject = function (
+  object: any,
+  configuration?: Configuration,
+) {
   if (configuration && (configuration.username || configuration.password)) {
-    object['auth'] = { username: configuration.username, password: configuration.password };
+    object['auth'] = {
+      username: configuration.username,
+      password: configuration.password,
+    };
   }
 };
 
@@ -72,7 +78,10 @@ export const setBasicAuthToObject = function (object: any, configuration?: Confi
  *
  * @export
  */
-export const setBearerAuthToObject = async function (object: any, configuration?: Configuration) {
+export const setBearerAuthToObject = async function (
+  object: any,
+  configuration?: Configuration,
+) {
   if (configuration && configuration.accessToken) {
     const accessToken =
       typeof configuration.accessToken === 'function'
@@ -90,7 +99,7 @@ export const setOAuthToObject = async function (
   object: any,
   name: string,
   scopes: string[],
-  configuration?: Configuration
+  configuration?: Configuration,
 ) {
   if (configuration && configuration.accessToken) {
     const localVarAccessTokenValue =
@@ -129,14 +138,16 @@ export const setSearchParams = function (url: URL, ...objects: any[]) {
 export const serializeDataIfNeeded = function (
   value: any,
   requestOptions: any,
-  configuration?: Configuration
+  configuration?: Configuration,
 ) {
   const nonString = typeof value !== 'string';
   const needsSerialization =
     nonString && configuration && configuration.isJsonMime
       ? configuration.isJsonMime(requestOptions.headers['Content-Type'])
       : nonString;
-  return needsSerialization ? JSON.stringify(value !== undefined ? value : {}) : value || '';
+  return needsSerialization
+    ? JSON.stringify(value !== undefined ? value : {})
+    : value || '';
 };
 
 /**
@@ -155,11 +166,11 @@ export const createRequestFunction = function (
   axiosArgs: RequestArgs,
   globalAxios: AxiosInstance,
   BASE_PATH: string,
-  configuration?: Configuration
+  configuration?: Configuration,
 ) {
   return <T = unknown, R = AxiosResponse<T>>(
     axios: AxiosInstance = globalAxios,
-    basePath: string = BASE_PATH
+    basePath: string = BASE_PATH,
   ) => {
     const axiosRequestArgs = {
       ...axiosArgs.options,

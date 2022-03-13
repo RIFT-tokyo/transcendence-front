@@ -71,10 +71,20 @@ const Settings: React.VFC<Props> = ({ active }) => {
       return (
         <Footer>
           <Stack direction="row" margin={2} spacing={2}>
-            <Button variant="contained" color="inherit" size="large" onClick={reset}>
+            <Button
+              variant="contained"
+              color="inherit"
+              size="large"
+              onClick={reset}
+            >
               reset
             </Button>
-            <Button variant="contained" color="primary" size="large" onClick={submit}>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={submit}
+            >
               save
             </Button>
           </Stack>

@@ -54,7 +54,9 @@ const UserProfile = () => {
 
   const fetchIsFollower = async (ownerId: number, targetId: number) => {
     await followApi
-      .getUsersUserIDFollowingTargetUserID(ownerId, targetId, { withCredentials: true })
+      .getUsersUserIDFollowingTargetUserID(ownerId, targetId, {
+        withCredentials: true,
+      })
       .then((res) => {
         setIsFollower(res.status === 204);
       })

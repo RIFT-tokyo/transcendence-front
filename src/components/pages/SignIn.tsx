@@ -29,9 +29,10 @@ const SignIn = () => {
   const authApi = new AuthApi();
   const { currentUser, login } = useContext(AuthContext);
 
-  const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
+  const handleChange =
+    (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      setValues({ ...values, [prop]: event.target.value });
+    };
 
   const handleClickShowPassword = () => {
     setValues({
@@ -63,7 +64,7 @@ const SignIn = () => {
       .catch((err) => {
         console.log(err);
         handleErrorOccured();
-      })
+      });
   };
 
   const handleOauthLogin = () => {
@@ -104,7 +105,8 @@ const SignIn = () => {
             sx={{ mt: 3, mb: 2 }}
             onClick={handleOauthLogin}
           >
-            SIGN UP WITH <img src="/auth/42.svg" alt="42" style={{ marginLeft: '24px' }} />
+            SIGN UP WITH{' '}
+            <img src="/auth/42.svg" alt="42" style={{ marginLeft: '24px' }} />
           </Button>
         </Grid>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>

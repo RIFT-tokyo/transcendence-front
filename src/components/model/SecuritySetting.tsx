@@ -1,7 +1,6 @@
 import { Stack, Typography, Divider, TextField, Button } from '@mui/material';
 
-const SecuritySetting = () => {
-  return (
+const SecuritySetting = () => (
     <Stack bgcolor="background.paper" width={500}>
       <Stack padding={2} direction="column" spacing={1}>
         <Typography variant="h4">Security</Typography>
@@ -19,8 +18,8 @@ const SecuritySetting = () => {
         <Divider />
         <Typography variant="h5">Two-factor authentication</Typography>
         <Typography variant="body1">
-          Two-factor authentication adds an additional layer of security to your account by
-          requiring more than just a password to sign in.
+          Two-factor authentication adds an additional layer of security to your
+          account by requiring more than just a password to sign in.
         </Typography>
         <Button variant="contained" color="primary">
           activate
@@ -28,6 +27,5 @@ const SecuritySetting = () => {
       </Stack>
     </Stack>
   );
-};
 
 export default SecuritySetting;

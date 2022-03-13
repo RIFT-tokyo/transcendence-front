@@ -31,10 +31,10 @@ export const AuthProvider: FC = ({ children }) => {
   };
 
   const login = async () => {
-	setLoading(true);
+    setLoading(true);
     const owner = await fetchMe();
     setCurrentUser(owner);
-	setLoading(false);
+    setLoading(false);
   };
 
   const logout = () => {
@@ -48,7 +48,10 @@ export const AuthProvider: FC = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const memo = useMemo(() => ({ currentUser, isLoading, login, logout }), [currentUser, isLoading]);
+  const memo = useMemo(
+    () => ({ currentUser, isLoading, login, logout }),
+    [currentUser, isLoading],
+  );
 
   return <AuthContext.Provider value={memo}>{children}</AuthContext.Provider>;
 };
