@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@mui/material';
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import theme from './components/config/theme';
 import Chat from './components/pages/Chat';
 import InternalServerError from './components/pages/InternalServerError';
