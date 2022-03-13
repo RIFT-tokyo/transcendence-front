@@ -99,6 +99,7 @@ const UserProfile = () => {
   };
 
   useEffect(() => {
+    console.log("ei");
     if (!currentUser) {
       goSignIn();
     }

@@ -13,37 +13,45 @@ import UserProfile from './components/pages/UserProfile';
 import AppBarWithMenu from './components/ui/AppBarWithMenu';
 import { AuthContext } from './contexts/AuthContext';
 
-// const PrivateRoute = () => (
-//   // const { currentUser } = useContext(AuthContext);
+const PrivateRoute = () => {
+  const { currentUser } = useContext(AuthContext);
 
-//   // return currentUser ? <Outlet /> : <Navigate to="signin" />;
-// );
+  return currentUser ? <Outlet /> : <Navigate to="signin" />;
+};
 
-const App = () => (
-  <div className="App">
-    <ThemeProvider theme={theme}>
-      <Routes>
-        <Route path="/" element={<AppBarWithMenu />}>
-          <Route path="home" element={<UserProfile />} />
-          <Route path="users">
-            <Route path=":username" element={<UserProfile />} />
-          </Route>
-          <Route path="chat" element={<Chat />} />
-          <Route path="pong" element={<Pong />} />
-          <Route path="settings">
-            <Route index element={<Navigate to="account" />} />
-            <Route path="account" element={<Settings active="Account" />} />
-            <Route path="security" element={<Settings active="Security" />} />
-          </Route>
-          <Route index element={<SignUp />} />
-          <Route path="signin" element={<SignIn />} />
-          <Route path="404" element={<NotFound />} />
-          <Route path="500" element={<InternalServerError />} />
-          <Route path="*" element={<Navigate to="404" />} />
-        </Route>
-      </Routes>
-    </ThemeProvider>
-  </div>
-);
+const App = () => {
+  const { isLoading } = useContext(AuthContext);
+
+  return (
+    <div className="App">
+      <ThemeProvider theme={theme}>
+        {isLoading ? null : (
+          <Routes>
+            <Route path="/" element={<AppBarWithMenu />}>
+              <Route path="" element={<PrivateRoute />}>
+                <Route path="home" element={<UserProfile />} />
+                <Route path="users">
+                  <Route path=":username" element={<UserProfile />} />
+                </Route>
+                <Route path="chat" element={<Chat />} />
+                <Route path="pong" element={<Pong />} />
+                <Route path="settings">
+                  <Route index element={<Navigate to="account" />} />
+                  <Route path="account" element={<Settings active="Account" />} />
+                  <Route path="security" element={<Settings active="Security" />} />
+                </Route>
+              </Route>
+              <Route index element={<SignUp />} />
+              <Route path="signin" element={<SignIn />} />
+              <Route path="404" element={<NotFound />} />
+              <Route path="500" element={<InternalServerError />} />
+              <Route path="*" element={<Navigate to="404" />} />
+            </Route>
+          </Routes>
+        )}
+      </ThemeProvider>
+    </div>
+  );
+};
 
 export default App;
