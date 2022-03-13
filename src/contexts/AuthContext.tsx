@@ -1,4 +1,3 @@
-import Cookies from 'js-cookie';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { User, UserApi } from '../api/generated/api';
 

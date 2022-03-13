@@ -1,6 +1,6 @@
 import { Container, LinearProgress, Stack } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { User, UserApi, FollowApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
 import FollowerList from '../model/FollowerList';
@@ -18,6 +18,7 @@ const UserProfile = () => {
   const userApi = new UserApi();
   const followApi = new FollowApi();
   const { username } = useParams();
+  const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
 
   const followUser = async (userId: number) => {
@@ -93,7 +94,14 @@ const UserProfile = () => {
       });
   };
 
+  const goSignIn = () => {
+    navigate('/signin');
+  };
+
   useEffect(() => {
+    if (!currentUser) {
+      goSignIn();
+    }
     (async () => {
       const owner = currentUser!;
       if (username && owner.username !== username) {
@@ -105,7 +113,7 @@ const UserProfile = () => {
         fetchFollowers(owner.id!);
       }
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
 
   return (
