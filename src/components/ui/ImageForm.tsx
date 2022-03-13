@@ -4,7 +4,7 @@ import { IconButton, Tooltip } from '@mui/material';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 
 interface Props {
-  saveImage: any // (fileName: Blob) => Promise<void> // callback taking a string and then dispatching a store actions
+  saveImage: any; // (fileName: Blob) => Promise<void> // callback taking a string and then dispatching a store actions
 }
 
 const ImageForm: VFC<Props> = ({ saveImage }: Props) => {
@@ -23,10 +23,7 @@ const ImageForm: VFC<Props> = ({ saveImage }: Props) => {
       />
       <Tooltip title="Select Image">
         <label htmlFor="profileImage">
-          <IconButton
-            aria-label="upload picture"
-            component="span"
-          >
+          <IconButton aria-label="upload picture" component="span">
             <PhotoCameraIcon fontSize="large" />
           </IconButton>
         </label>

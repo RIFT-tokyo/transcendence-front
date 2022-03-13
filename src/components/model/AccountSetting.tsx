@@ -34,13 +34,15 @@ const AccountSetting: VFC<Props> = ({ user, setUser }: Props) => {
     if (!user.id) {
       return;
     }
-    fileUploadApi.postUsersUserIDImages(user.id, file, { withCredentials: true }).then((res) => {
-      setUser({
-        ...user,
-        profile_image: res.data.file_path,
-      })
-    });
-  }
+    fileUploadApi
+      .postUsersUserIDImages(user.id, file, { withCredentials: true })
+      .then((res) => {
+        setUser({
+          ...user,
+          profile_image: res.data.file_path,
+        });
+      });
+  };
 
   return (
     <Stack bgcolor="background.paper" width={500}>
