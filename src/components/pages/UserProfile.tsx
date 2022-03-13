@@ -1,6 +1,6 @@
 import { Container, LinearProgress, Stack } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { User, UserApi, FollowApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
 import FollowerList from '../model/FollowerList';
@@ -18,7 +18,6 @@ const UserProfile = () => {
   const userApi = new UserApi();
   const followApi = new FollowApi();
   const { username } = useParams();
-  const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
 
   const followUser = async (userId: number) => {
@@ -28,7 +27,7 @@ const UserProfile = () => {
     setLoading(true);
     await followApi
       .putUsersFollowingUserID(userId, { withCredentials: true })
-      .then((res) => {
+      .then(() => {
         setIsFollower(true);
       })
       .catch((err) => {
@@ -44,7 +43,7 @@ const UserProfile = () => {
     setLoading(true);
     await followApi
       .deleteUsersFollowingUserID(userId, { withCredentials: true })
-      .then((res) => {
+      .then(() => {
         setIsFollower(false);
       })
       .catch((err) => {
@@ -53,9 +52,24 @@ const UserProfile = () => {
     setLoading(false);
   };
 
-  const fetchUserFromUsername = async (ownerId: number, username: string) => {
+  const fetchIsFollower = async (ownerId: number, targetId: number) => {
+    await followApi
+      .getUsersUserIDFollowingTargetUserID(ownerId, targetId, { withCredentials: true })
+      .then((res) => {
+        setIsFollower(res.status === 204);
+      })
+      .catch((err) => {
+        if (err.response.status === 404) {
+          setIsFollower(false);
+        } else {
+          setStatusCode(err.response.status);
+        }
+      });
+  };
+
+  const fetchUserFromUsername = async (ownerId: number, name: string) => {
     await userApi
-      .getUsersUsername(username, { withCredentials: true })
+      .getUsersUsername(name, { withCredentials: true })
       .then((res) => {
         if (!res.data.id) {
           return;
@@ -79,21 +93,6 @@ const UserProfile = () => {
       });
   };
 
-  const fetchIsFollower = async (ownerId: number, targetId: number) => {
-    await followApi
-      .getUsersUserIDFollowingTargetUserID(ownerId, targetId, { withCredentials: true })
-      .then((res) => {
-        setIsFollower(res.status === 204);
-      })
-      .catch((err) => {
-        if (err.response.status === 404) {
-          setIsFollower(false);
-        } else {
-          setStatusCode(err.response.status);
-        }
-      });
-  };
-
   useEffect(() => {
     (async () => {
       const owner = currentUser!;
@@ -106,7 +105,7 @@ const UserProfile = () => {
         fetchFollowers(owner.id!);
       }
     })();
-    // // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
 
   return (
