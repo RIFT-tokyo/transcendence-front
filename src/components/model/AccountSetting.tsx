@@ -1,4 +1,4 @@
-import { Divider, Stack, TextField, Typography } from '@mui/material';
+import { Avatar, Divider, Stack, TextField, Typography } from '@mui/material';
 import { VFC, ChangeEvent } from 'react';
 import { User } from '../../api/generated/api';
 import { FileUploadApi } from '../../api/upload/fileUpload';
@@ -11,6 +11,7 @@ type Props = {
 };
 
 const AccountSetting: VFC<Props> = ({ user, setUser }: Props) => {
+  const fileUploadApi = new FileUploadApi();
   const usernameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUser({
       ...user,
@@ -33,12 +34,10 @@ const AccountSetting: VFC<Props> = ({ user, setUser }: Props) => {
     if (!user.id) {
       return;
     }
-    const fileUploadApi = new FileUploadApi();
     fileUploadApi.postUsersUserIDImages(user.id, file, { withCredentials: true }).then((res) => {
-      const newPath = res.data.file_path;
       setUser({
         ...user,
-        profile_image: newPath,
+        profile_image: res.data.file_path,
       })
     });
   }
@@ -49,7 +48,8 @@ const AccountSetting: VFC<Props> = ({ user, setUser }: Props) => {
         <Typography variant="h4">Account</Typography>
         <Divider />
         <Typography variant="h6">Profile Image</Typography>
-        <ImageForm saveImage={saveImage} profileImageURL={user.profile_image} />
+        <Avatar sx={{ width: 296, height: 296 }} src={user.profile_image} />
+        <ImageForm saveImage={saveImage} />
         <Typography variant="h6">Username</Typography>
         <TextField
           size="small"
