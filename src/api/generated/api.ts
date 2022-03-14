@@ -24,6 +24,19 @@ import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } fr
 /**
  * 
  * @export
+ * @interface FilePath
+ */
+export interface FilePath {
+    /**
+     * 
+     * @type {string}
+     * @memberof FilePath
+     */
+    'file_path'?: string;
+}
+/**
+ * 
+ * @export
  * @interface Login
  */
 export interface Login {
@@ -1415,7 +1428,7 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async postUsersUserIDImages(userID: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async postUsersUserIDImages(userID: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FilePath>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.postUsersUserIDImages(userID, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -1508,7 +1521,7 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postUsersUserIDImages(userID: number, options?: any): AxiosPromise<void> {
+        postUsersUserIDImages(userID: number, options?: any): AxiosPromise<FilePath> {
             return localVarFp.postUsersUserIDImages(userID, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1599,7 +1612,7 @@ export interface UserApiInterface {
      * @throws {RequiredError}
      * @memberof UserApiInterface
      */
-    postUsersUserIDImages(userID: number, options?: AxiosRequestConfig): AxiosPromise<void>;
+    postUsersUserIDImages(userID: number, options?: AxiosRequestConfig): AxiosPromise<FilePath>;
 
     /**
      * 

@@ -1,29 +1,47 @@
 import { Avatar, Divider, Stack, TextField, Typography } from '@mui/material';
+import { VFC, ChangeEvent } from 'react';
 import { User } from '../../api/generated/api';
+import { FileUploadApi } from '../../api/upload/fileUpload';
+import ImageForm from '../ui/ImageForm';
 
 type Props = {
   user: User;
+  // eslint-disable-next-line no-unused-vars
   setUser: (user: User) => void;
 };
 
-const AccountSetting: React.VFC<Props> = ({ user, setUser }) => {
-  const usernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+const AccountSetting: VFC<Props> = ({ user, setUser }: Props) => {
+  const fileUploadApi = new FileUploadApi();
+  const usernameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUser({
       ...user,
       username: e.target.value,
     });
   };
-  const displayNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const displayNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUser({
       ...user,
       display_name: e.target.value,
     });
   };
-  const statusMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const statusMessageChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUser({
       ...user,
       status_message: e.target.value,
     });
+  };
+  const saveImage = async (file: File) => {
+    if (!user.id) {
+      return;
+    }
+    fileUploadApi
+      .postUsersUserIDImages(user.id, file, { withCredentials: true })
+      .then((res) => {
+        setUser({
+          ...user,
+          profile_image: res.data.file_path,
+        });
+      });
   };
 
   return (
@@ -33,6 +51,7 @@ const AccountSetting: React.VFC<Props> = ({ user, setUser }) => {
         <Divider />
         <Typography variant="h6">Profile Image</Typography>
         <Avatar sx={{ width: 296, height: 296 }} src={user.profile_image} />
+        <ImageForm saveImage={saveImage} />
         <Typography variant="h6">Username</Typography>
         <TextField
           size="small"
