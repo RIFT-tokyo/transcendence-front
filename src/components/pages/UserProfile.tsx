@@ -106,7 +106,7 @@ const UserProfile = () => {
       } else {
         setUser(owner);
         setIsOwner(true);
-        fetchFollowings(owner.id);
+        fetchFollowings(owner.id!);
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
