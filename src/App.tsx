@@ -14,9 +14,9 @@ import AppBarWithMenu from './components/ui/AppBarWithMenu';
 import { AuthContext } from './contexts/AuthContext';
 
 const PrivateRoute = () => {
-  const { currentUser } = useContext(AuthContext);
+  const { authUser } = useContext(AuthContext);
 
-  return currentUser ? <Outlet /> : <Navigate to="signin" />;
+  return authUser ? <Outlet /> : <Navigate to="signin" />;
 };
 
 const App = () => {

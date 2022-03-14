@@ -18,10 +18,10 @@ const Settings: React.VFC<Props> = ({ active }) => {
   const userApi = new UserApi();
   const [statusCode, setStatusCode] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
-  const { currentUser } = useContext(AuthContext);
+  const { authUser } = useContext(AuthContext);
 
   useEffect(() => {
-    setUser(currentUser);
+    setUser(authUser);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

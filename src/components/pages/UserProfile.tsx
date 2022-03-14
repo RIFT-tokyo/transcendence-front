@@ -18,7 +18,7 @@ const UserProfile = () => {
   const userApi = new UserApi();
   const followApi = new FollowApi();
   const { username } = useParams();
-  const { currentUser } = useContext(AuthContext);
+  const { authUser } = useContext(AuthContext);
 
   const followUser = async (userId: number) => {
     if (loading) {
@@ -99,7 +99,7 @@ const UserProfile = () => {
 
   useEffect(() => {
     (async () => {
-      const owner = currentUser!;
+      const owner = authUser!;
       if (username && owner.username !== username) {
         await fetchUserFromUsername(owner.id!, username);
         setIsOwner(false);

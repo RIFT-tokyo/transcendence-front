@@ -2,14 +2,14 @@ import React, { FC, useEffect, useMemo, useState } from 'react';
 import { User, UserApi } from '../api/generated/api';
 
 interface IAuthContext {
-  currentUser: User | null;
+  authUser: User | null;
   isLoading: boolean;
   login: () => void;
   logout: () => void;
 }
 
 const defaultState = {
-  currentUser: null,
+  authUser: null,
   isLoading: true,
   login: () => {},
   logout: () => {},
@@ -18,7 +18,7 @@ const defaultState = {
 export const AuthContext = React.createContext<IAuthContext>(defaultState);
 
 export const AuthProvider: FC = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [authUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setLoading] = useState(true);
   const userApi = new UserApi();
 
@@ -49,8 +49,8 @@ export const AuthProvider: FC = ({ children }) => {
   }, []);
 
   const memo = useMemo(
-    () => ({ currentUser, isLoading, login, logout }),
-    [currentUser, isLoading],
+    () => ({ authUser, isLoading, login, logout }),
+    [authUser, isLoading],
   );
 
   return <AuthContext.Provider value={memo}>{children}</AuthContext.Provider>;

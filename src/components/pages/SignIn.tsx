@@ -27,7 +27,7 @@ const SignIn = () => {
   });
   const navigate = useNavigate();
   const authApi = new AuthApi();
-  const { currentUser, login } = useContext(AuthContext);
+  const { authUser, login } = useContext(AuthContext);
 
   const handleChange =
     (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,11 +80,11 @@ const SignIn = () => {
   };
 
   useEffect(() => {
-    if (currentUser) {
+    if (authUser) {
       goHome();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUser]);
+  }, [authUser]);
 
   return (
     <Container component="main" maxWidth="xs">
