@@ -1,14 +1,15 @@
-import * as React from "react";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import { useNavigate } from "react-router-dom";
-import { AuthApi, UserApi } from "../../api/generated/api";
-import { useEffect } from "react";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import * as React from 'react';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import { useNavigate } from 'react-router-dom';
+import { useContext, useEffect } from 'react';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
+import { AuthApi } from '../../api/generated/api';
+import { AuthContext } from '../../contexts/AuthContext';
 
 interface State {
   username: string;
@@ -17,16 +18,16 @@ interface State {
   error: boolean;
 }
 
-export default function SignIn() {
+const SignIn = () => {
   const [values, setValues] = React.useState<State>({
-    username: "",
-    password: "",
+    username: '',
+    password: '',
     showPassword: false,
     error: false,
   });
   const navigate = useNavigate();
   const authApi = new AuthApi();
-  const userApi = new UserApi();
+  const { authUser, login } = useContext(AuthContext);
 
   const handleChange =
     (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,7 +57,8 @@ export default function SignIn() {
 
     await authApi
       .postAuthLogin(payload, { withCredentials: true })
-      .then(() => {
+      .then(async () => {
+        await login();
         goHome();
       })
       .catch((err) => {
@@ -70,35 +72,28 @@ export default function SignIn() {
   };
 
   const goHome = () => {
-    navigate("/home");
+    navigate('/home');
   };
 
   const handleClick = () => {
-    navigate("/");
+    navigate('/');
   };
 
   useEffect(() => {
-    (async () => {
-      await userApi
-        .getMe({ withCredentials: true })
-        .then(() => {
-          goHome();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    })();
+    if (authUser) {
+      goHome();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [authUser]);
 
   return (
     <Container component="main" maxWidth="xs">
       <Box
         sx={{
           marginTop: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
         }}
       >
         <img src="/auth/signin.svg" alt="Sign Up" width="440" />
@@ -106,12 +101,12 @@ export default function SignIn() {
           <Button
             type="submit"
             fullWidth
-            style={{ color: "white", backgroundColor: "#00BABC" }}
+            style={{ color: 'white', backgroundColor: '#00BABC' }}
             sx={{ mt: 3, mb: 2 }}
             onClick={handleOauthLogin}
           >
-            SIGN UP WITH{" "}
-            <img src="/auth/42.svg" alt="42" style={{ marginLeft: "24px" }} />
+            SIGN UP WITH{' '}
+            <img src="/auth/42.svg" alt="42" style={{ marginLeft: '24px' }} />
           </Button>
         </Grid>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
@@ -123,7 +118,7 @@ export default function SignIn() {
                 label="username"
                 name="username"
                 value={values.username}
-                onChange={handleChange("username")}
+                onChange={handleChange('username')}
                 error={values.error}
               />
             </Grid>
@@ -134,8 +129,8 @@ export default function SignIn() {
                 label="password"
                 id="password"
                 value={values.password}
-                onChange={handleChange("password")}
-                type={values.showPassword ? "text" : "password"}
+                onChange={handleChange('password')}
+                type={values.showPassword ? 'text' : 'password'}
                 InputProps={{
                   endAdornment: (
                     <IconButton
@@ -148,7 +143,7 @@ export default function SignIn() {
                   ),
                 }}
                 error={values.error}
-                helperText={values.error ? "Sign in failed..." : ""}
+                helperText={values.error ? 'Sign in failed...' : ''}
               />
             </Grid>
           </Grid>
@@ -159,7 +154,7 @@ export default function SignIn() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2, backgroundColor: "#448FA3" }}
+                sx={{ mt: 3, mb: 2, backgroundColor: '#448FA3' }}
               >
                 SIGN IN
               </Button>
@@ -171,8 +166,8 @@ export default function SignIn() {
                 sx={{
                   mt: 3,
                   mb: 2,
-                  color: "#1f3242",
-                  backgroundColor: "#e4dfe0",
+                  color: '#1f3242',
+                  backgroundColor: '#e4dfe0',
                 }}
                 onClick={handleClick}
               >
@@ -184,4 +179,6 @@ export default function SignIn() {
       </Box>
     </Container>
   );
-}
+};
+
+export default SignIn;

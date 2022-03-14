@@ -1,11 +1,12 @@
-import { Container, LinearProgress, Stack } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { User, UserApi, FollowApi } from "../../api/generated/api";
-import FollowerList from "../model/FollowerList";
-import GameResult from "../model/GameResult";
-import UserCard from "../model/UserCard";
-import ErrorRouter from "../ui/ErrorRouter";
+import { Container, LinearProgress, Stack } from '@mui/material';
+import { useContext, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { User, UserApi, FollowApi } from '../../api/generated/api';
+import { AuthContext } from '../../contexts/AuthContext';
+import FollowerList from '../model/FollowerList';
+import GameResult from '../model/GameResult';
+import UserCard from '../model/UserCard';
+import ErrorRouter from '../ui/ErrorRouter';
 
 const UserProfile = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -16,7 +17,8 @@ const UserProfile = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const userApi = new UserApi();
   const followApi = new FollowApi();
-  const username = useParams().username;
+  const { username } = useParams();
+  const { authUser } = useContext(AuthContext);
 
   const followUser = async (userId: number) => {
     if (loading) {
@@ -25,7 +27,7 @@ const UserProfile = () => {
     setLoading(true);
     await followApi
       .putUsersFollowingUserID(userId, { withCredentials: true })
-      .then((res) => {
+      .then(() => {
         setIsFollower(true);
       })
       .catch((err) => {
@@ -41,7 +43,7 @@ const UserProfile = () => {
     setLoading(true);
     await followApi
       .deleteUsersFollowingUserID(userId, { withCredentials: true })
-      .then((res) => {
+      .then(() => {
         setIsFollower(false);
       })
       .catch((err) => {
@@ -50,21 +52,26 @@ const UserProfile = () => {
     setLoading(false);
   };
 
-  const fetchMe = async () => {
-    const owner = await userApi
-      .getMe({ withCredentials: true })
+  const fetchIsFollower = async (ownerId: number, targetId: number) => {
+    await followApi
+      .getUsersUserIDFollowingTargetUserID(ownerId, targetId, {
+        withCredentials: true,
+      })
       .then((res) => {
-        return res.data;
+        setIsFollower(res.status === 204);
       })
       .catch((err) => {
-        setStatusCode(err.response.status);
+        if (err.response.status === 404) {
+          setIsFollower(false);
+        } else {
+          setStatusCode(err.response.status);
+        }
       });
-    return owner;
   };
 
-  const fetchUserFromUsername = async (ownerId: number, username: string) => {
+  const fetchUserFromUsername = async (ownerId: number, name: string) => {
     await userApi
-      .getUsersUsername(username, { withCredentials: true })
+      .getUsersUsername(name, { withCredentials: true })
       .then((res) => {
         if (!res.data.id) {
           return;
@@ -90,36 +97,16 @@ const UserProfile = () => {
       });
   };
 
-  const fetchIsFollower = async (ownerId: number, targetId: number) => {
-    await followApi
-      .getUsersUserIDFollowingTargetUserID(ownerId, targetId, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        setIsFollower(res.status === 204);
-      })
-      .catch((err) => {
-        if (err.response.status === 404) {
-          setIsFollower(false);
-        } else {
-          setStatusCode(err.response.status);
-        }
-      });
-  };
-
   useEffect(() => {
     (async () => {
-      const owner = await fetchMe();
-      if (!owner || !owner.id || !owner.username) {
-        return;
-      }
+      const owner = authUser!;
       if (username && owner.username !== username) {
-        await fetchUserFromUsername(owner.id, username);
+        await fetchUserFromUsername(owner.id!, username);
         setIsOwner(false);
       } else {
         setUser(owner);
         setIsOwner(true);
-        fetchFollowings(owner.id);
+        fetchFollowings(owner.id!);
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -130,8 +117,8 @@ const UserProfile = () => {
       {loading ? (
         <LinearProgress
           sx={{
-            width: "100%",
-            position: "absolute",
+            width: '100%',
+            position: 'absolute',
           }}
         />
       ) : null}

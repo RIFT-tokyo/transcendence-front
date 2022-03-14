@@ -1,12 +1,12 @@
-import { Link, Stack, Typography } from '@mui/material'
+import { Link, Stack, Typography } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import KeyIcon from '@mui/icons-material/Key';
 import HelpIcon from '@mui/icons-material/Help';
 import { NavLink } from 'react-router-dom';
 
 type Props = {
-  actions: string[]
-}
+  actions: string[];
+};
 
 const SettingTab: React.VFC<Props> = ({ actions }) => {
   const getIcon = (action: string) => {
@@ -18,24 +18,30 @@ const SettingTab: React.VFC<Props> = ({ actions }) => {
       default:
         return <HelpIcon />;
     }
-  }
-  let settings = actions.map(item => {
-    const link = '/settings/' + item.toLowerCase();
+  };
+  const settings = actions.map((item) => {
+    const link = `/settings/${  item.toLowerCase()}`;
     return (
-      <Link key={item.toLowerCase()} component={NavLink} color='inherit' underline='none' to={link}>
-        <Stack direction='row' spacing={2} alignItems='center'>
+      <Link
+        key={item.toLowerCase()}
+        component={NavLink}
+        color="inherit"
+        underline="none"
+        to={link}
+      >
+        <Stack direction="row" spacing={2} alignItems="center">
           {getIcon(item)}
-          <Typography variant='h5'>{item}</Typography>
+          <Typography variant="h5">{item}</Typography>
         </Stack>
       </Link>
-    )
-  })
+    );
+  });
 
   return (
-    <Stack padding={2} width={150} direction='column' spacing={1}>
+    <Stack padding={2} width={150} direction="column" spacing={1}>
       {settings}
     </Stack>
-  )
-}
+  );
+};
 
-export default SettingTab
+export default SettingTab;

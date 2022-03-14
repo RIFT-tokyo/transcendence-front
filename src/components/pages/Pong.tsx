@@ -1,9 +1,5 @@
-import { Typography } from '@mui/material'
+import { Typography } from '@mui/material';
 
-const Pong = () => {
-  return (
-    <Typography variant="h2">This page is for Pong</Typography>
-  )
-}
+const Pong = () => <Typography variant="h2">This page is for Pong</Typography>;
 
-export default Pong
+export default Pong;

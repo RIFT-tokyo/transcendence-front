@@ -1,12 +1,12 @@
-import { createTheme } from '@mui/material'
+import { createTheme } from '@mui/material';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#448FA3'
+      main: '#448FA3',
     },
     secondary: {
-      main: '#9A031E'
+      main: '#9A031E',
     },
     background: {
       default: '#FCF7F8',
@@ -30,8 +30,7 @@ const theme = createTheme({
       fontSize: '2rem',
     },
   },
-})
-
+});
 
 declare module '@mui/material/styles' {
   interface Palette {
@@ -57,4 +56,4 @@ declare module '@mui/material/SvgIcon' {
   }
 }
 
-export default theme
+export default theme;

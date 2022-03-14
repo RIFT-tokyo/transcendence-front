@@ -1,36 +1,27 @@
-import { Button, CircularProgress, Grid, Stack } from "@mui/material";
-import { useState, useEffect } from "react";
-import { User, UserApi } from "../../api/generated/api";
-import AccountSetting from "../model/AccountSetting";
-import SecuritySetting from "../model/SecuritySetting";
-import ErrorRouter from "../ui/ErrorRouter";
-import Footer from "../ui/Footer";
-import SettingTab from "../ui/SettingTab";
+import { Button, CircularProgress, Grid, Stack } from '@mui/material';
+import { useState, useEffect, useContext } from 'react';
+import { User, UserApi } from '../../api/generated/api';
+import { AuthContext } from '../../contexts/AuthContext';
+import AccountSetting from '../model/AccountSetting';
+import SecuritySetting from '../model/SecuritySetting';
+import ErrorRouter from '../ui/ErrorRouter';
+import Footer from '../ui/Footer';
+import SettingTab from '../ui/SettingTab';
 
 type Props = {
   active: string;
 };
 
 const Settings: React.VFC<Props> = ({ active }) => {
-  const actions = ["Account", "Security"];
+  const actions = ['Account', 'Security'];
   const [user, setUser] = useState<User | null>(null);
   const userApi = new UserApi();
   const [statusCode, setStatusCode] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
+  const { authUser } = useContext(AuthContext);
 
   useEffect(() => {
-    (async () => {
-      setLoading(true);
-      await userApi
-        .getMe({ withCredentials: true })
-        .then((res) => {
-          setUser(res.data);
-        })
-        .catch((err) => {
-          setStatusCode(err.response.status);
-        });
-      setLoading(false);
-    })();
+    setUser(authUser);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -69,14 +60,14 @@ const Settings: React.VFC<Props> = ({ active }) => {
   };
 
   let settingContent = <CircularProgress />;
-  if (active === "Account" && !loading && user) {
+  if (active === 'Account' && !loading && user) {
     settingContent = <AccountSetting user={user} setUser={setUser} />;
-  } else if (active === "Security" && !loading) {
+  } else if (active === 'Security' && !loading) {
     settingContent = <SecuritySetting />;
   }
 
   const getFooter = (active: string) => {
-    if (active === "Account") {
+    if (active === 'Account') {
       return (
         <Footer>
           <Stack direction="row" margin={2} spacing={2}>
