@@ -1,4 +1,4 @@
-import { Container, LinearProgress, Stack } from '@mui/material';
+import { Container, Divider, LinearProgress, Stack } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { User, UserApi, FollowApi } from '../../api/generated/api';
@@ -14,17 +14,17 @@ const UserProfile = () => {
   const [isOwner, setIsOwner] = useState<boolean>(false);
   const [isFollower, setIsFollower] = useState<boolean>(false);
   const [statusCode, setStatusCode] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isRequesting, setRequesting] = useState<boolean>(false);
   const userApi = new UserApi();
   const followApi = new FollowApi();
   const { username } = useParams();
   const { authUser } = useContext(AuthContext);
 
   const followUser = async (userId: number) => {
-    if (loading) {
+    if (isRequesting) {
       return;
     }
-    setLoading(true);
+    setRequesting(true);
     await followApi
       .putUsersFollowingUserID(userId, { withCredentials: true })
       .then(() => {
@@ -33,14 +33,14 @@ const UserProfile = () => {
       .catch((err) => {
         setStatusCode(err.response.status);
       });
-    setLoading(false);
+    setRequesting(false);
   };
 
   const unfollowUser = async (userId: number) => {
-    if (loading) {
+    if (isRequesting) {
       return;
     }
-    setLoading(true);
+    setRequesting(true);
     await followApi
       .deleteUsersFollowingUserID(userId, { withCredentials: true })
       .then(() => {
@@ -49,7 +49,7 @@ const UserProfile = () => {
       .catch((err) => {
         setStatusCode(err.response.status);
       });
-    setLoading(false);
+    setRequesting(false);
   };
 
   const fetchIsFollower = async (ownerId: number, targetId: number) => {
@@ -114,7 +114,7 @@ const UserProfile = () => {
 
   return (
     <ErrorRouter statusCode={statusCode}>
-      {loading ? (
+      {isRequesting ? (
         <LinearProgress
           sx={{
             width: '100%',
@@ -124,17 +124,18 @@ const UserProfile = () => {
       ) : null}
       <Container>
         <Stack direction="row" margin={2} spacing={2}>
-          <Stack direction="column" spacing={2}>
+          <Stack direction="column" margin={2} spacing={2}>
             <UserCard
               user={user}
               isOwner={isOwner}
               isFollower={isFollower}
-              loading={loading}
+              disabled={isRequesting}
               followUser={followUser}
               unfollowUser={unfollowUser}
             />
             {isOwner ? <FollowerList followers={followers} /> : null}
           </Stack>
+          <Divider orientation="vertical" flexItem />
           <Stack spacing={2}>
             <GameResult />
           </Stack>

@@ -1,19 +1,20 @@
+/* eslint-disable no-unused-vars */
 import {
   Avatar,
   Button,
-  Card,
-  CardContent,
   Typography,
   Link,
+  Stack,
 } from '@mui/material';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import * as React from 'react';
 import { User } from '../../api/generated/api';
 
 type Props = {
   user: User | null;
   isOwner: boolean;
   isFollower: boolean;
-  loading: boolean;
+  disabled: boolean;
   followUser: (userId: number) => void;
   unfollowUser: (userId: number) => void;
 };
@@ -22,15 +23,24 @@ const UserCard: React.VFC<Props> = ({
   user,
   isOwner,
   isFollower,
-  loading,
+  disabled,
   followUser,
   unfollowUser,
-}) => {
-  const handleButtonClick = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ) => {
+}: Props) => {
+
+  const navigate = useNavigate();
+  const buttonText = () => {
+    if (isOwner) {
+      return 'edit profile';
+    }
+    return isFollower ? 'Unfollow' : 'Follow';
+  }
+  const handleButtonClick = () => {
     if (!user?.id) {
       return;
+    }
+    if (isOwner) {
+      navigate('/settings/account');
     }
     if (isFollower) {
       unfollowUser(user.id);
@@ -39,54 +49,25 @@ const UserCard: React.VFC<Props> = ({
     }
   };
 
-  const ActionButton = (isOwner: boolean) => {
-    if (isOwner) {
-      return (
-        <Link
-          component={NavLink}
-          color="inherit"
-          underline="none"
-          to="/settings"
-        >
-          <Button
-            sx={{ width: 296, height: 30 }}
-            color="inherit"
-            variant="contained"
-          >
-            Edit Profile
-          </Button>
-        </Link>
-      );
-    }
-    return (
+  return (
+    <Stack sx={{ width: 296 }}>
+      <Avatar sx={{ width: 296, height: 296 }} src={user?.profile_image} />
+      <Typography sx={{ fontWeight: 'bold' }} variant="h4">
+        {user?.display_name ?? user?.username}
+      </Typography>
+      <Typography variant="h6">{user?.username}</Typography>
       <Button
         sx={{ width: 296, height: 30 }}
         color="inherit"
         variant="contained"
-        disabled={loading}
-        onClick={(e) => handleButtonClick(e)}
+        disabled={disabled}
+        onClick={handleButtonClick}
       >
-        {isFollower ? 'Unfollow' : 'Follow'}
+        {buttonText()}
       </Button>
-    );
-  };
-
-  return (
-    <Card
-      sx={{
-        width: 328,
-      }}
-    >
-      <CardContent>
-        <Avatar sx={{ width: 296, height: 296 }} src={user?.profile_image} />
-        <Typography sx={{ fontWeight: 'bold' }} variant="h4">
-          {user?.display_name ?? user?.username}
-        </Typography>
-        <Typography variant="subtitle1">{user?.username}</Typography>
-        {ActionButton(isOwner)}
-        <Typography variant="body2">{user?.status_message}</Typography>
-      </CardContent>
-    </Card>
+      <Typography variant="body1">{user?.status_message}</Typography>
+      <Typography variant="subtitle2">{user?.followers} follower, {user?.following} followings</Typography>
+    </Stack>
   );
 };
 
