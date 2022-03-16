@@ -8,15 +8,15 @@ type Props = {
 const Footer: React.FC<Props> = ({ children }) => (
     <Box
       component="footer"
-      // sx={{
-      //   width: '100%',
-      //   position: 'absolute',
-      //   bottom: 0,
-      //   backgroundColor: (theme) =>
-      //     theme.palette.mode === 'light'
-      //       ? theme.palette.grey[200]
-      //       : theme.palette.grey[800],
-      // }}
+      sx={{
+        width: '100%',
+        position: 'static',
+        bottom: 0,
+        backgroundColor: (theme) =>
+          theme.palette.mode === 'light'
+            ? theme.palette.grey[200]
+            : theme.palette.grey[800],
+      }}
     >
       <Grid container justifyContent="center">
         {children}
