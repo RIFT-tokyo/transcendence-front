@@ -10,7 +10,7 @@ const Footer: React.FC<Props> = ({ children }) => (
       component="footer"
       sx={{
         width: '100%',
-        position: 'static',
+        position: 'sticky',
         bottom: 0,
         backgroundColor: (theme) =>
           theme.palette.mode === 'light'
