@@ -36,7 +36,7 @@ const App = () => {
                 <Route path="chat" element={<Chat />} />
                 <Route path="pong" element={<Pong />} />
                 <Route path="settings">
-                  <Route index element={<Navigate to="account" />} />
+                  <Route index element={<Navigate to="account" replace />} />
                   <Route
                     path="account"
                     element={<Settings active="Account" />}
