@@ -6,7 +6,6 @@ import {
   Box,
   Menu,
   MenuItem,
-  Link,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { AccountCircle } from '@mui/icons-material';
@@ -54,8 +53,8 @@ const AppBarWithMenu = () => {
 
   return (
     <div>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
+      <Box sx={{ flexGrow: 1, pt: 10 }}>
+        <AppBar>
           <Toolbar>
             <IconButton
               size="large"
