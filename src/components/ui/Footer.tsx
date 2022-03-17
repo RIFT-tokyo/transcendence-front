@@ -1,4 +1,4 @@
-import { Box, Grid } from '@mui/material';
+import { BottomNavigation, Box, Grid, Paper } from '@mui/material';
 import { ReactNode } from 'react';
 
 type Props = {
@@ -6,22 +6,18 @@ type Props = {
 };
 
 const Footer: React.FC<Props> = ({ children }) => (
-    <Box
-      component="footer"
-      sx={{
-        width: '100%',
-        position: 'sticky',
-        bottom: 0,
-        backgroundColor: (theme) =>
-          theme.palette.mode === 'light'
-            ? theme.palette.grey[200]
-            : theme.palette.grey[800],
-      }}
+  <Box sx={{ pb: 10 }}>
+    <Paper
+      sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, pb: 2 }}
+      elevation={3}
     >
-      <Grid container justifyContent="center">
-        {children}
-      </Grid>
-    </Box>
-  );
+      <BottomNavigation>
+        <Grid container justifyContent="center">
+          {children}
+        </Grid>
+      </BottomNavigation>
+    </Paper>
+  </Box>
+);
 
 export default Footer;
