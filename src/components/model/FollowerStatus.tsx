@@ -1,13 +1,14 @@
 import { Avatar, Badge, Link, Stack, styled, Typography } from '@mui/material';
 import ChatBubble from '@mui/icons-material/ChatBubble';
 import { NavLink } from 'react-router-dom';
+import * as React from 'react';
 import { User, UserStatusEnum } from '../../api/generated/api';
 
 type Props = {
   user: User | null;
 };
 
-const FollowerStatus: React.VFC<Props> = ({ user }) => {
+const FollowerStatus: React.VFC<Props> = ({ user }: Props) => {
   const selectBadgeColor = (
     status?: UserStatusEnum,
   ): 'success' | 'error' | 'neutral' => {
@@ -30,7 +31,8 @@ const FollowerStatus: React.VFC<Props> = ({ user }) => {
   return (
     <Stack
       direction="row"
-      spacing={2}
+      margin={0.5}
+      spacing={1}
       alignItems="center"
       justifyContent="space-between"
     >
