@@ -18,7 +18,7 @@ const UserProfile = () => {
   const userApi = new UserApi();
   const followApi = new FollowApi();
   const { username } = useParams();
-  const { authUser } = useContext(AuthContext);
+  const { authUser, setAuthUser } = useContext(AuthContext);
 
   const followUser = async (userId: number) => {
     if (isRequesting) {
@@ -100,7 +100,10 @@ const UserProfile = () => {
   const fetchMe = async () => {
     await userApi
       .getMe({ withCredentials: true })
-      .then((res) => setUser(res.data))
+      .then((res) => {
+        setUser(res.data);
+        setAuthUser(res.data);
+      })
       .catch(() => null);
   };
 
