@@ -97,6 +97,13 @@ const UserProfile = () => {
       });
   };
 
+  const fetchMe = async () => {
+    await userApi
+      .getMe({ withCredentials: true })
+      .then((res) => setUser(res.data))
+      .catch(() => null);
+  };
+
   useEffect(() => {
     (async () => {
       const owner = authUser!;
@@ -104,7 +111,7 @@ const UserProfile = () => {
         await fetchUserFromUsername(owner.id!, username);
         setIsOwner(false);
       } else {
-        setUser(owner);
+        await fetchMe();
         setIsOwner(true);
         fetchFollowings(owner.id!);
       }
