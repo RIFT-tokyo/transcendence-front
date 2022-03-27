@@ -6,6 +6,7 @@ interface IAuthContext {
   isLoading: boolean;
   login: () => void;
   logout: () => void;
+  setAuthUser: (user: User | null) => void;
 }
 
 const defaultState = {
@@ -13,12 +14,13 @@ const defaultState = {
   isLoading: true,
   login: () => {},
   logout: () => {},
+  setAuthUser: () => {},
 };
 
 export const AuthContext = React.createContext<IAuthContext>(defaultState);
 
 export const AuthProvider: FC = ({ children }) => {
-  const [authUser, setCurrentUser] = useState<User | null>(null);
+  const [authUser, setAuthUser] = useState<User | null>(null);
   const [isLoading, setLoading] = useState(true);
   const userApi = new UserApi();
 
@@ -33,12 +35,12 @@ export const AuthProvider: FC = ({ children }) => {
   const login = async () => {
     setLoading(true);
     const owner = await fetchMe();
-    setCurrentUser(owner);
+    setAuthUser(owner);
     setLoading(false);
   };
 
   const logout = () => {
-    setCurrentUser(null);
+    setAuthUser(null);
   };
 
   useEffect(() => {
@@ -49,7 +51,7 @@ export const AuthProvider: FC = ({ children }) => {
   }, []);
 
   const memo = useMemo(
-    () => ({ authUser, isLoading, login, logout }),
+    () => ({ authUser, isLoading, login, logout, setAuthUser }),
     [authUser, isLoading],
   );
 
