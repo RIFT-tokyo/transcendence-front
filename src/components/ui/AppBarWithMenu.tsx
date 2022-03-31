@@ -53,7 +53,7 @@ const AppBarWithMenu = () => {
 
   return (
     <div>
-      <Box sx={{ flexGrow: 1, pt: { xs: 6, sm: 10 }}}>
+      <Box sx={{ flexGrow: 1, pt: { xs: 8, sm: 10 }}}>
         <AppBar>
           <Toolbar>
             <IconButton
