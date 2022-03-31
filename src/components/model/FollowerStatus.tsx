@@ -46,7 +46,7 @@ const FollowerStatus: React.VFC<Props> = ({ user }: Props) => {
           <Avatar sx={{ width: 40, height: 40 }} src={user?.profile_image} />
         </StyledBadge>
       </Link>
-      <Stack sx={{ flexGrow: 1 }} direction="column">
+      <Stack direction="column" sx={{ minWidth: 0, width: '100%' }}>
         <Link
           component={NavLink}
           to={`/users/${user?.username}`}
@@ -57,7 +57,7 @@ const FollowerStatus: React.VFC<Props> = ({ user }: Props) => {
             {user?.display_name ?? user?.username}
           </Typography>
         </Link>
-        <Typography variant="body2">{user?.status_message}</Typography>
+        <Typography noWrap variant="body2">{user?.status_message}</Typography>
       </Stack>
       <ChatBubble sx={{ fontSize: 24 }} color="neutral" />
     </Stack>
