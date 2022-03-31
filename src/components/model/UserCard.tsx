@@ -53,7 +53,7 @@ const UserCard: React.VFC<Props> = ({
     <Stack spacing={1}>
       <Stack direction={{ xs: 'row', sm: 'column' }} spacing={{ xs: 2, sm: 0 }}>
         <Avatar
-          sx={{ width: { xs: 80, sm: 296 }, height: { xs: 80, sm: 296 } }}
+          sx={{ width: { xs: 80, sm: 148, md: 296 }, height: { xs: 80, sm: 148, md: 296 }, alignSelf: 'center' }}
           src={user?.profile_image}
         />
         <Stack>
@@ -65,7 +65,7 @@ const UserCard: React.VFC<Props> = ({
         </Stack>
       </Stack>
       <Button
-        sx={{ width: 296, height: 30 }}
+        sx={{ height: 30 }}
         color="inherit"
         variant="contained"
         disabled={disabled}

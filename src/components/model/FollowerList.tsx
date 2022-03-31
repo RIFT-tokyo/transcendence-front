@@ -10,7 +10,6 @@ type Props = {
 const FollowerList: React.VFC<Props> = ({ followers }: Props) => (
     <Stack
       sx={{
-        width: 296,
         height: 384,
       }}
     >
