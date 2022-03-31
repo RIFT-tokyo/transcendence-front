@@ -148,7 +148,9 @@ const UserProfile = () => {
               followUser={followUser}
               unfollowUser={unfollowUser}
             />
-            {isOwner ? <FollowerList followers={followers} /> : null}
+            <Box sx={{ display: { xs: 'none', sm: 'block' }}}>
+              {isOwner ? <FollowerList followers={followers} /> : null}
+            </Box>
           </Stack>
           <Divider
             sx={{ display: { xs: 'none', sm: 'block' } }}
