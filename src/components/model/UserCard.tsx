@@ -50,13 +50,20 @@ const UserCard: React.VFC<Props> = ({
   };
 
   return (
-    <Stack sx={{ width: 296 }}>
-      <Avatar sx={{ width: 296, height: 296 }} src={user?.profile_image} />
-      <Typography sx={{ fontWeight: 'bold' }} variant="h4">
-        {user?.display_name ?? user?.username}
-      </Typography>
-      <Typography variant="h6">{user?.username}</Typography>
-      <Typography variant="body1">{user?.status_message}</Typography>
+    <Stack spacing={1}>
+      <Stack direction={{ xs: 'row', sm: 'column' }} spacing={{ xs: 2, sm: 0 }}>
+        <Avatar
+          sx={{ width: { xs: 80, sm: 296 }, height: { xs: 80, sm: 296 } }}
+          src={user?.profile_image}
+        />
+        <Stack>
+          <Typography sx={{ fontWeight: 'bold' }} variant="h4">
+            {user?.display_name ?? user?.username}
+          </Typography>
+          <Typography variant="h6">{user?.username}</Typography>
+          <Typography variant="body2">{user?.status_message}</Typography>
+        </Stack>
+      </Stack>
       <Button
         sx={{ width: 296, height: 30 }}
         color="inherit"
@@ -66,7 +73,9 @@ const UserCard: React.VFC<Props> = ({
       >
         {buttonText()}
       </Button>
-      <Typography variant="subtitle2">{user?.followers} follower, {user?.following} followings</Typography>
+      <Typography variant="subtitle2">
+        {user?.followers} follower, {user?.following} followings
+      </Typography>
     </Stack>
   );
 };

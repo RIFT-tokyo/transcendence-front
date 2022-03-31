@@ -133,7 +133,12 @@ const UserProfile = () => {
         />
       ) : null}
       <Container>
-        <Stack direction="row" margin={2} spacing={2}>
+        <Stack
+          direction={{ xs: 'column', sm: 'row' }}
+          alignItems={{ xs: 'center', sm: 'flex-start' }}
+          margin={2}
+          spacing={2}
+        >
           <Stack direction="column" margin={2} spacing={2}>
             <UserCard
               user={user}
@@ -145,7 +150,11 @@ const UserProfile = () => {
             />
             {isOwner ? <FollowerList followers={followers} /> : null}
           </Stack>
-          <Divider orientation="vertical" flexItem />
+          <Divider
+            sx={{ display: { xs: 'none', sm: 'block' } }}
+            orientation="vertical"
+            flexItem
+          />
           <Stack spacing={2}>
             <GameResult />
           </Stack>
