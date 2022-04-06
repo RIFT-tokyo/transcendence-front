@@ -53,7 +53,11 @@ const UserCard: React.VFC<Props> = ({
     <Stack spacing={1}>
       <Stack direction={{ xs: 'row', sm: 'column' }} spacing={{ xs: 2, sm: 0 }}>
         <Avatar
-          sx={{ width: { xs: 80, sm: 148, md: 256 }, height: { xs: 80, sm: 148, md: 256 }, alignSelf: 'center' }}
+          sx={{
+            width: { xs: 80, sm: 256 },
+            height: { xs: 80, sm: 256 },
+            alignSelf: 'center',
+          }}
           src={user?.profile_image}
         />
         <Stack>

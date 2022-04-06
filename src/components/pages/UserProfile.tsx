@@ -1,4 +1,4 @@
-import { Box, Container, Divider, Grid, LinearProgress, Stack } from '@mui/material';
+import { Box, Container, Divider, LinearProgress, Stack } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { User, UserApi, FollowApi } from '../../api/generated/api';
@@ -133,37 +133,36 @@ const UserProfile = () => {
         />
       ) : null}
       <Container sx={{ flexGlow: 1 }}>
-        <Grid container
-          columns={{ xs: 4, sm: 8, md: 12 }}
+        <Stack
           direction={{ xs: 'column', sm: 'row' }}
           alignItems={{ xs: 'center', sm: 'flex-start' }}
-          spacing={2}
           padding={2}
         >
-          <Grid item sm={3} md={4} zeroMinWidth>
-            <Stack direction="column" mr={{ xs: 0, sm: 2 }} spacing={2}>
-              <UserCard
-                user={user}
-                isOwner={isOwner}
-                isFollower={isFollower}
-                disabled={isRequesting}
-                followUser={followUser}
-                unfollowUser={unfollowUser}
-              />
-              <Box sx={{ display: { xs: 'none', sm: 'block' }}}>
-                {isOwner ? <FollowerList followers={followers} /> : null}
-              </Box>
-            </Stack>
-          </Grid>
+          <Stack
+            direction="column"
+            sx={{ width: { sm: 256 } }}
+            mr={{ xs: 0, sm: 2 }}
+            spacing={2}
+          >
+            <UserCard
+              user={user}
+              isOwner={isOwner}
+              isFollower={isFollower}
+              disabled={isRequesting}
+              followUser={followUser}
+              unfollowUser={unfollowUser}
+            />
+            <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+              {isOwner ? <FollowerList followers={followers} /> : null}
+            </Box>
+          </Stack>
           <Divider
             sx={{ display: { xs: 'none', sm: 'block' } }}
             orientation="vertical"
             flexItem
           />
-          <Grid item sm spacing={2}>
-            <GameResult />
-          </Grid>
-        </Grid>
+          <GameResult />
+        </Stack>
       </Container>
     </ErrorRouter>
   );
