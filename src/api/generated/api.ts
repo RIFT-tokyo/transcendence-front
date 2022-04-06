@@ -75,6 +75,25 @@ export interface ModelError {
 /**
  * 
  * @export
+ * @interface Password
+ */
+export interface Password {
+    /**
+     * 
+     * @type {string}
+     * @memberof Password
+     */
+    'old_password': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Password
+     */
+    'new_password': string;
+}
+/**
+ * 
+ * @export
  * @interface User
  */
 export interface User {
@@ -290,7 +309,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postUsers: async (login?: Login, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        postAuthSignup: async (login?: Login, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/auth/signup`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -311,6 +330,42 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(login, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Update User Password
+         * @param {Password} [password] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        putAuthPassword: async (password?: Password, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/auth/password`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication sessionAuth required
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(password, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -375,8 +430,19 @@ export const AuthApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async postUsers(login?: Login, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.postUsers(login, options);
+        async postAuthSignup(login?: Login, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postAuthSignup(login, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Update User Password
+         * @param {Password} [password] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async putAuthPassword(password?: Password, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.putAuthPassword(password, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -433,8 +499,18 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postUsers(login?: Login, options?: any): AxiosPromise<void> {
-            return localVarFp.postUsers(login, options).then((request) => request(axios, basePath));
+        postAuthSignup(login?: Login, options?: any): AxiosPromise<void> {
+            return localVarFp.postAuthSignup(login, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Update User Password
+         * @param {Password} [password] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        putAuthPassword(password?: Password, options?: any): AxiosPromise<void> {
+            return localVarFp.putAuthPassword(password, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -490,7 +566,17 @@ export interface AuthApiInterface {
      * @throws {RequiredError}
      * @memberof AuthApiInterface
      */
-    postUsers(login?: Login, options?: AxiosRequestConfig): AxiosPromise<void>;
+    postAuthSignup(login?: Login, options?: AxiosRequestConfig): AxiosPromise<void>;
+
+    /**
+     * 
+     * @summary Update User Password
+     * @param {Password} [password] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApiInterface
+     */
+    putAuthPassword(password?: Password, options?: AxiosRequestConfig): AxiosPromise<void>;
 
 }
 
@@ -554,8 +640,20 @@ export class AuthApi extends BaseAPI implements AuthApiInterface {
      * @throws {RequiredError}
      * @memberof AuthApi
      */
-    public postUsers(login?: Login, options?: AxiosRequestConfig) {
-        return AuthApiFp(this.configuration).postUsers(login, options).then((request) => request(this.axios, this.basePath));
+    public postAuthSignup(login?: Login, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).postAuthSignup(login, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Update User Password
+     * @param {Password} [password] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public putAuthPassword(password?: Password, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).putAuthPassword(password, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
