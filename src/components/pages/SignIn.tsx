@@ -64,7 +64,7 @@ const SignIn = () => {
     };
 
     try {
-      await authApi.postAuthLogin(payload, { withCredentials: true })
+      await authApi.postAuthLogin(payload, { withCredentials: true });
       await login();
       goHome();
     } catch (err) {
@@ -80,7 +80,7 @@ const SignIn = () => {
     if (authUser) {
       goHome();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authUser]);
 
   return (

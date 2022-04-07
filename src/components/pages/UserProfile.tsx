@@ -26,7 +26,9 @@ const UserProfile = () => {
     }
     setRequesting(true);
     try {
-      await followApi.putUsersFollowingUserID(userId, { withCredentials: true })
+      await followApi.putUsersFollowingUserID(userId, {
+        withCredentials: true,
+      });
       setIsFollower(true);
     } catch (err: any) {
       setStatusCode(err.status);
@@ -40,7 +42,9 @@ const UserProfile = () => {
     }
     setRequesting(true);
     try {
-      await followApi.deleteUsersFollowingUserID(userId, { withCredentials: true })
+      await followApi.deleteUsersFollowingUserID(userId, {
+        withCredentials: true,
+      });
       setIsFollower(false);
     } catch (err: any) {
       setStatusCode(err.response.status);
@@ -50,7 +54,11 @@ const UserProfile = () => {
 
   const fetchIsFollower = async (ownerId: number, targetId: number) => {
     try {
-      const res = await followApi.getUsersUserIDFollowingTargetUserID(ownerId, targetId, { withCredentials: true })
+      const res = await followApi.getUsersUserIDFollowingTargetUserID(
+        ownerId,
+        targetId,
+        { withCredentials: true },
+      );
       setIsFollower(res.status === 204);
     } catch (err: any) {
       if (err.response.status === 404) {
@@ -58,12 +66,17 @@ const UserProfile = () => {
       } else {
         setStatusCode(err.response.status);
       }
-    };
+    }
   };
 
   const fetchFollowings = async (ownerId: number) => {
     try {
-      const res = await followApi.getUsersUserIDFollowing(ownerId, undefined, undefined, { withCredentials: true})
+      const res = await followApi.getUsersUserIDFollowing(
+        ownerId,
+        undefined,
+        undefined,
+        { withCredentials: true },
+      );
       setFollowers(res.data);
     } catch (err: any) {
       setStatusCode(err.response.status);
@@ -72,7 +85,9 @@ const UserProfile = () => {
 
   const fetchUserFromUsername = async (ownerId: number, name: string) => {
     try {
-      const res = await userApi.getUsersUsername(name, { withCredentials: true });
+      const res = await userApi.getUsersUsername(name, {
+        withCredentials: true,
+      });
       if (!res.data.id) {
         return;
       }
@@ -85,7 +100,7 @@ const UserProfile = () => {
 
   const fetchMe = async () => {
     try {
-      const res = await userApi.getMe({ withCredentials: true })
+      const res = await userApi.getMe({ withCredentials: true });
       setUser(res.data);
       setAuthUser(res.data);
     } catch (err: any) {
