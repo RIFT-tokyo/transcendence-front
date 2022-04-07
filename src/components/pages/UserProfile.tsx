@@ -7,6 +7,7 @@ import FollowerList from '../model/FollowerList';
 import GameResult from '../model/GameResult';
 import UserCard from '../model/UserCard';
 import ErrorRouter from '../ui/ErrorRouter';
+import UserTab from '../ui/UserTab';
 
 const UserProfile = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -161,7 +162,7 @@ const UserProfile = () => {
             orientation="vertical"
             flexItem
           />
-          <GameResult />
+          <UserTab />
         </Stack>
       </Container>
     </ErrorRouter>
