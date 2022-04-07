@@ -41,6 +41,7 @@ const UserCard: React.VFC<Props> = ({
     }
     if (isOwner) {
       navigate('/settings/account');
+      return;
     }
     if (isFollower) {
       unfollowUser(user.id);

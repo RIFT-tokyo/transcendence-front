@@ -29,6 +29,14 @@ const SignIn = () => {
   const authApi = new AuthApi();
   const { authUser, login } = useContext(AuthContext);
 
+  const goHome = () => {
+    navigate('/home');
+  };
+
+  const goSignUp = () => {
+    navigate('/');
+  };
+
   const handleChange =
     (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
       setValues({ ...values, [prop]: event.target.value });
@@ -41,7 +49,7 @@ const SignIn = () => {
     });
   };
 
-  const handleErrorOccured = () => {
+  const handleErrorOccurred = () => {
     setValues({
       ...values,
       error: true,
@@ -55,35 +63,24 @@ const SignIn = () => {
       password: values.password,
     };
 
-    await authApi
-      .postAuthLogin(payload, { withCredentials: true })
-      .then(async () => {
-        await login();
-        goHome();
-      })
-      .catch((err) => {
-        console.log(err);
-        handleErrorOccured();
-      });
+    try {
+      await authApi.postAuthLogin(payload, { withCredentials: true })
+      await login();
+      goHome();
+    } catch (err) {
+      handleErrorOccurred();
+    }
   };
 
   const handleOauthLogin = () => {
     window.location.href = String(process.env.REACT_APP_OAUTH_LOGIN_URL);
   };
 
-  const goHome = () => {
-    navigate('/home');
-  };
-
-  const handleClick = () => {
-    navigate('/');
-  };
-
   useEffect(() => {
     if (authUser) {
       goHome();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authUser]);
 
   return (
@@ -169,7 +166,7 @@ const SignIn = () => {
                   color: '#1f3242',
                   backgroundColor: '#e4dfe0',
                 }}
-                onClick={handleClick}
+                onClick={goSignUp}
               >
                 SIGN UP
               </Button>
