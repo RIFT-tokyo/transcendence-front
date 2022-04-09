@@ -7,16 +7,16 @@ import {
   Menu,
   MenuItem,
 } from '@mui/material';
+import * as React from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import { AccountCircle } from '@mui/icons-material';
-import { useContext, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { AuthApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
 
 const AppBarWithMenu = () => {
-  const { logout } = useContext(AuthContext);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const { logout } = React.useContext(AuthContext);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const authApi = new AuthApi();
 
@@ -65,8 +65,16 @@ const AppBarWithMenu = () => {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              ft_transcendence
+            <Typography
+              variant="h5"
+              onClick={goHome}
+              sx={{
+                flexGrow: 1,
+                fontFamily: 'Zen Tokyo Zoo',
+                cursor: 'pointer',
+              }}
+            >
+              TRANSCENDENCE
             </Typography>
             <div>
               <IconButton
