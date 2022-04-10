@@ -1,10 +1,7 @@
 import { Box, Drawer, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import SettingsIcon from '@mui/icons-material/Settings';
-import ChatIcon from '@mui/icons-material/Chat';
-import HomeIcon from '@mui/icons-material/Home';
-import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
+import GlobalMenuItems from '../config/global-menu';
 
 type Props = {
   open: boolean;
@@ -13,29 +10,6 @@ type Props = {
 }
 
 const DRAWER_WIDTH = 240;
-
-const GlobalMenuItems = [
-  {
-    icon: <HomeIcon />,
-    text: 'Home',
-    to: '/',
-  },
-  {
-    icon: <ChatIcon />,
-    text: 'Chat',
-    to: '/chat',
-  },
-  {
-    icon: <SportsEsportsIcon />,
-    text: 'Games',
-    to: '/pong',
-  },
-  {
-    icon: <SettingsIcon />,
-    text: 'Setting',
-    to: '/settings'
-  },
-]
 
 const GlobalMenu: React.VFC<Props> = ({ open, onClose }: Props) => {
   const navigate = useNavigate();
