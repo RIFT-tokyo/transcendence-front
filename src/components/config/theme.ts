@@ -17,6 +17,7 @@ const theme = createTheme({
   },
   typography: {
     fontSize: 12,
+    fontFamily: 'Nunito',
     h1: {
       fontSize: '5rem',
     },
@@ -45,12 +46,14 @@ declare module '@mui/material/styles' {
 
 // Update the Component's color prop options
 declare module '@mui/material/Badge' {
+  // eslint-disable-next-line no-unused-vars
   interface BadgePropsColorOverrides {
     neutral: true;
   }
 }
 
 declare module '@mui/material/SvgIcon' {
+  // eslint-disable-next-line no-unused-vars
   interface SvgIconPropsColorOverrides {
     neutral: true;
   }
