@@ -4,9 +4,9 @@ import * as React from 'react';
 import { AuthApi, Password } from '../../api/generated/api';
 
 const SecuritySetting = () => {
-  const [currentPassword, setOldPassword] = React.useState<string | null>(null);
-  const [newPassword, setNewPassword] = React.useState<string | null>(null);
-  const [confirmPassword, setConfirmPassword] = React.useState<string | null>(null);
+  const [currentPassword, setOldPassword] = React.useState<string>('');
+  const [newPassword, setNewPassword] = React.useState<string>('');
+  const [confirmPassword, setConfirmPassword] = React.useState<string>('');
   const [showCurrentPassword, setShowCurrentPassword] = React.useState(false);
   const [showNewPassword, setShowNewPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
