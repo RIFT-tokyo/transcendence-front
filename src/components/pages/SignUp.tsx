@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useContext, useEffect } from 'react';
 import { IconButton } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { useSnackbar } from 'notistack';
 import { AuthApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
 
@@ -28,6 +29,7 @@ const SignUp = () => {
   const navigate = useNavigate();
   const authApi = new AuthApi();
   const { authUser, login } = useContext(AuthContext);
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleChange =
     (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,11 +43,19 @@ const SignUp = () => {
     });
   };
 
-  const handleErrorOccured = () => {
+  const handleErrorOccurred = () => {
     setValues({
       ...values,
       error: true,
     });
+  };
+
+  const goHome = () => {
+    navigate('/home');
+  };
+
+  const handleClick = () => {
+    navigate('/signin');
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -55,28 +65,18 @@ const SignUp = () => {
       password: values.password,
     };
 
-    await authApi
-      .postAuthSignup(payload, { withCredentials: true })
-      .then(async () => {
-        await login();
-        goHome();
-      })
-      .catch((err) => {
-        console.log(err);
-        handleErrorOccured();
-      });
+    try {
+      await authApi.postAuthSignup(payload, { withCredentials: true })
+      await login();
+      goHome();
+    } catch (err: any) {
+      enqueueSnackbar(err.response.data.message, { variant: 'error' });
+      handleErrorOccurred();
+    }
   };
 
   const handleOauthLogin = () => {
     window.location.href = String(process.env.REACT_APP_OAUTH_LOGIN_URL);
-  };
-
-  const goHome = () => {
-    navigate('/home');
-  };
-
-  const handleClick = () => {
-    navigate('/signin');
   };
 
   useEffect(() => {
