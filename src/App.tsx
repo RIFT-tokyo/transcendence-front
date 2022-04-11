@@ -29,7 +29,6 @@ const App = () => {
           <Routes>
             <Route path="/" element={<AppBarWithMenu />}>
               <Route path="" element={<PrivateRoute />}>
-                <Route index element={<Navigate to="home" replace />} />
                 <Route path="home" element={<UserProfile />} />
                 <Route path="users">
                   <Route path=":username" element={<UserProfile />} />
