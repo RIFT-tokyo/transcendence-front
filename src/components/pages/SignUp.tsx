@@ -56,7 +56,7 @@ const SignUp = () => {
     };
 
     await authApi
-      .postUsers(payload, { withCredentials: true })
+      .postAuthSignup(payload, { withCredentials: true })
       .then(async () => {
         await login();
         goHome();
