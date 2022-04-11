@@ -6,6 +6,7 @@ import {
   Box,
   Menu,
   MenuItem,
+  CssBaseline,
 } from '@mui/material';
 import * as React from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -13,10 +14,12 @@ import { AccountCircle } from '@mui/icons-material';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { AuthApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
+import GlobalMenu from './GlobalMenu';
 
 const AppBarWithMenu = () => {
   const { logout } = React.useContext(AuthContext);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [openDrawer, setOpenDrawer] = React.useState(false);
   const navigate = useNavigate();
   const authApi = new AuthApi();
 
@@ -51,10 +54,24 @@ const AppBarWithMenu = () => {
       });
   };
 
+  const toggleDrawer =
+    (open: boolean) =>
+    (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event.type === 'keydown' &&
+        ((event as React.KeyboardEvent).key === 'Tab' ||
+          (event as React.KeyboardEvent).key === 'Shift')
+      ) {
+        return;
+      }
+      setOpenDrawer(open);
+    };
+
   return (
     <div>
-      <Box sx={{ flexGrow: 1, pt: 10 }}>
-        <AppBar>
+      <Box sx={{ pt: 8 }}>
+        <CssBaseline />
+        <AppBar sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
           <Toolbar>
             <IconButton
               size="large"
@@ -62,6 +79,7 @@ const AppBarWithMenu = () => {
               color="inherit"
               aria-label="menu"
               sx={{ mr: 2 }}
+              onClick={toggleDrawer(!openDrawer)}
             >
               <MenuIcon />
             </IconButton>
@@ -109,6 +127,7 @@ const AppBarWithMenu = () => {
             </div>
           </Toolbar>
         </AppBar>
+        <GlobalMenu open={openDrawer} onClose={toggleDrawer(false)} />
       </Box>
       <Outlet />
     </div>
