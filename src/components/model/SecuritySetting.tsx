@@ -1,20 +1,27 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Stack, Typography, Divider, TextField, Button, IconButton } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { AuthApi, Password } from '../../api/generated/api';
+// import useNotification from '../../hooks/notification';
 
 const SecuritySetting = () => {
-  const [currentPassword, setOldPassword] = React.useState<string>('');
+  const [currentPassword, setCurrentPassword] = React.useState<string>('');
   const [newPassword, setNewPassword] = React.useState<string>('');
   const [confirmPassword, setConfirmPassword] = React.useState<string>('');
   const [showCurrentPassword, setShowCurrentPassword] = React.useState(false);
   const [showNewPassword, setShowNewPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+  const [isRequesting, setIsRequesting] = React.useState(false);
   const authApi = new AuthApi();
+  const { enqueueSnackbar } = useSnackbar();
 
   const changePassword = async () => {
+    if (isRequesting) {
+      return;
+    }
     if (!currentPassword || !newPassword || !confirmPassword || newPassword !== confirmPassword) {
-      alert('正しく入力してください');
+      enqueueSnackbar('Please fill all fields correctly', { variant: 'error' });
       return;
     }
     const data: Password = {
@@ -22,10 +29,16 @@ const SecuritySetting = () => {
       new_password: newPassword,
     }
     try {
+      setIsRequesting(true);
       await authApi.putAuthPassword(data, { withCredentials: true });
-    } catch (e) {
-      alert('パスワードの更新に失敗しました');
+      enqueueSnackbar('Password changed successfully', { variant: 'success' });
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (e: any) {
+      enqueueSnackbar(e.response.data.message, { variant: 'error' });
     }
+    setIsRequesting(false);
   }
 
   return (
@@ -40,7 +53,7 @@ const SecuritySetting = () => {
           variant="outlined"
           label="current password"
           value={currentPassword}
-          onChange={e => setOldPassword(e.target.value)}
+          onChange={e => setCurrentPassword(e.target.value)}
           type={showCurrentPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
