@@ -1,14 +1,10 @@
 /* eslint-disable no-unused-vars */
-import {
-  Avatar,
-  Button,
-  Typography,
-  Link,
-  Stack,
-} from '@mui/material';
+import { Avatar, Button, Typography, Link, Stack } from '@mui/material';
 import { NavLink, useNavigate } from 'react-router-dom';
 import * as React from 'react';
 import { User } from '../../api/generated/api';
+import { SETTING_URL } from '../config/constants';
+import stringToColor from '../../functions/stringToColor';
 
 type Props = {
   user: User | null;
@@ -27,20 +23,19 @@ const UserCard: React.VFC<Props> = ({
   followUser,
   unfollowUser,
 }: Props) => {
-
   const navigate = useNavigate();
   const buttonText = () => {
     if (isOwner) {
       return 'edit profile';
     }
-    return isFollower ? 'Unfollow' : 'Follow';
-  }
+    return isFollower ? 'unfollow' : 'follow';
+  };
   const handleButtonClick = () => {
     if (!user?.id) {
       return;
     }
     if (isOwner) {
-      navigate('/settings/account');
+      navigate(SETTING_URL);
       return;
     }
     if (isFollower) {
@@ -52,11 +47,22 @@ const UserCard: React.VFC<Props> = ({
 
   return (
     <Stack sx={{ width: 296 }}>
-      <Avatar sx={{ width: 296, height: 296 }} src={user?.profile_image} />
+      <Avatar
+        sx={{
+          width: 296,
+          height: 296,
+          bgcolor: stringToColor(user?.username ?? ''),
+        }}
+        src={user?.profile_image}
+      />
       <Typography sx={{ fontWeight: 'bold' }} variant="h4">
         {user?.display_name ?? user?.username}
       </Typography>
       <Typography variant="h6">{user?.username}</Typography>
+      <Typography variant="body1">{user?.status_message}</Typography>
+      <Typography variant="subtitle1">
+        {user?.followers} follower, {user?.following} followings
+      </Typography>
       <Button
         sx={{ width: 296, height: 30 }}
         color="inherit"
@@ -66,8 +72,6 @@ const UserCard: React.VFC<Props> = ({
       >
         {buttonText()}
       </Button>
-      <Typography variant="body1">{user?.status_message}</Typography>
-      <Typography variant="subtitle2">{user?.followers} follower, {user?.following} followings</Typography>
     </Stack>
   );
 };

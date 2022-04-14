@@ -1,19 +1,20 @@
-import { ReactNode } from 'react';
+import * as React from 'react';
 import { Navigate } from 'react-router-dom';
+import { INTERNAL_SERVER_ERROR_URL, NOT_FOUND_URL } from '../config/constants';
 
 type Props = {
   statusCode: number;
-  children: ReactNode;
+  children: React.ReactNode;
 };
 
-const ErrorRouter: React.VFC<Props> = ({ statusCode, children }) => {
+const ErrorRouter: React.VFC<Props> = ({ statusCode, children }: Props) => {
   switch (statusCode) {
     case 0:
-      return <>{children}</>;
+      return <div>{children}</div>;
     case 404:
-      return <Navigate to="/404" />;
+      return <Navigate to={NOT_FOUND_URL} />;
     case 500:
-      return <Navigate to="/500" />;
+      return <Navigate to={INTERNAL_SERVER_ERROR_URL} />;
     default:
       return <div>Unknown Status Code: {statusCode}</div>;
   }

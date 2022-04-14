@@ -12,9 +12,11 @@ import * as React from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import { AccountCircle } from '@mui/icons-material';
 import { Outlet, useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 import { AuthApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
 import GlobalMenu from './GlobalMenu';
+import { SETTING_URL } from '../config/constants';
 
 const AppBarWithMenu = () => {
   const { logout } = React.useContext(AuthContext);
@@ -22,6 +24,7 @@ const AppBarWithMenu = () => {
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const navigate = useNavigate();
   const authApi = new AuthApi();
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -38,25 +41,22 @@ const AppBarWithMenu = () => {
 
   const goToSettings = () => {
     handleClose();
-    navigate('/settings');
+    navigate(SETTING_URL);
   };
 
   const logOut = async () => {
     handleClose();
-    await authApi
-      .postAuthLogout({ withCredentials: true })
-      .then(() => {
-        logout();
-        goHome();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    try {
+      await authApi.postAuthLogout({ withCredentials: true });
+      logout();
+      goHome();
+    } catch (err: any) {
+      enqueueSnackbar(err.response.data.message, { variant: 'error' });
+    }
   };
 
   const toggleDrawer =
-    (open: boolean) =>
-    (event: React.KeyboardEvent | React.MouseEvent) => {
+    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
         event.type === 'keydown' &&
         ((event as React.KeyboardEvent).key === 'Tab' ||

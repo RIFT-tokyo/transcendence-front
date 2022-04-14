@@ -1,8 +1,8 @@
 import { BottomNavigation, Box, Grid, Paper } from '@mui/material';
-import { ReactNode } from 'react';
+import * as React from 'react';
 
 type Props = {
-  children: ReactNode;
+  children: React.ReactNode;
 };
 
 const Footer: React.FC<Props> = ({ children }) => (
