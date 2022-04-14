@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-import { Avatar, Button, Typography, Link, Stack } from '@mui/material';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { Avatar, Button, Typography, Stack } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import * as React from 'react';
 import { User } from '../../api/generated/api';
 import { SETTING_URL } from '../config/constants';
@@ -51,7 +51,7 @@ const UserCard: React.VFC<Props> = ({
         sx={{
           width: 296,
           height: 296,
-          bgcolor: stringToColor(user?.username ?? ''),
+          bgcolor: user?.profile_image ? undefined : stringToColor(user?.username ?? ''),
         }}
         src={user?.profile_image}
       />
