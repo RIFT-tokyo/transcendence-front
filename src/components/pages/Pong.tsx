@@ -9,12 +9,15 @@ const Pong = () => {
 
   useEffect(() => {
     if (client) {
-      client.emit('ping');
-      client.emit('userStatus', { status: 'game', userID: authUser?.id });
+      client.index.emit('ping');
+      client.users.emit('userStatus', { status: 'game', userID: authUser?.id });
     }
     return () => {
       if (client)
-        client.emit('userStatus', { status: 'online', userID: authUser?.id });
+        client.users.emit('userStatus', {
+          status: 'online',
+          userID: authUser?.id,
+        });
     };
   }, [client]);
 

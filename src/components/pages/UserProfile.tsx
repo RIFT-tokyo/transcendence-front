@@ -137,11 +137,11 @@ const UserProfile = () => {
     };
 
     if (followers && followers?.length > 0 && client) {
-      client.on('userStatus', onUserStatus);
+      client.users.on('userStatus', onUserStatus);
     }
     return () => {
       if (followers && followers?.length > 0 && client) {
-        client.off('userStatus', onUserStatus);
+        client.users.off('userStatus', onUserStatus);
       }
     };
   }, [followers, client]);
