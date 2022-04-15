@@ -127,8 +127,6 @@ const UserProfile = () => {
 
   useEffect(() => {
     const onUserStatus = (data: { status: string; userID: number }) => {
-      console.log('followers: ', followers);
-      console.log('data: ', data);
       const updatedFollowers = followers?.map((follower) => {
         if (follower.id === data.userID) {
           return { ...follower, status: data.status } as User;
@@ -138,11 +136,13 @@ const UserProfile = () => {
       setFollowers(updatedFollowers || null);
     };
 
-    if (followers && followers?.length > 0 && client)
+    if (followers && followers?.length > 0 && client) {
       client.on('userStatus', onUserStatus);
+    }
     return () => {
-      if (followers && followers?.length > 0 && client)
+      if (followers && followers?.length > 0 && client) {
         client.off('userStatus', onUserStatus);
+      }
     };
   }, [followers, client]);
 
