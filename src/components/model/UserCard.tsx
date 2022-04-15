@@ -61,7 +61,7 @@ const UserCard: React.VFC<Props> = ({
       <Typography variant="h6">{user?.username}</Typography>
       <Typography variant="body1">{user?.status_message}</Typography>
       <Typography variant="subtitle1">
-        {user?.followers} follower, {user?.following} followings
+        {user?.followers} followers, {user?.following} followings
       </Typography>
       <Button
         sx={{ width: 296, height: 30 }}
