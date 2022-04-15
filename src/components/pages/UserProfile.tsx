@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { User, UserApi, FollowApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
+import { SocketContext } from '../../contexts/SocketContext';
 import FollowerList from '../model/FollowerList';
 import GameResult from '../model/GameResult';
 import UserCard from '../model/UserCard';
@@ -19,6 +20,7 @@ const UserProfile = () => {
   const followApi = new FollowApi();
   const { username } = useParams();
   const { authUser, setAuthUser } = useContext(AuthContext);
+  const { client } = useContext(SocketContext);
 
   const followUser = async (userId: number) => {
     if (isRequesting) {
@@ -122,6 +124,27 @@ const UserProfile = () => {
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
+
+  useEffect(() => {
+    const onUserStatus = (data: { status: string; userID: number }) => {
+      console.log('followers: ', followers);
+      console.log('data: ', data);
+      const updatedFollowers = followers?.map((follower) => {
+        if (follower.id === data.userID) {
+          return { ...follower, status: data.status } as User;
+        }
+        return follower;
+      });
+      setFollowers(updatedFollowers || null);
+    };
+
+    if (followers && followers?.length > 0 && client)
+      client.on('userStatus', onUserStatus);
+    return () => {
+      if (followers && followers?.length > 0 && client)
+        client.off('userStatus', onUserStatus);
+    };
+  }, [followers, client]);
 
   return (
     <ErrorRouter statusCode={statusCode}>
