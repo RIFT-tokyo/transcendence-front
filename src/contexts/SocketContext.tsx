@@ -10,12 +10,18 @@ export const ContextProvider: FC = ({ children }) => {
     const sclient = socketIOclient(process.env.REACT_APP_SOCKET_URL!, {
       auth: { userID: id },
     });
+    const usersSclient = socketIOclient(
+      `${process.env.REACT_APP_SOCKET_URL!}/users`,
+      {
+        auth: { userID: id },
+      },
+    );
 
     sclient.on('pong', () => {
       console.log('pong');
     });
 
-    setClient(sclient);
+    setClient({ index: sclient, users: usersSclient });
   };
 
   const memo = useMemo(() => ({ client, connect }), [client]);
