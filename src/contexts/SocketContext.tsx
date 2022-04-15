@@ -14,7 +14,6 @@ export const ContextProvider: FC = ({ children }) => {
     sclient.on('pong', () => {
       console.log('pong');
     });
-    sclient.emit('userStatus', { status: 'online', userID: id });
 
     setClient(sclient);
   };
