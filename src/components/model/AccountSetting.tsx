@@ -1,4 +1,5 @@
 import { Avatar, Divider, Stack, TextField, Typography } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import { VFC, ChangeEvent } from 'react';
 import { User } from '../../api/generated/api';
 import { FileUploadApi } from '../../api/upload/fileUpload';
@@ -12,32 +13,25 @@ type Props = {
 
 const AccountSetting: VFC<Props> = ({ user, setUser }: Props) => {
   const fileUploadApi = new FileUploadApi();
-  const usernameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setUser({
-      ...user,
-      username: e.target.value,
-    });
-  };
-  const displayNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setUser({
-      ...user,
-      display_name: e.target.value,
-    });
-  };
-  const statusMessageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setUser({
-      ...user,
-      status_message: e.target.value,
-    });
-  };
+  const { enqueueSnackbar } = useSnackbar();
+
+  const handleChange =
+    (prop: keyof User) => (event: ChangeEvent<HTMLInputElement>) => {
+      setUser({ ...user, [prop]: event.target.value });
+    };
   const saveImage = async (file: File) => {
     if (!user.id) {
       return;
     }
-    const res = await fileUploadApi.postUsersUserIDImages(user.id, file, {
-      withCredentials: true,
-    });
-    setUser({ ...user, profile_image: res.data.file_path });
+    try {
+      const res = await fileUploadApi.postUsersUserIDImages(user.id, file, {
+        withCredentials: true,
+      });
+      setUser({ ...user, profile_image: res.data.file_path });
+      enqueueSnackbar('Profile image updated', { variant: 'success' });
+    } catch (e: any) {
+      enqueueSnackbar('Failed to upload image', { variant: 'error' });
+    }
   };
 
   return (
@@ -52,22 +46,22 @@ const AccountSetting: VFC<Props> = ({ user, setUser }: Props) => {
         <TextField
           size="small"
           variant="outlined"
-          value={user.username}
-          onChange={usernameChange}
+          value={user.username ?? ''}
+          onChange={handleChange('username')}
         />
         <Typography variant="h6">Display Name</Typography>
         <TextField
           size="small"
           variant="outlined"
-          value={user.display_name}
-          onChange={displayNameChange}
+          value={user.display_name ?? ''}
+          onChange={handleChange('display_name')}
         />
         <Typography variant="h6">Bio</Typography>
         <TextField
           size="small"
           variant="outlined"
-          value={user.status_message}
-          onChange={statusMessageChange}
+          value={user.status_message ?? ''}
+          onChange={handleChange('status_message')}
         />
       </Stack>
     </Stack>

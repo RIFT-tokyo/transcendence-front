@@ -1,9 +1,15 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Stack, Typography, Divider, TextField, Button, IconButton } from '@mui/material';
+import {
+  Stack,
+  Typography,
+  Divider,
+  TextField,
+  Button,
+  IconButton,
+} from '@mui/material';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { AuthApi, Password } from '../../api/generated/api';
-// import useNotification from '../../hooks/notification';
 
 const SecuritySetting = () => {
   const [currentPassword, setCurrentPassword] = React.useState<string>('');
@@ -20,14 +26,19 @@ const SecuritySetting = () => {
     if (isRequesting) {
       return;
     }
-    if (!currentPassword || !newPassword || !confirmPassword || newPassword !== confirmPassword) {
+    if (
+      !currentPassword ||
+      !newPassword ||
+      !confirmPassword ||
+      newPassword !== confirmPassword
+    ) {
       enqueueSnackbar('Please fill all fields correctly', { variant: 'error' });
       return;
     }
     const data: Password = {
       old_password: currentPassword,
       new_password: newPassword,
-    }
+    };
     try {
       setIsRequesting(true);
       await authApi.putAuthPassword(data, { withCredentials: true });
@@ -39,7 +50,7 @@ const SecuritySetting = () => {
       enqueueSnackbar(e.response.data.message, { variant: 'error' });
     }
     setIsRequesting(false);
-  }
+  };
 
   return (
     <Stack bgcolor="background.paper" width={500}>
@@ -53,7 +64,7 @@ const SecuritySetting = () => {
           variant="outlined"
           label="current password"
           value={currentPassword}
-          onChange={e => setCurrentPassword(e.target.value)}
+          onChange={(e) => setCurrentPassword(e.target.value)}
           type={showCurrentPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
@@ -73,7 +84,7 @@ const SecuritySetting = () => {
           variant="outlined"
           label="new password"
           value={newPassword}
-          onChange={e => setNewPassword(e.target.value)}
+          onChange={(e) => setNewPassword(e.target.value)}
           type={showNewPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
@@ -93,7 +104,7 @@ const SecuritySetting = () => {
           variant="outlined"
           label="confirm password"
           value={confirmPassword}
-          onChange={e => setConfirmPassword(e.target.value)}
+          onChange={(e) => setConfirmPassword(e.target.value)}
           type={showConfirmPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
@@ -107,11 +118,7 @@ const SecuritySetting = () => {
             ),
           }}
         />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={changePassword}
-        >
+        <Button variant="contained" color="primary" onClick={changePassword}>
           update password
         </Button>
         <Divider />

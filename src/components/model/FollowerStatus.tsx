@@ -3,6 +3,7 @@ import ChatBubble from '@mui/icons-material/ChatBubble';
 import { NavLink } from 'react-router-dom';
 import * as React from 'react';
 import { User, UserStatusEnum } from '../../api/generated/api';
+import stringToColor from '../../functions/stringToColor';
 
 type Props = {
   user: User | null;
@@ -36,14 +37,23 @@ const FollowerStatus: React.VFC<Props> = ({ user }: Props) => {
       alignItems="center"
       justifyContent="space-between"
     >
-      <Link component={NavLink} to={`/users/${user?.username}`}>
+      <Link component={NavLink} underline="none" to={`/users/${user?.username}`}>
         <StyledBadge
           color={selectBadgeColor(user?.status)}
           overlap="circular"
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           variant="dot"
         >
-          <Avatar sx={{ width: 40, height: 40 }} src={user?.profile_image} />
+          <Avatar
+            sx={{
+              width: 40,
+              height: 40,
+              bgcolor: user?.profile_image ? undefined : stringToColor(user?.username ?? ''),
+            }}
+            src={user?.profile_image}
+          >
+            {user?.username?.slice(0, 2) ?? ''}
+          </Avatar>
         </StyledBadge>
       </Link>
       <Stack sx={{ flexGrow: 1 }} direction="column">

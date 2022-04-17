@@ -3,12 +3,13 @@ import PersonIcon from '@mui/icons-material/Person';
 import KeyIcon from '@mui/icons-material/Key';
 import HelpIcon from '@mui/icons-material/Help';
 import { NavLink } from 'react-router-dom';
+import * as React from 'react';
 
 type Props = {
   actions: string[];
 };
 
-const SettingTab: React.VFC<Props> = ({ actions }) => {
+const SettingTab: React.VFC<Props> = ({ actions }: Props) => {
   const getIcon = (action: string) => {
     switch (action) {
       case 'Account':
@@ -20,7 +21,7 @@ const SettingTab: React.VFC<Props> = ({ actions }) => {
     }
   };
   const settings = actions.map((item) => {
-    const link = `/settings/${  item.toLowerCase()}`;
+    const link = `/settings/${item.toLowerCase()}`;
     return (
       <Link
         key={item.toLowerCase()}

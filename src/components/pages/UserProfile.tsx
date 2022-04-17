@@ -1,4 +1,5 @@
 import { Container, Divider, LinearProgress, Stack } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { User, UserApi, FollowApi } from '../../api/generated/api';
@@ -21,6 +22,8 @@ const UserProfile = () => {
   const { username } = useParams();
   const { authUser, setAuthUser } = useContext(AuthContext);
   const { client } = useContext(SocketContext);
+  const { enqueueSnackbar } = useSnackbar();
+
 
   const followUser = async (userId: number) => {
     if (isRequesting) {
@@ -33,7 +36,7 @@ const UserProfile = () => {
       });
       setIsFollower(true);
     } catch (err: any) {
-      setStatusCode(err.status);
+      enqueueSnackbar(err.message, { variant: 'error' });
     }
     setRequesting(false);
   };
@@ -49,7 +52,7 @@ const UserProfile = () => {
       });
       setIsFollower(false);
     } catch (err: any) {
-      setStatusCode(err.response.status);
+      enqueueSnackbar(err.message, { variant: 'error' });
     }
     setRequesting(false);
   };
