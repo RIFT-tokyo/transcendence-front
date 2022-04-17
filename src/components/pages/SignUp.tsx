@@ -11,6 +11,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 import { AuthApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
+import { HOME_URL, SIGNIN_URL } from '../config/constants';
 
 interface State {
   username: string;
@@ -50,14 +51,6 @@ const SignUp = () => {
     });
   };
 
-  const goHome = () => {
-    navigate('/home');
-  };
-
-  const handleClick = () => {
-    navigate('/signin');
-  };
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const payload = {
@@ -66,9 +59,9 @@ const SignUp = () => {
     };
 
     try {
-      await authApi.postAuthSignup(payload, { withCredentials: true })
+      await authApi.postAuthSignup(payload, { withCredentials: true });
       await login();
-      goHome();
+      navigate(HOME_URL);
     } catch (err: any) {
       enqueueSnackbar(err.response.data.message, { variant: 'error' });
       handleErrorOccurred();
@@ -81,7 +74,7 @@ const SignUp = () => {
 
   useEffect(() => {
     if (authUser) {
-      goHome();
+      navigate(HOME_URL);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authUser]);
@@ -89,12 +82,10 @@ const SignUp = () => {
   return (
     <Container component="main" maxWidth="xs">
       <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
+        marginTop={8}
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
       >
         <img src="/auth/signup.svg" alt="Sign Up" height="320" />
         <Grid container item>
@@ -153,7 +144,8 @@ const SignUp = () => {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2, backgroundColor: '#448FA3' }}
+                color="primary"
+                sx={{ mt: 3, mb: 2 }}
               >
                 SIGN UP
               </Button>
@@ -162,13 +154,9 @@ const SignUp = () => {
               <Button
                 fullWidth
                 variant="contained"
-                sx={{
-                  mt: 3,
-                  mb: 2,
-                  color: '#1f3242',
-                  backgroundColor: '#e4dfe0',
-                }}
-                onClick={handleClick}
+                color="inherit"
+                sx={{ mt: 3, mb: 2 }}
+                onClick={() => navigate(SIGNIN_URL)}
               >
                 SIGN IN
               </Button>

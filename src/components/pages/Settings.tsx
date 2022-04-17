@@ -1,5 +1,6 @@
 import { Button, CircularProgress, Grid, Stack } from '@mui/material';
-import { useState, useEffect, useContext } from 'react';
+import * as React from 'react';
+import { useSnackbar } from 'notistack';
 import { User, UserApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
 import AccountSetting from '../model/AccountSetting';
@@ -12,29 +13,28 @@ type Props = {
   active: string;
 };
 
-const Settings: React.VFC<Props> = ({ active }) => {
+const Settings: React.VFC<Props> = ({ active }: Props) => {
   const actions = ['Account', 'Security'];
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = React.useState<User | null>(null);
   const userApi = new UserApi();
-  const [statusCode, setStatusCode] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(false);
-  const { authUser } = useContext(AuthContext);
+  const [statusCode, setStatusCode] = React.useState<number>(0);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const { authUser } = React.useContext(AuthContext);
+  const { enqueueSnackbar } = useSnackbar();
 
-  useEffect(() => {
+  React.useEffect(() => {
     setUser(authUser);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const reset = async () => {
     setLoading(true);
-    await userApi
-      .getMe({ withCredentials: true })
-      .then((res) => {
-        setUser(res.data);
-      })
-      .catch((err) => {
-        setStatusCode(err.response.status);
-      });
+    try {
+      const { data } = await userApi.getMe({ withCredentials: true });
+      setUser(data);
+    } catch (err: any) {
+      setStatusCode(err.response.status);
+    }
     setLoading(false);
   };
 
@@ -43,19 +43,19 @@ const Settings: React.VFC<Props> = ({ active }) => {
       return;
     }
     setLoading(true);
-    const data = {
+    const requestBody = {
       username: user.username,
       display_name: user.display_name,
       status_message: user.status_message,
     };
-    await userApi
-      .putUsersUserId(user.id!, data, { withCredentials: true })
-      .then((res) => {
-        setUser(res.data);
-      })
-      .catch((err) => {
-        setStatusCode(err.response.status);
+    try {
+      const { data } = await userApi.putUsersUserId(user.id!, requestBody, {
+        withCredentials: true,
       });
+      setUser(data);
+    } catch (err: any) {
+      enqueueSnackbar(err.response.data.message, { variant: 'error' });
+    }
     setLoading(false);
   };
 
@@ -66,8 +66,8 @@ const Settings: React.VFC<Props> = ({ active }) => {
     settingContent = <SecuritySetting />;
   }
 
-  const getFooter = (active: string) => {
-    if (active === 'Account') {
+  const getFooter = (activeSetting: string) => {
+    if (activeSetting === 'Account') {
       return (
         <Footer>
           <Stack direction="row" margin={2} spacing={2}>

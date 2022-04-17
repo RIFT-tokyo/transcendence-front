@@ -23,7 +23,7 @@ const GlobalMenuItems = [
   {
     icon: <SettingsIcon />,
     text: 'Setting',
-    to: SETTING_URL
+    to: SETTING_URL,
   },
 ];
 
