@@ -6,7 +6,7 @@ import { SnackbarProvider } from 'notistack';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from './contexts/AuthContext';
-import { ContextProvider } from './contexts/SocketContext';
+import { SocketProvider } from './contexts/SocketContext';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -19,9 +19,9 @@ ReactDOM.render(
         autoHideDuration={2000}
       >
         <AuthProvider>
-          <ContextProvider>
+          <SocketProvider>
             <App />
-          </ContextProvider>
+          </SocketProvider>
         </AuthProvider>
       </SnackbarProvider>
     </BrowserRouter>

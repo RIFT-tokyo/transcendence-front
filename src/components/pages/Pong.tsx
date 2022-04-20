@@ -2,6 +2,7 @@ import { Typography } from '@mui/material';
 import { useContext, useEffect } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import { SocketContext } from '../../contexts/SocketContext';
+import { EVENT } from '../config/constants';
 
 const Pong = () => {
   const { client } = useContext(SocketContext);
@@ -9,12 +10,15 @@ const Pong = () => {
 
   useEffect(() => {
     if (client) {
-      client.index.emit('ping');
-      client.users.emit('userStatus', { status: 'game', userID: authUser?.id });
+      client.index.emit(EVENT.PING);
+      client.users.emit(EVENT.USER_STATUS, {
+        status: 'game',
+        userID: authUser?.id,
+      });
     }
     return () => {
       if (client)
-        client.users.emit('userStatus', {
+        client.users.emit(EVENT.USER_STATUS, {
           status: 'online',
           userID: authUser?.id,
         });

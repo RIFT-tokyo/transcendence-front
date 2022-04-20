@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { User, UserApi, FollowApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
 import { SocketContext } from '../../contexts/SocketContext';
+import { EVENT } from '../config/constants';
 import FollowerList from '../model/FollowerList';
 import GameResult from '../model/GameResult';
 import UserCard from '../model/UserCard';
@@ -23,7 +24,6 @@ const UserProfile = () => {
   const { authUser, setAuthUser } = useContext(AuthContext);
   const { client } = useContext(SocketContext);
   const { enqueueSnackbar } = useSnackbar();
-
 
   const followUser = async (userId: number) => {
     if (isRequesting) {
@@ -140,11 +140,11 @@ const UserProfile = () => {
     };
 
     if (followers && followers?.length > 0 && client) {
-      client.users.on('userStatus', onUserStatus);
+      client.users.on(EVENT.USER_STATUS, onUserStatus);
     }
     return () => {
       if (followers && followers?.length > 0 && client) {
-        client.users.off('userStatus', onUserStatus);
+        client.users.off(EVENT.USER_STATUS, onUserStatus);
       }
     };
   }, [followers, client]);
