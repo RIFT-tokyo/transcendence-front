@@ -1,4 +1,4 @@
-import { ThemeProvider } from '@mui/material';
+import { Container, ThemeProvider } from '@mui/material';
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { useContext } from 'react';
 import theme from './components/config/theme';
@@ -11,6 +11,7 @@ import SignUp from './components/pages/SignUp';
 import Settings from './components/pages/Settings';
 import UserProfile from './components/pages/UserProfile';
 import AppBarWithMenu from './components/ui/AppBarWithMenu';
+import Footer from './components/ui/Footer';
 import { AuthContext } from './contexts/AuthContext';
 
 const PrivateRoute = () => {
@@ -26,35 +27,44 @@ const App = () => {
     <div className="App">
       <ThemeProvider theme={theme}>
         {isLoading ? null : (
-          <Routes>
-            <Route path="/" element={<AppBarWithMenu />}>
-              <Route path="" element={<PrivateRoute />}>
-                <Route path="home" element={<UserProfile />} />
-                <Route path="users">
-                  <Route path=":username" element={<UserProfile />} />
-                </Route>
-                <Route path="chat" element={<Chat />} />
-                <Route path="pong" element={<Pong />} />
-                <Route path="settings">
-                  <Route index element={<Navigate to="account" replace />} />
-                  <Route
-                    path="account"
-                    element={<Settings active="Account" />}
-                  />
-                  <Route
-                    path="security"
-                    element={<Settings active="Security" />}
-                  />
-                </Route>
-              </Route>
+          <>
+            <AppBarWithMenu />
+            <Container>
+              <Routes>
+                <Route path="/">
+                  <Route path="" element={<PrivateRoute />}>
+                    <Route path="home" element={<UserProfile />} />
+                    <Route path="users">
+                      <Route path=":username" element={<UserProfile />} />
+                    </Route>
+                    <Route path="chat" element={<Chat />} />
+                    <Route path="pong" element={<Pong />} />
+                    <Route path="settings">
+                      <Route
+                        index
+                        element={<Navigate to="account" replace />}
+                      />
+                      <Route
+                        path="account"
+                        element={<Settings active="Account" />}
+                      />
+                      <Route
+                        path="security"
+                        element={<Settings active="Security" />}
+                      />
+                    </Route>
+                  </Route>
 
-              <Route index element={<SignUp />} />
-              <Route path="signin" element={<SignIn />} />
-              <Route path="404" element={<NotFound />} />
-              <Route path="500" element={<InternalServerError />} />
-              <Route path="*" element={<Navigate to="404" />} />
-            </Route>
-          </Routes>
+                  <Route index element={<SignUp />} />
+                  <Route path="signin" element={<SignIn />} />
+                  <Route path="404" element={<NotFound />} />
+                  <Route path="500" element={<InternalServerError />} />
+                  <Route path="*" element={<Navigate to="404" />} />
+                </Route>
+              </Routes>
+            </Container>
+            <Footer />
+          </>
         )}
       </ThemeProvider>
     </div>
