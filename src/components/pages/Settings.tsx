@@ -5,8 +5,8 @@ import { User, UserApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
 import AccountSetting from '../model/AccountSetting';
 import SecuritySetting from '../model/SecuritySetting';
+import SettingBottomNavigation from '../model/SettingBottomNavigation';
 import ErrorRouter from '../ui/ErrorRouter';
-import Footer from '../ui/Footer';
 import SettingTab from '../ui/SettingTab';
 
 type Props = {
@@ -66,10 +66,10 @@ const Settings: React.VFC<Props> = ({ active }: Props) => {
     settingContent = <SecuritySetting />;
   }
 
-  const getFooter = (activeSetting: string) => {
+  const getSettingBottomNavigation = (activeSetting: string) => {
     if (activeSetting === 'Account') {
       return (
-        <Footer>
+        <SettingBottomNavigation>
           <Stack direction="row" margin={2} spacing={2}>
             <Button
               variant="contained"
@@ -88,7 +88,7 @@ const Settings: React.VFC<Props> = ({ active }: Props) => {
               save
             </Button>
           </Stack>
-        </Footer>
+        </SettingBottomNavigation>
       );
     }
     return null;
@@ -102,7 +102,7 @@ const Settings: React.VFC<Props> = ({ active }: Props) => {
           {settingContent}
         </Stack>
       </Grid>
-      {getFooter(active)}
+      {getSettingBottomNavigation(active)}
     </ErrorRouter>
   );
 };
