@@ -69,7 +69,7 @@ const AppBarWithMenu = () => {
 
   return (
     <div>
-      <Box sx={{ pt: 8 }}>
+      <Box sx={{ pt: 10 }}>
         <CssBaseline />
         <AppBar sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
           <Toolbar>

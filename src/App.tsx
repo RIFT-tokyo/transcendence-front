@@ -29,7 +29,7 @@ const App = () => {
         {isLoading ? null : (
           <>
             <AppBarWithMenu />
-            <Container>
+            <Container className="content">
               <Routes>
                 <Route path="/">
                   <Route path="" element={<PrivateRoute />}>
