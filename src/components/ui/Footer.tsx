@@ -42,9 +42,9 @@ const Footer: React.VFC = () => (
         color="text.secondary"
         component="p"
       >
-        {'uses '}
+        {'App icon by '}
         <Link color="inherit" href="https://icons8.com">
-          icons8.com
+          icons8
         </Link>{' '}
       </Typography>
       <Copyright />
