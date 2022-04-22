@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@mui/material';
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import theme from './components/config/theme';
 import Chat from './components/pages/Chat';
 import InternalServerError from './components/pages/InternalServerError';
@@ -12,9 +12,17 @@ import Settings from './components/pages/Settings';
 import UserProfile from './components/pages/UserProfile';
 import AppBarWithMenu from './components/ui/AppBarWithMenu';
 import { AuthContext } from './contexts/AuthContext';
+import { SocketContext } from './contexts/SocketContext';
 
 const PrivateRoute = () => {
+  const { client, connect } = useContext(SocketContext);
   const { authUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (authUser) {
+      if (client === null) connect(authUser.id);
+    }
+  }, [client]);
 
   return authUser ? <Outlet /> : <Navigate to="signin" />;
 };
