@@ -4,6 +4,8 @@ import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { User, UserApi, FollowApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
+import { SocketContext } from '../../contexts/SocketContext';
+import { EVENT } from '../config/constants';
 import FollowerList from '../model/FollowerList';
 import GameResult from '../model/GameResult';
 import UserCard from '../model/UserCard';
@@ -20,6 +22,7 @@ const UserProfile = () => {
   const followApi = new FollowApi();
   const { username } = useParams();
   const { authUser, setAuthUser } = useContext(AuthContext);
+  const { client } = useContext(SocketContext);
   const { enqueueSnackbar } = useSnackbar();
 
   const followUser = async (userId: number) => {
@@ -124,6 +127,27 @@ const UserProfile = () => {
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
+
+  useEffect(() => {
+    const onUserStatus = (data: { status: string; userID: number }) => {
+      const updatedFollowers = followers?.map((follower) => {
+        if (follower.id === data.userID) {
+          return { ...follower, status: data.status } as User;
+        }
+        return follower;
+      });
+      setFollowers(updatedFollowers || null);
+    };
+
+    if (followers && followers?.length > 0 && client) {
+      client.users.on(EVENT.USER_STATUS, onUserStatus);
+    }
+    return () => {
+      if (followers && followers?.length > 0 && client) {
+        client.users.off(EVENT.USER_STATUS, onUserStatus);
+      }
+    };
+  }, [followers, client]);
 
   return (
     <ErrorRouter statusCode={statusCode}>
