@@ -161,7 +161,7 @@ const UserProfile = () => {
         />
       ) : null}
       <Container>
-        <Stack direction="row" margin={2} spacing={2}>
+        <Stack direction="row" marginY={2} spacing={2}>
           <Stack direction="column" margin={2} spacing={2}>
             <UserCard
               user={user}
