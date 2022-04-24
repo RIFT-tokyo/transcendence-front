@@ -51,7 +51,9 @@ const UserCard: React.VFC<Props> = ({
         sx={{
           width: 296,
           height: 296,
-          bgcolor: user?.profile_image ? undefined : stringToColor(user?.username ?? ''),
+          bgcolor: user?.profile_image
+            ? undefined
+            : stringToColor(user?.username ?? ''),
         }}
         src={user?.profile_image}
       />

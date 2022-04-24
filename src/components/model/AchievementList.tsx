@@ -33,10 +33,7 @@ const AchievementBadge = ({ achievement }: AchievementBadgeProps) => {
           alt={achievement.name}
         />
       </Stack>
-      <Modal
-        open={isOpenModal}
-        onClose={() => toggleModal(false)}
-      >
+      <Modal open={isOpenModal} onClose={() => toggleModal(false)}>
         <Box sx={style}>
           <Stack direction="row" alignItems="center">
             <img
@@ -54,15 +51,19 @@ const AchievementBadge = ({ achievement }: AchievementBadgeProps) => {
       </Modal>
     </Stack>
   );
-}
+};
 
 const AchievementList = ({ achievements }: AchievementListProps) => (
   <Stack>
-    <Typography sx={{ fontWeight: 'bold' }} variant='h5'>Achievements</Typography>
+    <Typography sx={{ fontWeight: 'bold' }} variant="h5">
+      Achievements
+    </Typography>
     <Stack direction="row">
-      {achievements.map((achievement) => <AchievementBadge key={achievement.name} achievement={achievement} />)}
+      {achievements.map((achievement) => (
+        <AchievementBadge key={achievement.name} achievement={achievement} />
+      ))}
     </Stack>
   </Stack>
-)
+);
 
 export default AchievementList;

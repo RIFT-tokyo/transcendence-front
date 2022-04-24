@@ -37,7 +37,11 @@ const FollowerStatus: React.VFC<Props> = ({ user }: Props) => {
       alignItems="center"
       justifyContent="space-between"
     >
-      <Link component={NavLink} underline="none" to={`/users/${user?.username}`}>
+      <Link
+        component={NavLink}
+        underline="none"
+        to={`/users/${user?.username}`}
+      >
         <StyledBadge
           color={selectBadgeColor(user?.status)}
           overlap="circular"
@@ -48,7 +52,9 @@ const FollowerStatus: React.VFC<Props> = ({ user }: Props) => {
             sx={{
               width: 40,
               height: 40,
-              bgcolor: user?.profile_image ? undefined : stringToColor(user?.username ?? ''),
+              bgcolor: user?.profile_image
+                ? undefined
+                : stringToColor(user?.username ?? ''),
             }}
             src={user?.profile_image}
           >

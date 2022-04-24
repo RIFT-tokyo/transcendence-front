@@ -1,4 +1,14 @@
-import { Table, TableContainer, TableHead, TableRow, TableCell, TableBody, Typography, Avatar, Stack } from '@mui/material';
+import {
+  Table,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Typography,
+  Avatar,
+  Stack,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { Match, MatchApi } from '../../api/generated';
@@ -17,35 +27,25 @@ const MatchHistory = () => {
 
   useEffect(() => {
     fetchMatches();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <TableContainer
-      sx={{height: 790}}
-    >
+    <TableContainer sx={{ height: 790 }}>
       <Table>
         <TableHead>
           <TableRow>
             <TableCell>
-              <Typography variant="h6">
-                Host Player
-              </Typography>
+              <Typography variant="h6">Host Player</Typography>
             </TableCell>
             <TableCell>
-              <Typography variant="h6">
-                Guest Player
-              </Typography>
+              <Typography variant="h6">Guest Player</Typography>
             </TableCell>
             <TableCell>
-              <Typography variant="h6">
-                Points
-              </Typography>
+              <Typography variant="h6">Points</Typography>
             </TableCell>
             <TableCell>
-              <Typography variant="h6">
-                Date
-              </Typography>
+              <Typography variant="h6">Date</Typography>
             </TableCell>
           </TableRow>
         </TableHead>
@@ -58,7 +58,9 @@ const MatchHistory = () => {
                     sx={{
                       width: 30,
                       height: 30,
-                      bgcolor: match.host_player?.profile_image ? undefined : stringToColor(match.host_player?.username ?? ''),
+                      bgcolor: match.host_player?.profile_image
+                        ? undefined
+                        : stringToColor(match.host_player?.username ?? ''),
                     }}
                     src={match.host_player?.profile_image}
                   >
@@ -66,8 +68,10 @@ const MatchHistory = () => {
                   </Avatar>
                   <Typography
                     padding={1}
-                    variant='body1'
-                    sx={{fontWeight: match.result === 'host' ? 'bold' : undefined}}
+                    variant="body1"
+                    sx={{
+                      fontWeight: match.result === 'host' ? 'bold' : undefined,
+                    }}
                   >
                     {match.host_player?.username}
                   </Typography>
@@ -79,7 +83,9 @@ const MatchHistory = () => {
                     sx={{
                       width: 30,
                       height: 30,
-                      bgcolor: match.guest_player?.profile_image ? undefined : stringToColor(match.guest_player?.username ?? ''),
+                      bgcolor: match.guest_player?.profile_image
+                        ? undefined
+                        : stringToColor(match.guest_player?.username ?? ''),
                     }}
                     src={match.guest_player?.profile_image}
                   >
@@ -87,20 +93,22 @@ const MatchHistory = () => {
                   </Avatar>
                   <Typography
                     padding={1}
-                    variant='body1'
-                    sx={{fontWeight: match.result === 'guest' ? 'bold' : undefined}}
+                    variant="body1"
+                    sx={{
+                      fontWeight: match.result === 'guest' ? 'bold' : undefined,
+                    }}
                   >
                     {match.guest_player?.username}
                   </Typography>
                 </Stack>
               </TableCell>
               <TableCell>
-                <Typography variant='body1'>
-                {match.host_player_points} vs {match.guest_player_points}
+                <Typography variant="body1">
+                  {match.host_player_points} vs {match.guest_player_points}
                 </Typography>
               </TableCell>
               <TableCell>
-                <Typography variant='body1'>
+                <Typography variant="body1">
                   {format(new Date(match.end_at!), 'yyyy/MM/dd HH:mm')}
                 </Typography>
               </TableCell>
@@ -110,6 +118,6 @@ const MatchHistory = () => {
       </Table>
     </TableContainer>
   );
-}
+};
 
 export default MatchHistory;

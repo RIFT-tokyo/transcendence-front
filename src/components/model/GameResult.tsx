@@ -40,10 +40,26 @@ const GameResult = () => {
       }}
     >
       <Box>
-        <Tabs value={value} onChange={handleChange} aria-label="game result tabs">
-          <Tab label="match" id="game-result-0" aria-controls="game-result-tabpanel-0" />
-          <Tab label="ranking" id="game-result-1" aria-controls="game-result-tabpanel-1" />
-          <Tab label="level" id="game-result-2" aria-controls="game-result-tabpanel-2" />
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="game result tabs"
+        >
+          <Tab
+            label="match"
+            id="game-result-0"
+            aria-controls="game-result-tabpanel-0"
+          />
+          <Tab
+            label="ranking"
+            id="game-result-1"
+            aria-controls="game-result-tabpanel-1"
+          />
+          <Tab
+            label="level"
+            id="game-result-2"
+            aria-controls="game-result-tabpanel-2"
+          />
         </Tabs>
         <TabPanel value={value} index={0}>
           <MatchHistory />
@@ -57,5 +73,5 @@ const GameResult = () => {
       </Box>
     </Stack>
   );
-}
+};
 export default GameResult;
