@@ -18,7 +18,6 @@ const AchievementBadge = ({ achievement }: AchievementBadgeProps) => (
 const AchievementList = ({ achievements }: AchievementListProps) => (
   <Stack>
     <Typography sx={{ fontWeight: 'bold' }} variant='h5'>Achievements</Typography>
-    { achievements.length === 0 && <Typography variant='body1'>No achievements yet</Typography> }
     <Stack direction="row">
       {achievements.map((achievement) => <AchievementBadge key={achievement.name} achievement={achievement} />)}
     </Stack>

@@ -172,7 +172,7 @@ const UserProfile = () => {
               unfollowUser={unfollowUser}
             />
             {isOwner ? <FollowerList followers={followers} /> : null}
-            <AchievementList achievements={user?.achievements ?? []} />
+            {user?.achievements && user.achievements.length > 0 && <AchievementList achievements={user.achievements} />}
           </Stack>
           <Divider orientation="vertical" flexItem />
           <Stack spacing={2}>
