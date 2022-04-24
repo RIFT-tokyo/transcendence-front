@@ -805,123 +805,6 @@ export class AuthApi extends BaseAPI implements AuthApiInterface {
 
 
 /**
- * DefaultApi - axios parameter creator
- * @export
- */
-export const DefaultApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Your GET endpoint
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getMatches: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/matches`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication sessionAuth required
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * DefaultApi - functional programming interface
- * @export
- */
-export const DefaultApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = DefaultApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * 
-         * @summary Your GET endpoint
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getMatches(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Match>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getMatches(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-    }
-};
-
-/**
- * DefaultApi - factory interface
- * @export
- */
-export const DefaultApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = DefaultApiFp(configuration)
-    return {
-        /**
-         * 
-         * @summary Your GET endpoint
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getMatches(options?: any): AxiosPromise<Array<Match>> {
-            return localVarFp.getMatches(options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * DefaultApi - interface
- * @export
- * @interface DefaultApi
- */
-export interface DefaultApiInterface {
-    /**
-     * 
-     * @summary Your GET endpoint
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DefaultApiInterface
-     */
-    getMatches(options?: AxiosRequestConfig): AxiosPromise<Array<Match>>;
-
-}
-
-/**
- * DefaultApi - object-oriented interface
- * @export
- * @class DefaultApi
- * @extends {BaseAPI}
- */
-export class DefaultApi extends BaseAPI implements DefaultApiInterface {
-    /**
-     * 
-     * @summary Your GET endpoint
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DefaultApi
-     */
-    public getMatches(options?: AxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).getMatches(options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
  * FollowApi - axios parameter creator
  * @export
  */
@@ -1402,6 +1285,123 @@ export class FollowApi extends BaseAPI implements FollowApiInterface {
      */
     public putUsersFollowingUserID(userID: number, options?: AxiosRequestConfig) {
         return FollowApiFp(this.configuration).putUsersFollowingUserID(userID, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * MatchApi - axios parameter creator
+ * @export
+ */
+export const MatchApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Your GET endpoint
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMatches: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/matches`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication sessionAuth required
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * MatchApi - functional programming interface
+ * @export
+ */
+export const MatchApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = MatchApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Your GET endpoint
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getMatches(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Match>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getMatches(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * MatchApi - factory interface
+ * @export
+ */
+export const MatchApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = MatchApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Your GET endpoint
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMatches(options?: any): AxiosPromise<Array<Match>> {
+            return localVarFp.getMatches(options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * MatchApi - interface
+ * @export
+ * @interface MatchApi
+ */
+export interface MatchApiInterface {
+    /**
+     * 
+     * @summary Your GET endpoint
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MatchApiInterface
+     */
+    getMatches(options?: AxiosRequestConfig): AxiosPromise<Array<Match>>;
+
+}
+
+/**
+ * MatchApi - object-oriented interface
+ * @export
+ * @class MatchApi
+ * @extends {BaseAPI}
+ */
+export class MatchApi extends BaseAPI implements MatchApiInterface {
+    /**
+     * 
+     * @summary Your GET endpoint
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MatchApi
+     */
+    public getMatches(options?: AxiosRequestConfig) {
+        return MatchApiFp(this.configuration).getMatches(options).then((request) => request(this.axios, this.basePath));
     }
 }
 
