@@ -8,9 +8,11 @@ import {
   Typography,
   Avatar,
   Stack,
+  Link,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
+import { NavLink } from 'react-router-dom';
 import { Match, MatchApi } from '../../api/generated';
 import stringToColor from '../../functions/stringToColor';
 
@@ -53,54 +55,70 @@ const MatchHistory = () => {
           {matches.map((match) => (
             <TableRow key={match.id}>
               <TableCell>
-                <Stack direction="row" alignItems="center">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30,
-                      bgcolor: match.host_player?.profile_image
-                        ? undefined
-                        : stringToColor(match.host_player?.username ?? ''),
-                    }}
-                    src={match.host_player?.profile_image}
-                  >
-                    {match.host_player?.username?.slice(0, 2) ?? ''}
-                  </Avatar>
-                  <Typography
-                    padding={1}
-                    variant="body1"
-                    sx={{
-                      fontWeight: match.result === 'host' ? 'bold' : undefined,
-                    }}
-                  >
-                    {match.host_player?.username}
-                  </Typography>
-                </Stack>
+                <Link
+                  component={NavLink}
+                  underline="none"
+                  color="inherit"
+                  to={`/users/${match.host_player?.username}`}
+                >
+                  <Stack direction="row" alignItems="center">
+                    <Avatar
+                      sx={{
+                        width: 30,
+                        height: 30,
+                        bgcolor: match.host_player?.profile_image
+                          ? undefined
+                          : stringToColor(match.host_player?.username ?? ''),
+                      }}
+                      src={match.host_player?.profile_image}
+                    >
+                      {match.host_player?.username?.slice(0, 2) ?? ''}
+                    </Avatar>
+                    <Typography
+                      padding={1}
+                      variant="body1"
+                      sx={{
+                        fontWeight:
+                          match.result === 'host' ? 'bold' : undefined,
+                      }}
+                    >
+                      {match.host_player?.username}
+                    </Typography>
+                  </Stack>
+                </Link>
               </TableCell>
               <TableCell>
-                <Stack direction="row" alignItems="center">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30,
-                      bgcolor: match.guest_player?.profile_image
-                        ? undefined
-                        : stringToColor(match.guest_player?.username ?? ''),
-                    }}
-                    src={match.guest_player?.profile_image}
-                  >
-                    {match.guest_player?.username?.slice(0, 2) ?? ''}
-                  </Avatar>
-                  <Typography
-                    padding={1}
-                    variant="body1"
-                    sx={{
-                      fontWeight: match.result === 'guest' ? 'bold' : undefined,
-                    }}
-                  >
-                    {match.guest_player?.username}
-                  </Typography>
-                </Stack>
+                <Link
+                  component={NavLink}
+                  underline="none"
+                  color="inherit"
+                  to={`/users/${match.guest_player?.username}`}
+                >
+                  <Stack direction="row" alignItems="center">
+                    <Avatar
+                      sx={{
+                        width: 30,
+                        height: 30,
+                        bgcolor: match.guest_player?.profile_image
+                          ? undefined
+                          : stringToColor(match.guest_player?.username ?? ''),
+                      }}
+                      src={match.guest_player?.profile_image}
+                    >
+                      {match.guest_player?.username?.slice(0, 2) ?? ''}
+                    </Avatar>
+                    <Typography
+                      padding={1}
+                      variant="body1"
+                      sx={{
+                        fontWeight:
+                          match.result === 'guest' ? 'bold' : undefined,
+                      }}
+                    >
+                      {match.guest_player?.username}
+                    </Typography>
+                  </Stack>
+                </Link>
               </TableCell>
               <TableCell>
                 <Typography variant="body1">
