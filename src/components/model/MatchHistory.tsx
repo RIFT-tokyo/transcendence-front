@@ -31,7 +31,7 @@ const MatchHistory = () => {
   }, []);
 
   return (
-    <TableContainer sx={{ height: 790 }}>
+    <TableContainer sx={{ height: 900 }}>
       <Table>
         <TableHead>
           <TableRow>

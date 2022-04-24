@@ -36,7 +36,7 @@ const GameResult = () => {
     <Stack
       sx={{
         width: 810,
-        height: 790,
+        height: 900,
       }}
     >
       <Box>
