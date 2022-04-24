@@ -71,7 +71,7 @@ const AppBarWithMenu = () => {
     <div>
       <Box sx={{ pt: 8 }}>
         <CssBaseline />
-        <AppBar sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+        <AppBar>
           <Toolbar>
             <IconButton
               size="large"

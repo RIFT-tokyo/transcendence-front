@@ -31,6 +31,10 @@ const theme = createTheme({
       fontSize: '2rem',
     },
   },
+  zIndex: {
+    appBar: 1200,
+    drawer: 1100,
+  }
 });
 
 declare module '@mui/material/styles' {
