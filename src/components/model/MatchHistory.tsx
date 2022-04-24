@@ -1,6 +1,8 @@
-import { Table, TableContainer, Paper, TableHead, TableRow, TableCell, TableBody, Typography } from '@mui/material';
+import { Table, TableContainer, TableHead, TableRow, TableCell, TableBody, Typography, Avatar, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { format } from 'date-fns';
 import { Match, MatchApi } from '../../api/generated';
+import stringToColor from '../../functions/stringToColor';
 
 const MatchHistory = () => {
   const [matches, setMatches] = useState<Match[]>([]);
@@ -20,39 +22,88 @@ const MatchHistory = () => {
 
   return (
     <TableContainer
-      component={Paper}
-      sx={{height: '85vh'}}
+      sx={{height: 790}}
     >
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Host Player</TableCell>
-            <TableCell>Guest Player</TableCell>
-            <TableCell>Points</TableCell>
-            <TableCell>Date</TableCell>
+            <TableCell>
+              <Typography variant="h6">
+                Host Player
+              </Typography>
+            </TableCell>
+            <TableCell>
+              <Typography variant="h6">
+                Guest Player
+              </Typography>
+            </TableCell>
+            <TableCell>
+              <Typography variant="h6">
+                Points
+              </Typography>
+            </TableCell>
+            <TableCell>
+              <Typography variant="h6">
+                Date
+              </Typography>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody sx={{ overflowY: 'auto' }}>
           {matches.map((match) => (
             <TableRow key={match.id}>
               <TableCell>
-                <Typography
-                  color={match.result === 'host' ? 'primary': undefined}
-                  sx={{fontWeight: match.result === 'host' ? 'bold' : undefined}}
-                >
-                  {match.host_player?.username}
+                <Stack direction="row" alignItems="center">
+                  <Avatar
+                    sx={{
+                      width: 30,
+                      height: 30,
+                      bgcolor: match.host_player?.profile_image ? undefined : stringToColor(match.host_player?.username ?? ''),
+                    }}
+                    src={match.host_player?.profile_image}
+                  >
+                    {match.host_player?.username?.slice(0, 2) ?? ''}
+                  </Avatar>
+                  <Typography
+                    padding={1}
+                    variant='body1'
+                    sx={{fontWeight: match.result === 'host' ? 'bold' : undefined}}
+                  >
+                    {match.host_player?.username}
+                  </Typography>
+                </Stack>
+              </TableCell>
+              <TableCell>
+                <Stack direction="row" alignItems="center">
+                  <Avatar
+                    sx={{
+                      width: 30,
+                      height: 30,
+                      bgcolor: match.guest_player?.profile_image ? undefined : stringToColor(match.guest_player?.username ?? ''),
+                    }}
+                    src={match.guest_player?.profile_image}
+                  >
+                    {match.guest_player?.username?.slice(0, 2) ?? ''}
+                  </Avatar>
+                  <Typography
+                    padding={1}
+                    variant='body1'
+                    sx={{fontWeight: match.result === 'guest' ? 'bold' : undefined}}
+                  >
+                    {match.guest_player?.username}
+                  </Typography>
+                </Stack>
+              </TableCell>
+              <TableCell>
+                <Typography variant='body1'>
+                {match.host_player_points} vs {match.guest_player_points}
                 </Typography>
               </TableCell>
               <TableCell>
-                <Typography
-                  color={match.result === 'guest' ? 'primary': undefined}
-                  sx={{fontWeight: match.result === 'guest' ? 'bold' : undefined}}
-                >
-                  {match.guest_player?.username}
+                <Typography variant='body1'>
+                  {format(new Date(match.end_at!), 'yyyy/MM/dd HH:mm')}
                 </Typography>
               </TableCell>
-              <TableCell>{match.host_player_points} vs {match.guest_player_points}</TableCell>
-              <TableCell>{match.end_at}</TableCell>
             </TableRow>
           ))}
         </TableBody>
