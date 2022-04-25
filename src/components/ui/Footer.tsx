@@ -15,16 +15,7 @@ const Copyright = () => (
 );
 
 const Footer: React.VFC = () => (
-  <Box
-    component="footer"
-    sx={{
-      bgcolor: 'background.paper',
-      width: '100%',
-      position: 'static',
-      bottom: 0,
-      pb: 10,
-    }}
-  >
+  <Box component="footer" sx={{ pb: 10 }}>
     <Container>
       <Typography
         variant="h6"
