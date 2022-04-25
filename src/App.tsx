@@ -1,4 +1,4 @@
-import { Container, ThemeProvider } from '@mui/material';
+import { Box, ThemeProvider } from '@mui/material';
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { useContext } from 'react';
 import theme from './components/config/theme';
@@ -29,7 +29,7 @@ const App = () => {
         {isLoading ? null : (
           <>
             <AppBarWithMenu />
-            <Container className="content">
+            <Box sx={{ minHeight: 'calc(100vh - 248px)' }}>
               <Routes>
                 <Route path="/">
                   <Route path="" element={<PrivateRoute />}>
@@ -62,7 +62,7 @@ const App = () => {
                   <Route path="*" element={<Navigate to="404" />} />
                 </Route>
               </Routes>
-            </Container>
+            </Box>
             <Footer />
           </>
         )}

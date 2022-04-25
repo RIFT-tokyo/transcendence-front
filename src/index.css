@@ -12,7 +12,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
-.content {
-  min-height: calc(100vh - 200px);
-}
