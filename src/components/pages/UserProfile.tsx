@@ -161,8 +161,8 @@ const UserProfile = () => {
         />
       ) : null}
       <Container component="main">
-        <Stack direction="row" height='calc(100vh - 64px)'>
-          <Stack direction="column" margin={2} spacing={2}>
+        <Stack direction="row">
+          <Stack direction="column" margin={2} spacing={2} width={296}>
             <UserCard
               user={user}
               isOwner={isOwner}

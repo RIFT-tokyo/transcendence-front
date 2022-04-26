@@ -15,7 +15,7 @@ const Copyright = () => (
 );
 
 const GlobalFooter: React.VFC = () => (
-  <Box component="footer" sx={{ pb: 10 }}>
+  <Box component="footer" height={72}>
     <Container>
       <Typography
         variant="h6"

@@ -16,6 +16,7 @@ import { AuthApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
 import GlobalMenu from './GlobalMenu';
 import { SETTING_URL } from '../config/constants';
+import GlobalFooter from './GlobalFooter';
 
 const AppBarWithMenu = () => {
   const { logout } = React.useContext(AuthContext);
@@ -125,8 +126,11 @@ const AppBarWithMenu = () => {
         </Toolbar>
       </AppBar>
       <GlobalMenu open={openDrawer} onClose={toggleDrawer(false)} />
-      <Box sx={{ pt: 8 }}>
-        <Outlet />
+      <Box height='calc(100vh - 64px)' sx={{ mt: 8, overflowY: 'auto' }}>
+        <Box minHeight='calc(100vh - 136px)'>
+          <Outlet />
+        </Box>
+        <GlobalFooter />
       </Box>
     </div>
   );

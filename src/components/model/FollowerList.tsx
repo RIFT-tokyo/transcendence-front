@@ -8,14 +8,14 @@ type Props = {
 };
 
 const FollowerList: React.VFC<Props> = ({ followers }: Props) => (
-  <Stack
-    width={296}
-    height={384}
-  >
+  <Stack>
     <Typography sx={{ fontWeight: 'bold' }} variant="h5">
       Followings
     </Typography>
-    <Stack sx={{ overflowY: 'auto' }}>
+    <Stack
+      maxHeight={256}
+      sx={{ overflowY: 'auto' }}
+    >
       {followers?.map((follower) => (
         <FollowerStatus key={follower.id} user={follower} />
       ))}
