@@ -33,45 +33,38 @@ const GameResult = () => {
   };
 
   return (
-    <Stack
-      sx={{
-        width: 810,
-        height: 900,
-      }}
-    >
-      <Box>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="game result tabs"
-        >
-          <Tab
-            label="match"
-            id="game-result-0"
-            aria-controls="game-result-tabpanel-0"
-          />
-          <Tab
-            label="ranking"
-            id="game-result-1"
-            aria-controls="game-result-tabpanel-1"
-          />
-          <Tab
-            label="level"
-            id="game-result-2"
-            aria-controls="game-result-tabpanel-2"
-          />
-        </Tabs>
-        <TabPanel value={value} index={0}>
-          <MatchHistory />
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          ranking
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-          level
-        </TabPanel>
-      </Box>
-    </Stack>
+    <Box>
+      <Tabs
+        value={value}
+        onChange={handleChange}
+        aria-label="game result tabs"
+      >
+        <Tab
+          label="match"
+          id="game-result-0"
+          aria-controls="game-result-tabpanel-0"
+        />
+        <Tab
+          label="ranking"
+          id="game-result-1"
+          aria-controls="game-result-tabpanel-1"
+        />
+        <Tab
+          label="level"
+          id="game-result-2"
+          aria-controls="game-result-tabpanel-2"
+        />
+      </Tabs>
+      <TabPanel value={value} index={0}>
+        <MatchHistory />
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        ranking
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        level
+      </TabPanel>
+    </Box>
   );
 };
 export default GameResult;

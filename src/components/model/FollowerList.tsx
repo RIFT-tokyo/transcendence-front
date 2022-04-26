@@ -9,10 +9,8 @@ type Props = {
 
 const FollowerList: React.VFC<Props> = ({ followers }: Props) => (
   <Stack
-    sx={{
-      width: 296,
-      height: 384,
-    }}
+    width={296}
+    height={384}
   >
     <Typography sx={{ fontWeight: 'bold' }} variant="h5">
       Followings

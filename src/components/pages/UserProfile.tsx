@@ -160,8 +160,8 @@ const UserProfile = () => {
           }}
         />
       ) : null}
-      <Container>
-        <Stack direction="row" marginY={2} spacing={2}>
+      <Container component="main">
+        <Stack direction="row" height='calc(100vh - 64px)'>
           <Stack direction="column" margin={2} spacing={2}>
             <UserCard
               user={user}
@@ -176,8 +176,8 @@ const UserProfile = () => {
               <AchievementList achievements={user.achievements} />
             )}
           </Stack>
-          <Divider orientation="vertical" flexItem />
-          <Stack spacing={2}>
+          <Divider orientation="vertical" flexItem variant='middle' />
+          <Stack margin={2} width='100%'>
             <GameResult />
           </Stack>
         </Stack>
