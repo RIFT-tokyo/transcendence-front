@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { User, UserApi, FollowApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
+import AchievementList from '../model/AchievementList';
 import { SocketContext } from '../../contexts/SocketContext';
 import { EVENT } from '../config/constants';
 import FollowerList from '../model/FollowerList';
@@ -159,9 +160,9 @@ const UserProfile = () => {
           }}
         />
       ) : null}
-      <Container>
-        <Stack direction="row" margin={2} spacing={2}>
-          <Stack direction="column" margin={2} spacing={2}>
+      <Container component="main">
+        <Stack direction="row">
+          <Stack direction="column" margin={2} spacing={2} width={296}>
             <UserCard
               user={user}
               isOwner={isOwner}
@@ -171,9 +172,12 @@ const UserProfile = () => {
               unfollowUser={unfollowUser}
             />
             {isOwner ? <FollowerList followers={followers} /> : null}
+            {user?.achievements && user.achievements.length > 0 && (
+              <AchievementList achievements={user.achievements} />
+            )}
           </Stack>
-          <Divider orientation="vertical" flexItem />
-          <Stack spacing={2}>
+          <Divider orientation="vertical" flexItem variant='middle' />
+          <Stack margin={2} width='100%'>
             <GameResult />
           </Stack>
         </Stack>

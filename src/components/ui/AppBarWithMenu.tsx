@@ -6,7 +6,6 @@ import {
   Box,
   Menu,
   MenuItem,
-  CssBaseline,
 } from '@mui/material';
 import * as React from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -17,6 +16,7 @@ import { AuthApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
 import GlobalMenu from './GlobalMenu';
 import { SETTING_URL } from '../config/constants';
+import GlobalFooter from './GlobalFooter';
 
 const AppBarWithMenu = () => {
   const { logout } = React.useContext(AuthContext);
@@ -69,67 +69,69 @@ const AppBarWithMenu = () => {
 
   return (
     <div>
-      <Box sx={{ pt: 8 }}>
-        <CssBaseline />
-        <AppBar sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-          <Toolbar>
+      <AppBar>
+        <Toolbar>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+            onClick={toggleDrawer(!openDrawer)}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography
+            variant="h5"
+            onClick={goHome}
+            sx={{
+              flexGrow: 1,
+              fontFamily: 'Zen Tokyo Zoo',
+              cursor: 'pointer',
+            }}
+          >
+            TRANSCENDENCE
+          </Typography>
+          <div>
             <IconButton
               size="large"
-              edge="start"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleMenu}
               color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2 }}
-              onClick={toggleDrawer(!openDrawer)}
             >
-              <MenuIcon />
+              <AccountCircle />
             </IconButton>
-            <Typography
-              variant="h5"
-              onClick={goHome}
-              sx={{
-                flexGrow: 1,
-                fontFamily: 'Zen Tokyo Zoo',
-                cursor: 'pointer',
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
               }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
             >
-              TRANSCENDENCE
-            </Typography>
-            <div>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={goHome}>Profile</MenuItem>
-                <MenuItem onClick={goToSettings}>Settings</MenuItem>
-                <MenuItem onClick={logOut}>Logout</MenuItem>
-              </Menu>
-            </div>
-          </Toolbar>
-        </AppBar>
-        <GlobalMenu open={openDrawer} onClose={toggleDrawer(false)} />
+              <MenuItem onClick={goHome}>Profile</MenuItem>
+              <MenuItem onClick={goToSettings}>Settings</MenuItem>
+              <MenuItem onClick={logOut}>Logout</MenuItem>
+            </Menu>
+          </div>
+        </Toolbar>
+      </AppBar>
+      <GlobalMenu open={openDrawer} onClose={toggleDrawer(false)} />
+      <Box height='calc(100vh - 64px)' sx={{ mt: 8, overflowY: 'auto' }}>
+        <Box minHeight='calc(100vh - 136px)'>
+          <Outlet />
+        </Box>
+        <GlobalFooter />
       </Box>
-      <Outlet />
     </div>
   );
 };

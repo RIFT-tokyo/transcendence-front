@@ -1,4 +1,4 @@
-import { Avatar, Divider, Stack, TextField, Typography } from '@mui/material';
+import { Avatar, Button, Divider, Stack, TextField, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { VFC, ChangeEvent } from 'react';
 import { User } from '../../api/generated/api';
@@ -9,9 +9,11 @@ type Props = {
   user: User;
   // eslint-disable-next-line no-unused-vars
   setUser: (user: User) => void;
+  submit: () => void;
+  reset: () => void;
 };
 
-const AccountSetting: VFC<Props> = ({ user, setUser }: Props) => {
+const AccountSetting: VFC<Props> = ({ user, setUser, submit, reset }: Props) => {
   const fileUploadApi = new FileUploadApi();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -62,7 +64,26 @@ const AccountSetting: VFC<Props> = ({ user, setUser }: Props) => {
           variant="outlined"
           value={user.status_message ?? ''}
           onChange={handleChange('status_message')}
+
         />
+        <Button
+          fullWidth
+          variant="contained"
+          color="primary"
+          size="medium"
+          onClick={submit}
+        >
+          save
+        </Button>
+        <Button
+          fullWidth
+          variant="contained"
+          color="inherit"
+          size="medium"
+          onClick={reset}
+        >
+          reset
+        </Button>
       </Stack>
     </Stack>
   );

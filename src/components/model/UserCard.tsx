@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Avatar, Button, Typography, Stack } from '@mui/material';
+import { Avatar, Button, Typography, Stack, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import * as React from 'react';
 import { User } from '../../api/generated/api';
@@ -44,27 +44,36 @@ const UserCard: React.VFC<Props> = ({
       followUser(user.id);
     }
   };
+  const displayName = () => {
+    if (!user?.display_name) {
+      return user?.username;
+    }
+    return user.display_name;
+  }
 
   return (
-    <Stack sx={{ width: 296 }}>
+    <Box>
       <Avatar
         sx={{
           width: 296,
           height: 296,
-          bgcolor: user?.profile_image ? undefined : stringToColor(user?.username ?? ''),
+          bgcolor: user?.profile_image
+            ? undefined
+            : stringToColor(user?.username ?? ''),
         }}
         src={user?.profile_image}
       />
-      <Typography sx={{ fontWeight: 'bold' }} variant="h4">
-        {user?.display_name ?? user?.username}
+      <Typography sx={{ fontWeight: 'bold' }} variant="h4" marginTop={1}>
+        {displayName()}
       </Typography>
-      <Typography variant="h6">{user?.username}</Typography>
+      <Typography variant="h6">{user?.display_name ? user?.username : ''}</Typography>
       <Typography variant="body1">{user?.status_message}</Typography>
       <Typography variant="subtitle1">
         {user?.followers} followers, {user?.following} followings
       </Typography>
       <Button
-        sx={{ width: 296, height: 30 }}
+        size='small'
+        fullWidth
         color="inherit"
         variant="contained"
         disabled={disabled}
@@ -72,7 +81,7 @@ const UserCard: React.VFC<Props> = ({
       >
         {buttonText()}
       </Button>
-    </Stack>
+    </Box>
   );
 };
 
