@@ -82,6 +82,7 @@ const SignUp = () => {
   return (
     <Container component="main" maxWidth="xs">
       <Box
+        component="div"
         marginTop={8}
         display="flex"
         flexDirection="column"

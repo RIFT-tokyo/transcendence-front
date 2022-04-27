@@ -30,7 +30,7 @@ const AchievementBadge = ({ achievement }: AchievementBadgeProps) => {
         />
       </Stack>
       <Modal open={isOpenModal} onClose={() => toggleModal(false)}>
-        <Box sx={style}>
+        <Box component="div" sx={style}>
           <Stack direction="row" alignItems="center">
             <img
               width={100}

@@ -126,8 +126,12 @@ const AppBarWithMenu = () => {
         </Toolbar>
       </AppBar>
       <GlobalMenu open={openDrawer} onClose={toggleDrawer(false)} />
-      <Box height='calc(100vh - 64px)' sx={{ mt: 8, overflowY: 'auto' }}>
-        <Box minHeight='calc(100vh - 136px)'>
+      <Box
+        component="div"
+        height="calc(100vh - 64px)"
+        sx={{ mt: 8, overflowY: 'auto' }}
+      >
+        <Box component="div" minHeight="calc(100vh - 136px)">
           <Outlet />
         </Box>
         <GlobalFooter />

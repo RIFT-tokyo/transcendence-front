@@ -79,6 +79,7 @@ const SignIn = () => {
   return (
     <Container component="main" maxWidth="xs">
       <Box
+        component="div"
         display="flex"
         marginTop={8}
         flexDirection="column"
