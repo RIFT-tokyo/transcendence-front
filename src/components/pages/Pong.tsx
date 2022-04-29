@@ -1,11 +1,10 @@
-import { Box, Container, Typography } from '@mui/material';
-import { Sphere } from '@react-three/drei';
-import { Canvas } from '@react-three/fiber';
+import { Box, Container } from '@mui/material';
 import { useContext, useEffect } from 'react';
-import { blueGrey } from '@mui/material/colors';
 import { AuthContext } from '../../contexts/AuthContext';
 import { SocketContext } from '../../contexts/SocketContext';
 import { EVENT } from '../config/constants';
+import GameCanvas from '../game/GameCanvas';
+import Navigation from '../game/Navigation';
 
 const Pong = () => {
   const { client } = useContext(SocketContext);
@@ -30,35 +29,25 @@ const Pong = () => {
   }, [client]);
 
   return (
-    <Container component="main" maxWidth="xl" sx={{ padding: 2 }}>
-      <Box
-        component="div"
-        zIndex={500}
-        m={2}
-        p={2}
-        sx={{ position: 'absolute' }}
-        alignItems="center"
-        justifyItems="center"
-      >
-        <Typography
-          variant="h2"
-          color={blueGrey[100]}
+    <Container component="main" maxWidth="xl">
+      <Box component="div" sx={{ paddingY: 2, position: 'relative' }}>
+        <Box
+          component="div"
+          top={0}
+          left={-24}
+          width={1}
+          zIndex={500}
+          paddingX={3}
+          paddingY={2}
           sx={{
-            fontFamily: 'Zen Tokyo Zoo',
+            position: 'absolute',
           }}
         >
-          PONG
-        </Typography>
-      </Box>
-      <Box component="div">
-        <Canvas
-          style={{ height: 'calc(100vh - 172px)', backgroundColor: blueGrey[800] }}
-        >
-          <ambientLight />
-          <Sphere>
-            <meshNormalMaterial />
-          </Sphere>
-        </Canvas>
+          <Navigation />
+        </Box>
+        <Box component="div">
+          <GameCanvas />
+        </Box>
       </Box>
     </Container>
   );
