@@ -1,5 +1,5 @@
 import { blueGrey } from '@mui/material/colors';
-import { Sphere } from '@react-three/drei';
+// import { Sphere } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 
 const GameCanvas = () => (
@@ -7,9 +7,9 @@ const GameCanvas = () => (
     style={{ height: 'calc(100vh - 188px)', backgroundColor: blueGrey[900] }}
   >
     <ambientLight />
-    <Sphere>
+    {/* <Sphere>
       <meshNormalMaterial />
-    </Sphere>
+    </Sphere> */}
   </Canvas>
 );
 
