@@ -1,55 +1,58 @@
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
+import { useState } from 'react';
+import { GameStatus } from './types/gameStatus';
+import HostGame from './navigation/HostGame';
+import JoinGame from './navigation/JoinGame';
+import Waiting from './navigation/Waiting';
+import Welcome from './navigation/Welcome';
 
-const Navigation = () => (
-  <Box
-    component="div"
-    maxHeight="calc(100vh - 220px)"
-    padding={2}
-    sx={{ overflow: 'auto' }}
-  >
+const Navigation = () => {
+  const [state, setState] = useState<GameStatus>('welcome');
+
+  return (
     <Box
-      margin="auto"
       component="div"
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      maxWidth="sm"
+      maxHeight="calc(100vh - 220px)"
+      padding={2}
+      sx={{ overflow: 'auto' }}
     >
-      <Grid container spacing={10}>
-        <Grid
-          item
-          xs={12}
-          marginY={10}
-          alignItems="center"
-          display="flex"
-          direction="column"
-        >
-          <Typography
-            variant="h1"
-            color={blueGrey[200]}
-            sx={{
-              fontFamily: 'Zen Tokyo Zoo',
-            }}
+      <Box
+        margin="auto"
+        component="div"
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        maxWidth="sm"
+      >
+        <Grid container spacing={10}>
+          <Grid
+            item
+            container
+            xs={12}
+            marginY={10}
+            alignItems="center"
+            display="flex"
+            direction="column"
           >
-            PONG
-          </Typography>
-        </Grid>
-        <Grid container item xs={12} spacing={5} marginY={5}>
-          <Grid item xs={6}>
-            <Button fullWidth size="large" variant="contained" color="inherit">
-              host match
-            </Button>
+            <Typography
+              variant="h1"
+              color={blueGrey[200]}
+              sx={{
+                fontFamily: 'Zen Tokyo Zoo',
+              }}
+            >
+              PONG
+            </Typography>
           </Grid>
-          <Grid item xs={6}>
-            <Button fullWidth size="large" variant="contained" color="inherit">
-              join match
-            </Button>
-          </Grid>
+          {state === 'welcome' && <Welcome setStatus={setState} />}
+          {state === 'host' && <HostGame setStatus={setState} />}
+          {state === 'join' && <JoinGame setStatus={setState} />}
+          {state === 'waiting' && <Waiting setStatus={setState} />}
         </Grid>
-      </Grid>
+      </Box>
     </Box>
-  </Box>
-);
+  );
+};
 
 export default Navigation;
