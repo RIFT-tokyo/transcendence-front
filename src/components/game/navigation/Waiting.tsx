@@ -18,16 +18,10 @@ const Waiting = ({ setStatus }: Props) => (
       display="flex"
       direction="column"
     >
-      <Typography
-        variant="h4"
-        color={blueGrey[100]}
-      >
+      <Typography variant="h4" color={blueGrey[100]}>
         Room Name: sample-room
       </Typography>
-      <Typography
-        variant="h4"
-        color={blueGrey[100]}
-      >
+      <Typography variant="h4" color={blueGrey[100]}>
         Waiting for other player to join
       </Typography>
     </Grid>
@@ -40,13 +34,13 @@ const Waiting = ({ setStatus }: Props) => (
       display="flex"
       direction="column"
     >
-      <CircularProgress sx={{color: blueGrey[100]}} />
+      <CircularProgress sx={{ color: blueGrey[100] }} />
     </Grid>
     <Grid item xs={12}>
       <Button
         fullWidth
         variant="contained"
-        color='inherit'
+        color="inherit"
         sx={{
           color: blueGrey[900],
           backgroundColor: blueGrey[100],

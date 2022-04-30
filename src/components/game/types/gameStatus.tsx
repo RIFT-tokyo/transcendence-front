@@ -1,1 +1,7 @@
-export type GameStatus = 'welcome' | 'host' | 'join' | 'waiting' | 'play' | 'end';
+export type GameStatus =
+  | 'welcome'
+  | 'host'
+  | 'join'
+  | 'waiting'
+  | 'play'
+  | 'end';

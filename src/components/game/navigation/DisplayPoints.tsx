@@ -28,14 +28,11 @@ const DisplayPoints = ({ setStatus }: Props) => (
       >
         GAME POINTS
       </Typography>
-      <Typography
-        variant="h1"
-        color={blueGrey[200]}
-      >
+      <Typography variant="h1" color={blueGrey[200]}>
         6 - 3
       </Typography>
     </Grid>
   </Grid>
-)
+);
 
 export default DisplayPoints;

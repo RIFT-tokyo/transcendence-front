@@ -28,10 +28,7 @@ const DisplayPoints = ({ setStatus }: Props) => (
       >
         RESULT
       </Typography>
-      <Typography
-        variant="h1"
-        color={blueGrey[200]}
-      >
+      <Typography variant="h1" color={blueGrey[200]}>
         8 - 11
       </Typography>
     </Grid>
@@ -42,10 +39,10 @@ const DisplayPoints = ({ setStatus }: Props) => (
       alignItems="center"
       display="flex"
       direction="column"
- >
+    >
       <Typography
         variant="h1"
-        color='secondary'
+        color="secondary"
         sx={{
           fontFamily: 'Zen Tokyo Zoo',
         }}

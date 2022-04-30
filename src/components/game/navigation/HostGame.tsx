@@ -9,20 +9,14 @@ interface Props {
 
 const HostGame = ({ setStatus }: Props) => (
   <Grid container item xs={12} spacing={4} marginY={5}>
-    <Grid
-      container
-      item
-      xs={12}
-      spacing={1}
-      alignItems="center"
-    >
+    <Grid container item xs={12} spacing={1} alignItems="center">
       <Grid item xs={9}>
         <TextField
           fullWidth
           size="small"
           sx={{
             borderRadius: 1,
-            backgroundColor: blueGrey[100]
+            backgroundColor: blueGrey[100],
           }}
         />
       </Grid>
@@ -30,7 +24,7 @@ const HostGame = ({ setStatus }: Props) => (
         <Button
           fullWidth
           size="large"
-          color='inherit'
+          color="inherit"
           variant="contained"
           sx={{
             color: blueGrey[900],

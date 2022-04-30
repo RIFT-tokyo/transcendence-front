@@ -13,7 +13,7 @@ const Welcome = ({ setStatus }: Props) => (
       <Button
         fullWidth
         size="large"
-        color='inherit'
+        color="inherit"
         variant="contained"
         sx={{
           color: blueGrey[900],
@@ -28,7 +28,7 @@ const Welcome = ({ setStatus }: Props) => (
       <Button
         fullWidth
         size="large"
-        color='inherit'
+        color="inherit"
         variant="contained"
         sx={{
           color: blueGrey[900],
@@ -40,6 +40,6 @@ const Welcome = ({ setStatus }: Props) => (
       </Button>
     </Grid>
   </Grid>
-)
+);
 
 export default Welcome;

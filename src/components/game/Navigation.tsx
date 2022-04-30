@@ -27,7 +27,7 @@ const Navigation = () => {
         alignItems="center"
         maxWidth="sm"
       >
-        {state !== 'play' && state !== 'end' &&
+        {state !== 'play' && state !== 'end' && (
           <Grid container spacing={10}>
             <Grid
               item
@@ -54,7 +54,7 @@ const Navigation = () => {
             {state === 'join' && <JoinGame setStatus={setState} />}
             {state === 'waiting' && <Waiting setStatus={setState} />}
           </Grid>
-        }
+        )}
         {state === 'play' && <DisplayPoints setStatus={setState} />}
         {state === 'end' && <DisplayResult setStatus={setState} />}
       </Box>
