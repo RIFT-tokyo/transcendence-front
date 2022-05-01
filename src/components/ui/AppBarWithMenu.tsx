@@ -10,13 +10,27 @@ import {
 import * as React from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import { AccountCircle } from '@mui/icons-material';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { AuthApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
 import GlobalMenu from './GlobalMenu';
 import { SETTING_URL } from '../config/constants';
 import GlobalFooter from './GlobalFooter';
+import { SocketContext } from '../../contexts/SocketContext';
+
+const RequiredAuth = () => {
+  const { client, connect } = React.useContext(SocketContext);
+  const { authUser } = React.useContext(AuthContext);
+
+  React.useEffect(() => {
+    if (authUser) {
+      if (client === null) connect(authUser.id);
+    }
+  }, [authUser, client, connect]);
+
+  return authUser ? <Outlet /> : <Navigate to="signup" />;
+};
 
 const AppBarWithMenu = () => {
   const { logout } = React.useContext(AuthContext);
@@ -126,9 +140,13 @@ const AppBarWithMenu = () => {
         </Toolbar>
       </AppBar>
       <GlobalMenu open={openDrawer} onClose={toggleDrawer(false)} />
-      <Box height='calc(100vh - 64px)' sx={{ mt: 8, overflowY: 'auto' }}>
-        <Box minHeight='calc(100vh - 136px)'>
-          <Outlet />
+      <Box
+        component="div"
+        height="calc(100vh - 64px)"
+        sx={{ mt: 8, overflowY: 'auto' }}
+      >
+        <Box component="div" minHeight="calc(100vh - 136px)">
+          <RequiredAuth />
         </Box>
         <GlobalFooter />
       </Box>
