@@ -1,5 +1,5 @@
 import { Grid, Typography } from '@mui/material';
-import { blueGrey } from '@mui/material/colors';
+import { blue, blueGrey, pink } from '@mui/material/colors';
 import { GameStatus } from '../types/gameStatus';
 
 interface Props {
@@ -8,12 +8,26 @@ interface Props {
 }
 
 const DisplayPoints = ({ setStatus }: Props) => (
-  <Grid container>
+  <Grid container padding={4} spacing={2}>
     <Grid
       item
       container
-      xs={12}
-      marginY={5}
+      xs={4}
+      marginTop={6}
+      alignItems="right"
+      direction='row-reverse'
+    >
+      <Typography
+        variant="h4"
+        color={blue[700]}
+      >
+        tkomatsu
+      </Typography>
+    </Grid>
+    <Grid
+      item
+      container
+      xs={4}
       alignItems="center"
       display="flex"
       direction="column"
@@ -26,10 +40,24 @@ const DisplayPoints = ({ setStatus }: Props) => (
         }}
         onClick={() => setStatus('end')}
       >
-        GAME POINTS
+        POINTS
       </Typography>
-      <Typography variant="h1" color={blueGrey[200]}>
+      <Typography variant="h2" color={blueGrey[200]}>
         6 - 3
+      </Typography>
+    </Grid>
+    <Grid
+      item
+      container
+      xs={4}
+      marginTop={6}
+      alignItems="left"
+    >
+      <Typography
+        variant="h4"
+        color={pink[700]}
+      >
+        syudai
       </Typography>
     </Grid>
   </Grid>
