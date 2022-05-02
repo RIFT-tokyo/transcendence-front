@@ -7,7 +7,7 @@ import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router-dom';
 import { useContext, useEffect } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { IconButton } from '@mui/material';
+import { IconButton, Typography } from '@mui/material';
 import { AuthApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
 import { FT_COLOR, HOME_URL, ROOT_URL } from '../config/constants';
@@ -78,27 +78,37 @@ const SignIn = () => {
 
   return (
     <Container component="main" maxWidth="xs">
-      <Box
-        display="flex"
-        marginTop={8}
-        flexDirection="column"
-        alignItems="center"
-      >
-        <img src="/auth/signin.svg" alt="Sign Up" width="440" />
-        <Grid container item>
-          <Button
-            type="submit"
-            fullWidth
-            style={{ color: 'white', backgroundColor: FT_COLOR }}
-            sx={{ mt: 3, mb: 2 }}
-            onClick={handleOauthLogin}
-          >
-            SIGN UP WITH{' '}
-            <img src="/auth/42.svg" alt="42" style={{ marginLeft: '24px' }} />
-          </Button>
-        </Grid>
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-          <Grid container spacing={2}>
+      <Box mt={20} display="flex" flexDirection="column" alignItems="center">
+        <Typography
+          variant="h1"
+          color="primary"
+          mb={10}
+          sx={{
+            fontFamily: 'Zen Tokyo Zoo',
+          }}
+        >
+          TRANSCENDENCE
+        </Typography>
+        <img src="/auth/signin.svg" alt="Sign Up" height={320} />
+        <Box component="form" noValidate onSubmit={handleSubmit} mt={2}>
+          <Grid container item marginTop={10} spacing={2}>
+            <Grid item xs={12}>
+              <Button
+                type="submit"
+                size="large"
+                fullWidth
+                sx={{ color: 'white', backgroundColor: FT_COLOR }}
+                onClick={handleOauthLogin}
+              >
+                sign in with{' '}
+                <img
+                  src="/auth/42.svg"
+                  alt="42"
+                  height={15}
+                  style={{ marginLeft: 10 }}
+                />
+              </Button>
+            </Grid>
             <Grid item xs={12}>
               <TextField
                 fullWidth
@@ -108,6 +118,7 @@ const SignIn = () => {
                 value={values.username}
                 onChange={handleChange('username')}
                 error={values.error}
+                size="small"
               />
             </Grid>
             <Grid item xs={12}>
@@ -131,19 +142,16 @@ const SignIn = () => {
                   ),
                 }}
                 error={values.error}
+                size="small"
                 helperText={values.error ? 'Sign in failed...' : ''}
               />
             </Grid>
-          </Grid>
-
-          <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
                 color="primary"
-                sx={{ mt: 3, mb: 2 }}
               >
                 SIGN IN
               </Button>
@@ -153,7 +161,6 @@ const SignIn = () => {
                 fullWidth
                 variant="contained"
                 color="inherit"
-                sx={{ mt: 3, mb: 2 }}
                 onClick={() => navigate(ROOT_URL)}
               >
                 SIGN UP
