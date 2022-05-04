@@ -78,11 +78,11 @@ const SignIn = () => {
 
   return (
     <Container component="main" maxWidth="xs">
-      <Box mt={20} display="flex" flexDirection="column" alignItems="center">
+      <Box mt={10} display="flex" flexDirection="column" alignItems="center">
         <Typography
           variant="h1"
           color="primary"
-          mb={10}
+          mb={5}
           sx={{
             fontFamily: 'Zen Tokyo Zoo',
           }}
@@ -90,8 +90,8 @@ const SignIn = () => {
           TRANSCENDENCE
         </Typography>
         <img src="/auth/signin.svg" alt="Sign Up" height={320} />
-        <Box component="form" noValidate onSubmit={handleSubmit} mt={2}>
-          <Grid container item marginTop={10} spacing={2}>
+        <Box component="form" noValidate onSubmit={handleSubmit} my={10}>
+          <Grid container item spacing={2}>
             <Grid item xs={12}>
               <Button
                 type="submit"
