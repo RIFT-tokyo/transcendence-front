@@ -27,7 +27,9 @@ const App = () => {
               <Route path="users">
                 <Route path=":username" element={<UserProfile />} />
               </Route>
-              <Route path="chat" element={<Chat />} />
+              <Route path="chat" element={<Chat />}>
+                <Route path="channels/:channelId" element={<Chat />} />
+              </Route>
               <Route path="pong" element={<Pong />} />
               <Route path="settings">
                 <Route index element={<Navigate to="account" replace />} />
