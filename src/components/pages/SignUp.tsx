@@ -83,7 +83,7 @@ const SignUp = () => {
     <Container component="main" maxWidth="xs">
       <Box mt={10} display="flex" flexDirection="column" alignItems="center">
         <Typography
-          variant="h1"
+          variant="h2"
           color="primary"
           mb={5}
           sx={{
