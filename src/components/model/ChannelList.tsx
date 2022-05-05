@@ -55,8 +55,8 @@ const ChannelList = (props: Props) => {
   };
 
   return (
-    <Stack spacing={0.5} width={296}>
-      <Stack direction="row" alignItems="center">
+    <Stack spacing={0.5}>
+      <Stack direction="row" alignItems="center" width={220}>
         <Typography sx={{ fontWeight: 'bold', flexGrow: 1 }} variant="h5">
           Channels
         </Typography>
