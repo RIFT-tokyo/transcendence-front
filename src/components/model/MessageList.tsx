@@ -21,7 +21,7 @@ const MessageList = (props: Props) => {
 
   return (
     <Stack spacing={2}>
-      <Stack direction="row" alignItems="center" spacing={2}>
+      <Stack direction="row" alignItems="center" spacing={0.5}>
         {channelIcon(channel?.is_protected ?? false)}
         <Typography sx={{ fontWeight: 'bold' }} variant="h5">
           {channel?.name}
