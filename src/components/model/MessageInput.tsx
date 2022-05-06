@@ -1,4 +1,5 @@
-import { TextField } from '@mui/material';
+import { Send } from '@mui/icons-material';
+import { IconButton, TextField } from '@mui/material';
 import { ChangeEvent, useState } from 'react';
 
 const MessageInput = () => {
