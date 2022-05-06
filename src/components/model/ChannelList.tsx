@@ -1,5 +1,6 @@
 import {
   Button,
+  Collapse,
   Dialog,
   DialogActions,
   DialogContent,
@@ -15,6 +16,7 @@ import TagIcon from '@mui/icons-material/Tag';
 import LockIcon from '@mui/icons-material/Lock';
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { ChevronRight, ExpandMore } from '@mui/icons-material';
 import { Channel, ChannelApi } from '../../api/generated';
 
 type Props = {
@@ -26,6 +28,7 @@ type Props = {
 const ChannelList = (props: Props) => {
   const { selectedChannel, channels, setChannels } = props;
   const [openDialog, setOpenDialog] = useState(false);
+  const [openChannels, setOpenChannels] = useState(true);
   const [channelName, setChannelName] = useState('');
   const [channelPassword, setChannelPassword] = useState('');
   const channelApi = new ChannelApi();
@@ -47,6 +50,8 @@ const ChannelList = (props: Props) => {
     setChannelName(e.target.value);
   };
 
+  const toggleOpenChannels = () => setOpenChannels(!openChannels);
+
   const channelIcon = (isProtected: boolean) => {
     if (isProtected) {
       return <LockIcon />;
@@ -57,7 +62,17 @@ const ChannelList = (props: Props) => {
   return (
     <Stack spacing={0.5}>
       <Stack direction="row" alignItems="center" width={220}>
-        <Typography sx={{ fontWeight: 'bold', flexGrow: 1 }} variant="h5">
+        <IconButton
+          aria-label="Toggle channel visibility"
+          onClick={toggleOpenChannels}
+        >
+          {openChannels ? <ExpandMore /> : <ChevronRight />}
+        </IconButton>
+        <Typography
+          sx={{ fontWeight: 'bold', flexGrow: 1 }}
+          variant="h5"
+          onClick={toggleOpenChannels}
+        >
           Channels
         </Typography>
         <IconButton
@@ -93,20 +108,24 @@ const ChannelList = (props: Props) => {
           </DialogActions>
         </Dialog>
       </Stack>
-      {channels.map((channel) => (
-        <Link
-          key={channel.id}
-          component={NavLink}
-          underline="none"
-          to={`/chat/channels/${channel.id}`}
-          color={channel.id === selectedChannel?.id ? undefined : 'inherit'}
-        >
-          <Stack direction="row" alignItems="center" spacing={0.5}>
-            {channelIcon(channel.is_protected ?? false)}
-            <Typography variant="h6">{channel.name}</Typography>
-          </Stack>
-        </Link>
-      ))}
+      <Collapse in={openChannels}>
+        <Stack pl={4}>
+          {channels.map((channel) => (
+            <Link
+              key={channel.id}
+              component={NavLink}
+              underline="none"
+              to={`/chat/channels/${channel.id}`}
+              color={channel.id === selectedChannel?.id ? undefined : 'inherit'}
+            >
+              <Stack direction="row" alignItems="center" spacing={0.5}>
+                {channelIcon(channel.is_protected ?? false)}
+                <Typography variant="h6">{channel.name}</Typography>
+              </Stack>
+            </Link>
+          ))}
+        </Stack>
+      </Collapse>
     </Stack>
   );
 };
