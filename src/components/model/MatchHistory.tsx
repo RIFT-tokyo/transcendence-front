@@ -17,14 +17,14 @@ import { Match, MatchApi } from '../../api/generated';
 import stringToColor from '../../functions/stringToColor';
 
 const MatchHistory = () => {
-  const [matches, setMatches] = useState<Match[]>([]);
+  const [matches, setMatches] = useState<Match[] | undefined>();
   const matchApi = new MatchApi();
 
   const fetchMatches = async () => {
-    const { data } = await matchApi.getMatches({
+    const { data } = await matchApi.getMatches(undefined, undefined, {
       withCredentials: true,
     });
-    setMatches(data);
+    setMatches(data.entries);
   };
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const MatchHistory = () => {
           </TableRow>
         </TableHead>
         <TableBody sx={{ overflowY: 'auto' }}>
-          {matches.map((match) => (
+          {matches?.map((match) => (
             <TableRow key={match.id}>
               <TableCell>
                 <Link

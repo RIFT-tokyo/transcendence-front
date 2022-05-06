@@ -14,7 +14,7 @@ import ErrorRouter from '../ui/ErrorRouter';
 
 const UserProfile = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [followers, setFollowers] = useState<User[] | null>(null);
+  const [followers, setFollowers] = useState<User[] | undefined>();
   const [isOwner, setIsOwner] = useState<boolean>(false);
   const [isFollower, setIsFollower] = useState<boolean>(false);
   const [statusCode, setStatusCode] = useState<number>(0);
@@ -77,13 +77,13 @@ const UserProfile = () => {
 
   const fetchFollowings = async (ownerId: number) => {
     try {
-      const res = await followApi.getUsersUserIDFollowing(
+      const { data } = await followApi.getUsersUserIDFollowing(
         ownerId,
         undefined,
         undefined,
         { withCredentials: true },
       );
-      setFollowers(res.data);
+      setFollowers(data.entries);
     } catch (err: any) {
       setStatusCode(err.response.status);
     }
@@ -137,7 +137,7 @@ const UserProfile = () => {
         }
         return follower;
       });
-      setFollowers(updatedFollowers || null);
+      setFollowers(updatedFollowers);
     };
 
     if (followers && followers?.length > 0 && client) {
@@ -176,8 +176,8 @@ const UserProfile = () => {
               <AchievementList achievements={user.achievements} />
             )}
           </Stack>
-          <Divider orientation="vertical" flexItem variant='middle' />
-          <Stack margin={2} width='100%'>
+          <Divider orientation="vertical" flexItem variant="middle" />
+          <Stack margin={2} width="100%">
             <GameResult />
           </Stack>
         </Stack>
