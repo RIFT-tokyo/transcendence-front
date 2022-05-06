@@ -121,7 +121,12 @@ const ChannelList = (props: Props) => {
         </Dialog>
       </Stack>
       <Collapse in={openChannels}>
-        <Stack pl={4}>
+        <Stack
+          pl={4}
+          spacing={0.5}
+          sx={{ overflow: 'hidden' }}
+          width={220 - 8 * 4}
+        >
           {channels.map((channel) => (
             <Link
               key={channel.id}
@@ -132,7 +137,9 @@ const ChannelList = (props: Props) => {
             >
               <Stack direction="row" alignItems="center" spacing={0.5}>
                 {channelIcon(channel.is_protected ?? false)}
-                <Typography variant="h6">{channel.name}</Typography>
+                <Typography variant="h6" noWrap>
+                  {channel.name}
+                </Typography>
               </Stack>
             </Link>
           ))}
