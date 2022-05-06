@@ -17,7 +17,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { ChevronRight, ExpandMore } from '@mui/icons-material';
-import { Channel, ChannelApi } from '../../api/generated';
+import { Channel, ChannelApi, NewChannel } from '../../api/generated';
 
 type Props = {
   selectedChannel: Channel | null;
@@ -33,21 +33,30 @@ const ChannelList = (props: Props) => {
   const [channelPassword, setChannelPassword] = useState('');
   const channelApi = new ChannelApi();
 
-  const addChannel = async (name: string) => {
+  const addChannel = async (name: string, password: string) => {
     try {
-      const res = await channelApi.postChannels(
-        { name },
-        { withCredentials: true },
-      );
+      const newChannel: NewChannel = { name };
+      if (password) {
+        newChannel.password = password;
+      }
+      const res = await channelApi.postChannels(newChannel, {
+        withCredentials: true,
+      });
       setChannels([...channels, res.data]);
+      setChannelName('');
+      setChannelPassword('');
       setOpenDialog(false);
     } catch (err: any) {
       // TODO: error handling
     }
   };
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChannelNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setChannelName(e.target.value);
+  };
+
+  const handleChannelPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setChannelPassword(e.target.value);
   };
 
   const toggleOpenChannels = () => setOpenChannels(!openChannels);
@@ -92,7 +101,7 @@ const ChannelList = (props: Props) => {
               id="name"
               label="Channel name"
               value={channelName}
-              onChange={handleChange}
+              onChange={handleChannelNameChange}
             />
             <TextField
               fullWidth
@@ -100,11 +109,14 @@ const ChannelList = (props: Props) => {
               id="password"
               label="Password"
               value={channelPassword}
+              onChange={handleChannelPasswordChange}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
-            <Button onClick={() => addChannel(channelName)}>Create</Button>
+            <Button onClick={() => addChannel(channelName, channelPassword)}>
+              Create
+            </Button>
           </DialogActions>
         </Dialog>
       </Stack>
