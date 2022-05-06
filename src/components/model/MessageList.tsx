@@ -34,7 +34,7 @@ const MessageList = (props: Props) => {
       </Stack>
       <Stack
         spacing={2}
-        height="calc(100vh - 160px - 28px - 53px)"
+        height="calc(100vh - 160px - 40px - 54px)"
         sx={{ overflowY: 'auto' }}
       >
         {channel?.id

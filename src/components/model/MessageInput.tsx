@@ -15,9 +15,17 @@ const MessageInput = () => {
       placeholder="Message"
       value={text}
       onChange={handleChange}
+      size="small"
       multiline
       fullWidth
       required
+      InputProps={{
+        endAdornment: (
+          <IconButton aria-label="send message" edge="end">
+            <Send />
+          </IconButton>
+        ),
+      }}
     />
   );
 };
