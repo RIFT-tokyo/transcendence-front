@@ -25,7 +25,7 @@ const MessageList = (props: Props) => {
         direction="row"
         alignItems="center"
         spacing={0.5}
-        paddingBottom={1}
+        paddingBottom={1.5}
       >
         {channelIcon(channel?.is_protected ?? false)}
         <Typography sx={{ fontWeight: 'bold' }} variant="h5">
