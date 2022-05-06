@@ -55,11 +55,12 @@ const Chat = () => {
   return (
     <ErrorRouter statusCode={statusCode}>
       <Container component="main">
-        <Stack direction="row" spacing={2} padding={2}>
+        <Stack direction="row" spacing={2} paddingX={2} paddingTop={2}>
           <ChannelList
             selectedChannel={selectedChannel}
             channels={channels}
             setChannels={setChannels}
+            // それぞれhightを指定して、overflow設定する
           />
           <Divider orientation="vertical" flexItem variant="middle" />
           {selectedChannel && <MessageList channel={selectedChannel} />}
