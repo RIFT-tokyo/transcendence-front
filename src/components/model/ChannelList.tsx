@@ -69,8 +69,8 @@ const ChannelList = (props: Props) => {
   };
 
   return (
-    <Stack spacing={0.5}>
-      <Stack direction="row" alignItems="center" width={220}>
+    <Stack direction="column" spacing={0.5} width={220}>
+      <Stack direction="row" alignItems="center">
         <IconButton
           aria-label="Toggle channel visibility"
           onClick={toggleOpenChannels}
@@ -121,12 +121,7 @@ const ChannelList = (props: Props) => {
         </Dialog>
       </Stack>
       <Collapse in={openChannels}>
-        <Stack
-          pl={4}
-          spacing={0.5}
-          sx={{ overflow: 'hidden' }}
-          width={220 - 8 * 4}
-        >
+        <Stack pl={4} spacing={0.5}>
           {channels.map((channel) => (
             <Link
               key={channel.id}
