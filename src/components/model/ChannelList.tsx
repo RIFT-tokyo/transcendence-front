@@ -25,7 +25,7 @@ type Props = {
 
 const ChannelList = (props: Props) => {
   const { selectedChannel, channels, setChannels } = props;
-  const [open, setOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const [channelName, setChannelName] = useState('');
   const [channelPassword, setChannelPassword] = useState('');
   const channelApi = new ChannelApi();
@@ -37,7 +37,7 @@ const ChannelList = (props: Props) => {
         { withCredentials: true },
       );
       setChannels([...channels, res.data]);
-      setOpen(false);
+      setOpenDialog(false);
     } catch (err: any) {
       // TODO: error handling
     }
@@ -60,10 +60,13 @@ const ChannelList = (props: Props) => {
         <Typography sx={{ fontWeight: 'bold', flexGrow: 1 }} variant="h5">
           Channels
         </Typography>
-        <IconButton aria-label="create channel" onClick={() => setOpen(true)}>
+        <IconButton
+          aria-label="create channel"
+          onClick={() => setOpenDialog(true)}
+        >
           <AddIcon />
         </IconButton>
-        <Dialog open={open} onClose={() => setOpen(false)}>
+        <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
           <DialogTitle>Create a channel</DialogTitle>
           <DialogContent>
             <TextField
@@ -85,7 +88,7 @@ const ChannelList = (props: Props) => {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setOpen(false)}>Cancel</Button>
+            <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
             <Button onClick={() => addChannel(channelName)}>Create</Button>
           </DialogActions>
         </Dialog>
