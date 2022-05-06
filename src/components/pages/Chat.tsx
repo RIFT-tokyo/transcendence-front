@@ -60,7 +60,6 @@ const Chat = () => {
             selectedChannel={selectedChannel}
             channels={channels}
             setChannels={setChannels}
-            // それぞれhightを指定して、overflow設定する
           />
           <Divider orientation="vertical" flexItem variant="middle" />
           {selectedChannel && <MessageList channel={selectedChannel} />}
