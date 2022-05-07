@@ -2,9 +2,10 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
+import { FOOTER_HEIGHT } from '../config/constants';
 
 const GlobalFooter: React.VFC = () => (
-  <Box component="footer" height={72}>
+  <Box component="footer" height={FOOTER_HEIGHT}>
     <Typography
       variant="h6"
       align="center"

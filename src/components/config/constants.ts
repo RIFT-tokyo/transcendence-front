@@ -18,3 +18,10 @@ export const EVENT = {
 };
 
 export const FT_COLOR = '#00BABC';
+
+const APPBAR_HEIGHT = 64;
+export const FOOTER_HEIGHT = 72;
+export const CONTENT_WITH_FOOTER_HEIGHT = `calc(100vh - ${APPBAR_HEIGHT}px)`;
+export const CONTENT_HEIGHT = `calc(100vh - ${
+  APPBAR_HEIGHT + FOOTER_HEIGHT
+}px)`;
