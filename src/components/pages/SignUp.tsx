@@ -81,7 +81,13 @@ const SignUp = () => {
 
   return (
     <Container component="main" maxWidth="xs">
-      <Box component="div" mt={10} display="flex" flexDirection="column" alignItems="center">
+      <Box
+        component="div"
+        mt={10}
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+      >
         <Typography
           variant="h2"
           color="primary"
