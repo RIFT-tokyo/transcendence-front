@@ -4,10 +4,11 @@ import { GameStatus } from './types/gameStatus';
 import HostGame from './navigation/HostGame';
 import JoinGame from './navigation/JoinGame';
 import Waiting from './navigation/Waiting';
-import Welcome from './navigation/Welcome';
+import FriendMatch from './navigation/FriendMatch';
 import DisplayPoints from './navigation/DisplayPoints';
 import DisplayResult from './navigation/DisplayResult';
 import { User } from '../../api/generated';
+import Entrance from './navigation/Entrance';
 
 interface Props {
   gameStatus: GameStatus;
@@ -63,7 +64,10 @@ const Navigation = ({
               PONG
             </Typography>
           </Grid>
-          {gameStatus === 'welcome' && <Welcome setStatus={setGameStatus} />}
+          {gameStatus === 'entrance' && <Entrance setStatus={setGameStatus} />}
+          {gameStatus === 'friend_match' && (
+            <FriendMatch setStatus={setGameStatus} />
+          )}
           {gameStatus === 'host' && <HostGame setStatus={setGameStatus} />}
           {gameStatus === 'join' && <JoinGame setStatus={setGameStatus} />}
           {gameStatus === 'waiting' && <Waiting setStatus={setGameStatus} />}

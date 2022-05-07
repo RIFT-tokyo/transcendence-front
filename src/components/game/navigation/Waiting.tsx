@@ -36,32 +36,37 @@ const Waiting = ({ setStatus }: Props) => (
     >
       <CircularProgress sx={{ color: blueGrey[100] }} />
     </Grid>
-    <Grid item xs={12}>
+    <Grid item xs={3} />
+    <Grid item xs={6}>
       <Button
         fullWidth
-        variant="contained"
+        variant="outlined"
         color="inherit"
         sx={{
-          color: blueGrey[900],
-          backgroundColor: blueGrey[100],
+          color: blueGrey[100],
         }}
-        endIcon={<ChatIcon />}
+        startIcon={<ChatIcon />}
       >
-        Invite by chat
+        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+          Invite by chat
+        </Typography>
       </Button>
     </Grid>
-    <Grid item xs={12}>
+    <Grid item xs={3} />
+    <Grid item xs={4} />
+    <Grid item xs={4}>
       <Button
         fullWidth
         size="small"
         sx={{
           color: blueGrey[100],
         }}
-        onClick={() => setStatus('welcome')}
+        onClick={() => setStatus('entrance')}
       >
         Back to Top
       </Button>
     </Grid>
+    <Grid item xs={4} />
   </Grid>
 );
 

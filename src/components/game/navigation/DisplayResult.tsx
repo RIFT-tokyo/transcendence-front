@@ -57,7 +57,7 @@ const DisplayPoints = ({ setStatus }: Props) => (
         sx={{
           color: blueGrey[100],
         }}
-        onClick={() => setStatus('welcome')}
+        onClick={() => setStatus('entrance')}
       >
         play again
       </Button>

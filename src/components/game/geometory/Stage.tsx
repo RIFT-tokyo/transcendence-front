@@ -10,7 +10,7 @@ const Stage = () => (
       radius={0.05}
       smoothness={4}
     >
-      <meshStandardMaterial color={blueGrey[500]} />
+      <meshStandardMaterial color={blueGrey[700]} />
     </RoundedBox>
     <RoundedBox
       args={[0.4, 1, 20]}
@@ -19,7 +19,7 @@ const Stage = () => (
       radius={0.05}
       smoothness={4}
     >
-      <meshStandardMaterial color={blueGrey[500]} />
+      <meshStandardMaterial color={blueGrey[700]} />
     </RoundedBox>
     <RoundedBox
       args={[8.4, 0.4, 20]}
@@ -28,7 +28,7 @@ const Stage = () => (
       radius={0.05}
       smoothness={4}
     >
-      <meshStandardMaterial color={blueGrey[500]} />
+      <meshStandardMaterial color={blueGrey[700]} />
     </RoundedBox>
   </>
 );

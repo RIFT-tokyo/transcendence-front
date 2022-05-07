@@ -1,5 +1,6 @@
 export type GameStatus =
-  | 'welcome'
+  | 'entrance'
+  | 'friend_match'
   | 'host'
   | 'join'
   | 'waiting'

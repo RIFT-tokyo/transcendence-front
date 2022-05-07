@@ -1,4 +1,4 @@
-import { Button, Grid, TextField } from '@mui/material';
+import { Button, Grid, TextField, Typography } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
 import { GameStatus } from '../types/gameStatus';
 
@@ -10,10 +10,10 @@ interface Props {
 const JoinGame = ({ setStatus }: Props) => (
   <Grid container item xs={12} spacing={4} marginY={5}>
     <Grid container item xs={12} spacing={1} alignItems="center">
-      <Grid item xs={9}>
+      <Grid item xs={1} />
+      <Grid item xs={7}>
         <TextField
           fullWidth
-          size="small"
           sx={{
             borderRadius: 1,
             backgroundColor: blueGrey[100],
@@ -25,29 +25,33 @@ const JoinGame = ({ setStatus }: Props) => (
           fullWidth
           size="large"
           color="inherit"
-          variant="contained"
+          variant="outlined"
           sx={{
-            color: blueGrey[900],
-            backgroundColor: blueGrey[100],
+            color: blueGrey[100],
           }}
           onClick={() => setStatus('waiting')}
         >
-          join room
+          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+            join
+          </Typography>
         </Button>
       </Grid>
+      <Grid item xs={1} />
     </Grid>
-    <Grid item xs={12}>
+    <Grid item xs={4} />
+    <Grid item xs={4}>
       <Button
         fullWidth
         size="small"
         sx={{
           color: blueGrey[100],
         }}
-        onClick={() => setStatus('welcome')}
+        onClick={() => setStatus('entrance')}
       >
         Back to Top
       </Button>
     </Grid>
+    <Grid item xs={4} />
   </Grid>
 );
 

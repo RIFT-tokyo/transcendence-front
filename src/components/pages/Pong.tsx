@@ -12,7 +12,7 @@ const Pong = () => {
   const { client } = useContext(SocketContext);
   const { authUser } = useContext(AuthContext);
 
-  const [gameStatus, setGameStatus] = useState<GameStatus>('welcome');
+  const [gameStatus, setGameStatus] = useState<GameStatus>('entrance');
   const [hostPlayer] = useState<User | null>(null);
   const [guestPlayer] = useState<User | null>(null);
   const [hostPoints] = useState<number>(0);
