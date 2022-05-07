@@ -1,14 +1,22 @@
 import { Box, Container } from '@mui/material';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { User } from '../../api/generated';
 import { AuthContext } from '../../contexts/AuthContext';
 import { SocketContext } from '../../contexts/SocketContext';
 import { EVENT } from '../config/constants';
 import GameCanvas from '../game/GameCanvas';
 import Navigation from '../game/Navigation';
+import { GameStatus } from '../game/types/gameStatus';
 
 const Pong = () => {
   const { client } = useContext(SocketContext);
   const { authUser } = useContext(AuthContext);
+
+  const [gameStatus, setGameStatus] = useState<GameStatus>('welcome');
+  const [hostPlayer] = useState<User | null>(null);
+  const [guestPlayer] = useState<User | null>(null);
+  const [hostPoints] = useState<number>(0);
+  const [guestPoints] = useState<number>(0);
 
   useEffect(() => {
     if (client) {
@@ -43,7 +51,14 @@ const Pong = () => {
             position: 'absolute',
           }}
         >
-          <Navigation />
+          <Navigation
+            gameStatus={gameStatus}
+            setGameStatus={setGameStatus}
+            hostPlayer={hostPlayer}
+            guestPlayer={guestPlayer}
+            hostPoints={hostPoints}
+            guestPoints={guestPoints}
+          />
         </Box>
         <Box component="div">
           <GameCanvas />

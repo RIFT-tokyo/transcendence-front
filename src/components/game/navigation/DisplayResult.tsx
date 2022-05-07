@@ -1,5 +1,5 @@
 import { Button, Grid, Typography } from '@mui/material';
-import { blueGrey } from '@mui/material/colors';
+import { blue, blueGrey } from '@mui/material/colors';
 import { GameStatus } from '../types/gameStatus';
 
 interface Props {
@@ -42,7 +42,7 @@ const DisplayPoints = ({ setStatus }: Props) => (
     >
       <Typography
         variant="h1"
-        color="secondary"
+        color={blue[700]}
         sx={{
           fontFamily: 'Zen Tokyo Zoo',
         }}
