@@ -25,6 +25,13 @@ const ChannelDialog = (props: Props) => {
   const [errorPassword, setErrorPassword] = useState(false);
   const channelApi = new ChannelApi();
 
+  const closeDialog = () => {
+    setName('');
+    setPassword('');
+    setErrorPassword(false);
+    setOpen(false);
+  };
+
   const createChannel = async (
     channelName: string,
     channelPassword: string,
@@ -42,9 +49,7 @@ const ChannelDialog = (props: Props) => {
         withCredentials: true,
       });
       addChannel(res.data);
-      setName('');
-      setPassword('');
-      setOpen(false);
+      closeDialog();
     } catch (err: any) {
       // TODO: error handling
     }
@@ -98,7 +103,7 @@ const ChannelDialog = (props: Props) => {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => setOpen(false)}>Cancel</Button>
+        <Button onClick={() => closeDialog()}>Cancel</Button>
         <Button onClick={() => createChannel(name, password)}>Create</Button>
       </DialogActions>
     </Dialog>
