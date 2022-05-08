@@ -1,23 +1,18 @@
 import {
-  Button,
   Collapse,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   IconButton,
   Link,
   Stack,
-  TextField,
   Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import TagIcon from '@mui/icons-material/Tag';
 import LockIcon from '@mui/icons-material/Lock';
-import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { ChevronRight, ExpandMore } from '@mui/icons-material';
-import { Channel, ChannelApi, NewChannel } from '../../api/generated';
+import { Channel } from '../../api/generated';
+import ChannelDialog from './ChannelDialog';
 
 type Props = {
   selectedChannel: Channel | null;
@@ -29,37 +24,10 @@ const ChannelList = (props: Props) => {
   const { selectedChannel, channels, setChannels } = props;
   const [openDialog, setOpenDialog] = useState(false);
   const [openChannels, setOpenChannels] = useState(true);
-  const [channelName, setChannelName] = useState('');
-  const [channelPassword, setChannelPassword] = useState('');
-  const channelApi = new ChannelApi();
-
-  const addChannel = async (name: string, password: string) => {
-    try {
-      const newChannel: NewChannel = { name };
-      if (password) {
-        newChannel.password = password;
-      }
-      const res = await channelApi.postChannels(newChannel, {
-        withCredentials: true,
-      });
-      setChannels([...channels, res.data]);
-      setChannelName('');
-      setChannelPassword('');
-      setOpenDialog(false);
-    } catch (err: any) {
-      // TODO: error handling
-    }
-  };
-
-  const handleChannelNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setChannelName(e.target.value);
-  };
-
-  const handleChannelPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setChannelPassword(e.target.value);
-  };
 
   const toggleOpenChannels = () => setOpenChannels(!openChannels);
+
+  const addChannel = (channel: Channel) => setChannels([...channels, channel]);
 
   const channelIcon = (isProtected: boolean) => {
     if (isProtected) {
@@ -90,36 +58,11 @@ const ChannelList = (props: Props) => {
         >
           <AddIcon />
         </IconButton>
-        <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-          <DialogTitle>Create a channel</DialogTitle>
-          <DialogContent>
-            <TextField
-              required
-              autoFocus
-              fullWidth
-              margin="dense"
-              id="name"
-              label="Channel name"
-              value={channelName}
-              onChange={handleChannelNameChange}
-            />
-            <TextField
-              fullWidth
-              margin="dense"
-              id="password"
-              label="Password"
-              type="password"
-              value={channelPassword}
-              onChange={handleChannelPasswordChange}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
-            <Button onClick={() => addChannel(channelName, channelPassword)}>
-              Create
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <ChannelDialog
+          open={openDialog}
+          setOpen={setOpenDialog}
+          addChannel={addChannel}
+        />
       </Stack>
       <Collapse in={openChannels}>
         <Stack pl={4} spacing={0.5}>
