@@ -9,6 +9,7 @@ import DisplayPoints from './navigation/DisplayPoints';
 import DisplayResult from './navigation/DisplayResult';
 import Entrance from './navigation/Entrance';
 import WatchGame from './navigation/WatchGame';
+import { CONTENT_HEIGHT } from '../config/constants';
 
 interface Props {
   context: GameContext;
@@ -19,7 +20,7 @@ interface Props {
 const Navigation = ({ context, setContext }: Props) => (
   <Box
     component="div"
-    maxHeight="calc(100vh - 220px)"
+    maxHeight={CONTENT_HEIGHT}
     padding={2}
     sx={{ overflow: 'auto' }}
   >

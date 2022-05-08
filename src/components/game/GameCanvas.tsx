@@ -10,6 +10,7 @@ import { Suspense, useEffect, useState, useContext } from 'react';
 import Stage from './geometry/Stage';
 import { GameContext } from './types/gameStatus';
 import { AuthContext } from '../../contexts/AuthContext';
+import { GAME_HEIGHT } from '../config/constants';
 
 interface Props {
   context: GameContext;
@@ -42,7 +43,10 @@ const GameCanvas = ({ context, setContext }: Props) => {
   return (
     <Canvas
       shadows
-      style={{ height: 'calc(100vh - 188px)', backgroundColor: blueGrey[900] }}
+      style={{
+        height: GAME_HEIGHT,
+        backgroundColor: blueGrey[900],
+      }}
     >
       <Suspense fallback={null}>
         <PerspectiveCamera
