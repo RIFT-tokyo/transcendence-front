@@ -1,5 +1,5 @@
 import { Button, Grid, Typography } from '@mui/material';
-import { blue, blueGrey } from '@mui/material/colors';
+import { blue, blueGrey, pink } from '@mui/material/colors';
 import { useContext, useEffect, useState } from 'react';
 import { GameContext } from '../types/gameStatus';
 import { AuthContext } from '../../../contexts/AuthContext';
@@ -20,11 +20,9 @@ const DisplayPoints = ({ context, setContext }: Props) => {
         ? context.hostPlayer?.id
         : context.guestPlayer?.id;
     if (winner === authUser?.id) {
-      setResult('YOU WIN');
-    } else if (winner === null) {
-      setResult('DRAW');
+      setResult('WIN');
     } else {
-      setResult('YOU LOSE');
+      setResult('LOSE');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -64,15 +62,16 @@ const DisplayPoints = ({ context, setContext }: Props) => {
       >
         <Typography
           variant="h1"
-          color={blue[700]}
+          color={result === 'WIN' ? blue[700] : pink[700]}
           sx={{
             fontFamily: 'Zen Tokyo Zoo',
           }}
         >
-          {result}
+          YOU {result}
         </Typography>
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={4} />
+      <Grid item xs={4}>
         <Button
           fullWidth
           size="large"
@@ -84,6 +83,7 @@ const DisplayPoints = ({ context, setContext }: Props) => {
           play again
         </Button>
       </Grid>
+      <Grid item xs={4} />
     </Grid>
   );
 };

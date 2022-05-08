@@ -19,9 +19,11 @@ const Waiting = ({ context, setContext }: Props) => (
       display="flex"
       direction="column"
     >
-      <Typography variant="h4" color={blueGrey[100]}>
-        Room ID: {context.roomId}
-      </Typography>
+      {context.roomId && (
+        <Typography variant="h4" color={blueGrey[100]}>
+          Room ID: {context.roomId}
+        </Typography>
+      )}
       <Typography variant="h4" color={blueGrey[100]}>
         Waiting for other player to join
       </Typography>
@@ -37,23 +39,27 @@ const Waiting = ({ context, setContext }: Props) => (
     >
       <CircularProgress sx={{ color: blueGrey[100] }} />
     </Grid>
-    <Grid item xs={3} />
-    <Grid item xs={6}>
-      <Button
-        fullWidth
-        variant="outlined"
-        color="inherit"
-        sx={{
-          color: blueGrey[100],
-        }}
-        startIcon={<ChatIcon />}
-      >
-        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-          Invite by chat
-        </Typography>
-      </Button>
-    </Grid>
-    <Grid item xs={3} />
+    {context.roomId && (
+      <>
+        <Grid item xs={3} />
+        <Grid item xs={6}>
+          <Button
+            fullWidth
+            variant="outlined"
+            color="inherit"
+            sx={{
+              color: blueGrey[100],
+            }}
+            startIcon={<ChatIcon />}
+          >
+            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+              Invite by chat
+            </Typography>
+          </Button>
+        </Grid>
+        <Grid item xs={3} />
+      </>
+    )}
     <Grid item xs={4} />
     <Grid item xs={4}>
       <Button
