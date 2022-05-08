@@ -32,7 +32,6 @@ const MatchHistory = () => {
     }
     setOffset((prev) => prev + 10);
     setMatches((prev) => [...(prev || []), ...(data.entries || [])]);
-    console.log(offset, matches);
   }, [offset, matches]);
 
   return (
