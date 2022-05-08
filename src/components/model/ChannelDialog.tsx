@@ -22,12 +22,17 @@ const ChannelDialog = (props: Props) => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [errorPassword, setErrorPassword] = useState(false);
   const channelApi = new ChannelApi();
 
   const createChannel = async (
     channelName: string,
     channelPassword: string,
   ) => {
+    if (!channelName) {
+      setErrorPassword(true);
+      return;
+    }
     try {
       const newChannel: NewChannel = { name: channelName };
       if (password) {
@@ -66,6 +71,10 @@ const ChannelDialog = (props: Props) => {
           label="Channel name"
           value={name}
           onChange={handleNameChange}
+          error={errorPassword}
+          helperText={
+            errorPassword ? 'Please fill Channel name field' : undefined
+          }
         />
         <TextField
           fullWidth
