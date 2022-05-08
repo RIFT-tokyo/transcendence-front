@@ -12,16 +12,11 @@ const ScrollObserver = (props: Props) => {
 
   useEffect(() => {
     if (ref.current === null) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          onIntersect();
-        }
-      },
-      {
-        threshold: 1,
-      },
-    );
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        onIntersect();
+      }
+    });
     observer.observe(ref.current);
     return () => {
       observer.unobserve(ref.current);
