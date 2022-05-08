@@ -14,7 +14,7 @@ import ErrorRouter from '../ui/ErrorRouter';
 
 const UserProfile = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [followers, setFollowers] = useState<User[] | undefined>();
+  const [followers, setFollowers] = useState<User[]>([]);
   const [isOwner, setIsOwner] = useState<boolean>(false);
   const [isFollower, setIsFollower] = useState<boolean>(false);
   const [statusCode, setStatusCode] = useState<number>(0);
@@ -83,7 +83,7 @@ const UserProfile = () => {
         undefined,
         { withCredentials: true },
       );
-      setFollowers(data.entries);
+      setFollowers(data.entries || []);
     } catch (err: any) {
       setStatusCode(err.response.status);
     }

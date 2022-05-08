@@ -4,7 +4,7 @@ import { User } from '../../api/generated/api';
 import FollowerStatus from './FollowerStatus';
 
 type Props = {
-  followers: User[] | undefined;
+  followers: User[];
 };
 
 const FollowerList: React.VFC<Props> = ({ followers }: Props) => (
