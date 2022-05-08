@@ -1,4 +1,4 @@
-import { Container, Divider, Stack, Typography } from '@mui/material';
+import { Container, Divider, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ChannelList from '../model/ChannelList';
