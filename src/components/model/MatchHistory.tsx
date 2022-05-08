@@ -10,7 +10,7 @@ import {
   Stack,
   Link,
 } from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { format } from 'date-fns';
 import { NavLink } from 'react-router-dom';
 import { Match, MatchApi } from '../../api/generated';
