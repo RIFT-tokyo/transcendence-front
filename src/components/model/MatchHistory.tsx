@@ -23,19 +23,6 @@ const MatchHistory = () => {
   const [matches, setMatches] = useState<Match[] | undefined>();
   const matchApi = new MatchApi();
 
-  // const fetchMatches = useCallback(async () => {
-  //   const { data } = await matchApi.getMatches(undefined, undefined, {
-  //     withCredentials: true,
-  //   });
-  //   setMatches(data.entries);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-
-  // useEffect(() => {
-  //   fetchMatches();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-
   const fetchNextMatches = useCallback(async () => {
     const { data } = await matchApi.getMatches(undefined, offset, {
       withCredentials: true,
