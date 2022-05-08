@@ -1,9 +1,11 @@
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
   TextField,
 } from '@mui/material';
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
@@ -19,6 +21,7 @@ const ChannelDialog = (props: Props) => {
   const { open, setOpen, addChannel } = props;
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const channelApi = new ChannelApi();
 
   const createChannel = async (
@@ -69,9 +72,20 @@ const ChannelDialog = (props: Props) => {
           margin="dense"
           id="password"
           label="Password"
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           value={password}
           onChange={handlePasswordChange}
+          InputProps={{
+            endAdornment: (
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={() => setShowPassword(!showPassword)}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            ),
+          }}
         />
       </DialogContent>
       <DialogActions>
