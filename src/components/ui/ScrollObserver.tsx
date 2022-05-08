@@ -1,29 +1,31 @@
 import { Grid, CircularProgress } from '@mui/material';
-import { memo, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 type Props = {
   onIntersect: () => Promise<void>;
   isActiveObserver: boolean;
 };
 
-const ScrollObserver = memo((props: Props) => {
+const ScrollObserver = (props: Props) => {
   const { onIntersect, isActiveObserver } = props;
   const ref = useRef(null);
 
   useEffect(() => {
     if (ref.current === null) return;
     const observer = new IntersectionObserver(
-      (
-        entries: IntersectionObserverEntry[],
-        _observer: IntersectionObserver,
-      ) => {
-        if (entries[0].intersectionRatio >= 1) {
-          _observer.disconnect();
+      (entries) => {
+        if (entries[0].isIntersecting) {
           onIntersect();
         }
       },
+      {
+        threshold: 1,
+      },
     );
     observer.observe(ref.current);
+    return () => {
+      observer.unobserve(ref.current);
+    };
   }, [onIntersect]);
 
   return isActiveObserver ? (
@@ -31,6 +33,6 @@ const ScrollObserver = memo((props: Props) => {
       <CircularProgress />
     </Grid>
   ) : null;
-});
+};
 
 export default ScrollObserver;

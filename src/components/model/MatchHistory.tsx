@@ -10,27 +10,43 @@ import {
   Stack,
   Link,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { NavLink } from 'react-router-dom';
 import { Match, MatchApi } from '../../api/generated';
 import stringToColor from '../../functions/stringToColor';
+import ScrollObserver from '../ui/ScrollObserver';
 
 const MatchHistory = () => {
+  const [offset, setOffset] = useState(0);
+  const [isActiveObserver, setIsActiveObserver] = useState(true);
   const [matches, setMatches] = useState<Match[] | undefined>();
   const matchApi = new MatchApi();
 
-  const fetchMatches = async () => {
-    const { data } = await matchApi.getMatches(undefined, undefined, {
+  // const fetchMatches = useCallback(async () => {
+  //   const { data } = await matchApi.getMatches(undefined, undefined, {
+  //     withCredentials: true,
+  //   });
+  //   setMatches(data.entries);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+
+  // useEffect(() => {
+  //   fetchMatches();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+
+  const fetchNextMatches = useCallback(async () => {
+    const { data } = await matchApi.getMatches(undefined, offset, {
       withCredentials: true,
     });
-    setMatches(data.entries);
-  };
-
-  useEffect(() => {
-    fetchMatches();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (data.has_next === false) {
+      return setIsActiveObserver(false);
+    }
+    setOffset((prev) => prev + 10);
+    setMatches((prev) => [...(prev || []), ...(data.entries || [])]);
+    console.log(offset, matches);
+  }, [offset, matches]);
 
   return (
     <TableContainer sx={{ height: 700 }}>
@@ -134,6 +150,10 @@ const MatchHistory = () => {
           ))}
         </TableBody>
       </Table>
+      <ScrollObserver
+        onIntersect={fetchNextMatches}
+        isActiveObserver={isActiveObserver}
+      />
     </TableContainer>
   );
 };
