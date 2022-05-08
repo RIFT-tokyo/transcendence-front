@@ -20,7 +20,7 @@ import ScrollObserver from '../ui/ScrollObserver';
 const MatchHistory = () => {
   const [offset, setOffset] = useState(0);
   const [isActiveObserver, setIsActiveObserver] = useState(true);
-  const [matches, setMatches] = useState<Match[] | undefined>();
+  const [matches, setMatches] = useState<Match[]>([]);
   const matchApi = new MatchApi();
 
   const fetchNextMatches = useCallback(async () => {
@@ -31,7 +31,7 @@ const MatchHistory = () => {
       return setIsActiveObserver(false);
     }
     setOffset((prev) => prev + 10);
-    setMatches((prev) => [...(prev || []), ...(data.entries || [])]);
+    setMatches((prev) => [...prev, ...(data.entries || [])]);
   }, [offset, matches]);
 
   return (
