@@ -108,6 +108,7 @@ const ChannelList = (props: Props) => {
               margin="dense"
               id="password"
               label="Password"
+              type="password"
               value={channelPassword}
               onChange={handleChannelPasswordChange}
             />
