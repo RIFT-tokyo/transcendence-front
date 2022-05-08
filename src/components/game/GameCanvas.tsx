@@ -6,9 +6,10 @@ import {
   RoundedBox,
 } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useState, useContext } from 'react';
 import Stage from './geometry/Stage';
 import { GameContext } from './types/gameStatus';
+import { AuthContext } from '../../contexts/AuthContext';
 
 interface Props {
   context: GameContext;
@@ -21,12 +22,17 @@ interface State {
 }
 
 const GameCanvas = ({ context, setContext }: Props) => {
+  const { authUser } = useContext(AuthContext);
   const [state, setState] = useState<State>({
-    cameraPosition: [0, 3, 15],
+    cameraPosition: [7, 9, 0],
   });
   useEffect(() => {
     if (context.gameStatus === 'play') {
-      setState({ ...state, cameraPosition: [0, 3, 15] });
+      if (context.hostPlayer?.id === authUser?.id) {
+        setState({ ...state, cameraPosition: [0, 3, 15] });
+      } else if (context.guestPlayer?.id === authUser?.id) {
+        setState({ ...state, cameraPosition: [0, 3, -15] });
+      }
       setContext({ ...context, hostPoints: 11, guestPoints: 8 });
     } else if (context.gameStatus === 'watch') {
       setState({ ...state, cameraPosition: [7, 9, 0] });

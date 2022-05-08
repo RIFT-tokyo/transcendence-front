@@ -26,7 +26,9 @@ const Entrance = ({ context, setContext }: Props) => (
           sx={{
             color: blueGrey[100],
           }}
-          onClick={() => setContext({ ...context, gameStatus: 'waiting' })}
+          onClick={() =>
+            setContext({ ...context, roomId: '', gameStatus: 'waiting' })
+          }
         >
           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
             auto match

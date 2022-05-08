@@ -15,14 +15,22 @@ const DisplayPoints = ({ context, setContext }: Props) => {
   const [result, setResult] = useState<string>('');
 
   useEffect(() => {
-    const winner =
-      context.hostPoints > context.guestPoints
-        ? context.hostPlayer?.id
-        : context.guestPlayer?.id;
-    if (winner === authUser?.id) {
+    if (
+      context.hostPoints > context.guestPoints &&
+      context.hostPlayer?.id === authUser?.id
+    ) {
       setResult('WIN');
-    } else {
+    } else if (
+      context.hostPoints < context.guestPoints &&
+      context.guestPlayer?.id === authUser?.id
+    ) {
       setResult('LOSE');
+    } else {
+      const winner =
+        context.hostPoints > context.guestPoints
+          ? context.hostPlayer
+          : context.guestPlayer;
+      setResult(`${winner?.display_name ?? winner?.username} WINS`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -62,12 +70,12 @@ const DisplayPoints = ({ context, setContext }: Props) => {
       >
         <Typography
           variant="h1"
-          color={result === 'WIN' ? blue[700] : pink[700]}
+          color={result === 'LOSE' ? pink[700] : blue[700]}
           sx={{
             fontFamily: 'Zen Tokyo Zoo',
           }}
         >
-          YOU {result}
+          {result === 'WIN' || result === 'LOSE' ? `YOU ${result}` : result}
         </Typography>
       </Grid>
       <Grid item xs={4} />
