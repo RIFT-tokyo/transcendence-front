@@ -60,6 +60,7 @@ const Entrance = ({ context, setContext }: Props) => (
           sx={{
             color: blueGrey[100],
           }}
+          onClick={() => setContext({ ...context, gameStatus: 'watch_match' })}
         >
           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
             watch match

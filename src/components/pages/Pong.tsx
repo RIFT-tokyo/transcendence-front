@@ -55,7 +55,7 @@ const Pong = () => {
           <Navigation context={context} setContext={setContext} />
         </Box>
         <Box component="div">
-          <GameCanvas />
+          <GameCanvas context={context} setContext={setContext} />
         </Box>
       </Box>
     </Container>
