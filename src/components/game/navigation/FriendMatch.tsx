@@ -1,13 +1,14 @@
 import { Grid, Button, Typography } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
-import { GameStatus } from '../types/gameStatus';
+import { GameContext } from '../types/gameStatus';
 
 interface Props {
+  context: GameContext;
   // eslint-disable-next-line no-unused-vars
-  setStatus: (state: GameStatus) => void;
+  setContext: (context: GameContext) => void;
 }
 
-const FriendMatch = ({ setStatus }: Props) => (
+const FriendMatch = ({ context, setContext }: Props) => (
   <Grid container item xs={12} marginY={5}>
     <Grid item xs={3} />
     <Grid container item xs={6} spacing={2}>
@@ -20,7 +21,7 @@ const FriendMatch = ({ setStatus }: Props) => (
           sx={{
             color: blueGrey[100],
           }}
-          onClick={() => setStatus('host')}
+          onClick={() => setContext({ ...context, gameStatus: 'host' })}
         >
           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
             create room
@@ -36,7 +37,7 @@ const FriendMatch = ({ setStatus }: Props) => (
           sx={{
             color: blueGrey[100],
           }}
-          onClick={() => setStatus('join')}
+          onClick={() => setContext({ ...context, gameStatus: 'join' })}
         >
           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
             join room
@@ -50,7 +51,7 @@ const FriendMatch = ({ setStatus }: Props) => (
           sx={{
             color: blueGrey[100],
           }}
-          onClick={() => setStatus('entrance')}
+          onClick={() => setContext({ ...context, gameStatus: 'entrance' })}
         >
           Back to Top
         </Button>

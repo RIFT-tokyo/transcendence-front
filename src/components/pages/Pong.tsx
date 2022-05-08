@@ -1,22 +1,24 @@
 import { Box, Container } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
-import { User } from '../../api/generated';
 import { AuthContext } from '../../contexts/AuthContext';
 import { SocketContext } from '../../contexts/SocketContext';
 import { EVENT } from '../config/constants';
 import GameCanvas from '../game/GameCanvas';
 import Navigation from '../game/Navigation';
-import { GameStatus } from '../game/types/gameStatus';
+import { GameContext } from '../game/types/gameStatus';
 
 const Pong = () => {
   const { client } = useContext(SocketContext);
   const { authUser } = useContext(AuthContext);
 
-  const [gameStatus, setGameStatus] = useState<GameStatus>('entrance');
-  const [hostPlayer] = useState<User | null>(null);
-  const [guestPlayer] = useState<User | null>(null);
-  const [hostPoints] = useState<number>(0);
-  const [guestPoints] = useState<number>(0);
+  const [context, setContext] = useState<GameContext>({
+    gameStatus: 'entrance',
+    roomId: '',
+    hostPlayer: null,
+    guestPlayer: null,
+    hostPoints: 0,
+    guestPoints: 0,
+  });
 
   useEffect(() => {
     if (client) {
@@ -33,8 +35,7 @@ const Pong = () => {
           userID: authUser?.id,
         });
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [client]);
+  }, [authUser?.id, client]);
 
   return (
     <Container component="main" maxWidth="xl">
@@ -51,14 +52,7 @@ const Pong = () => {
             position: 'absolute',
           }}
         >
-          <Navigation
-            gameStatus={gameStatus}
-            setGameStatus={setGameStatus}
-            hostPlayer={hostPlayer}
-            guestPlayer={guestPlayer}
-            hostPoints={hostPoints}
-            guestPoints={guestPoints}
-          />
+          <Navigation context={context} setContext={setContext} />
         </Box>
         <Box component="div">
           <GameCanvas />

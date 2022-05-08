@@ -1,33 +1,21 @@
 import { Box, Grid, Typography } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
-import { GameStatus } from './types/gameStatus';
+import { GameContext } from './types/gameStatus';
 import HostGame from './navigation/HostGame';
 import JoinGame from './navigation/JoinGame';
 import Waiting from './navigation/Waiting';
 import FriendMatch from './navigation/FriendMatch';
 import DisplayPoints from './navigation/DisplayPoints';
 import DisplayResult from './navigation/DisplayResult';
-import { User } from '../../api/generated';
 import Entrance from './navigation/Entrance';
 
 interface Props {
-  gameStatus: GameStatus;
+  context: GameContext;
   // eslint-disable-next-line no-unused-vars
-  setGameStatus: (gameStatus: GameStatus) => void;
-  hostPlayer: User | null;
-  guestPlayer: User | null;
-  hostPoints: number;
-  guestPoints: number;
+  setContext: (context: GameContext) => void;
 }
 
-const Navigation = ({
-  gameStatus,
-  setGameStatus,
-  hostPlayer,
-  guestPlayer,
-  hostPoints,
-  guestPoints,
-}: Props) => (
+const Navigation = ({ context, setContext }: Props) => (
   <Box
     component="div"
     maxHeight="calc(100vh - 220px)"
@@ -42,7 +30,7 @@ const Navigation = ({
       alignItems="center"
       maxWidth="sm"
     >
-      {gameStatus !== 'play' && gameStatus !== 'end' && (
+      {context.gameStatus !== 'play' && context.gameStatus !== 'end' && (
         <Grid container spacing={10}>
           <Grid
             item
@@ -59,30 +47,34 @@ const Navigation = ({
               sx={{
                 fontFamily: 'Zen Tokyo Zoo',
               }}
-              onClick={() => setGameStatus('play')}
+              onClick={() => setContext({ ...context, gameStatus: 'play' })}
             >
               PONG
             </Typography>
           </Grid>
-          {gameStatus === 'entrance' && <Entrance setStatus={setGameStatus} />}
-          {gameStatus === 'friend_match' && (
-            <FriendMatch setStatus={setGameStatus} />
+          {context.gameStatus === 'entrance' && (
+            <Entrance context={context} setContext={setContext} />
           )}
-          {gameStatus === 'host' && <HostGame setStatus={setGameStatus} />}
-          {gameStatus === 'join' && <JoinGame setStatus={setGameStatus} />}
-          {gameStatus === 'waiting' && <Waiting setStatus={setGameStatus} />}
+          {context.gameStatus === 'friend_match' && (
+            <FriendMatch context={context} setContext={setContext} />
+          )}
+          {context.gameStatus === 'host' && (
+            <HostGame context={context} setContext={setContext} />
+          )}
+          {context.gameStatus === 'join' && (
+            <JoinGame context={context} setContext={setContext} />
+          )}
+          {context.gameStatus === 'waiting' && (
+            <Waiting context={context} setContext={setContext} />
+          )}
         </Grid>
       )}
-      {gameStatus === 'play' && (
-        <DisplayPoints
-          setStatus={setGameStatus}
-          hostPlayer={hostPlayer!}
-          guestPlayer={guestPlayer!}
-          hostPoints={hostPoints}
-          guestPoints={guestPoints}
-        />
+      {context.gameStatus === 'play' && (
+        <DisplayPoints context={context} setContext={setContext} />
       )}
-      {gameStatus === 'end' && <DisplayResult setStatus={setGameStatus} />}
+      {context.gameStatus === 'end' && (
+        <DisplayResult context={context} setContext={setContext} />
+      )}
     </Box>
   </Box>
 );

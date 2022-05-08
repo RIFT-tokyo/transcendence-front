@@ -4,14 +4,15 @@ import ShuffleIcon from '@mui/icons-material/Shuffle';
 import GroupIcon from '@mui/icons-material/Group';
 import LiveTvIcon from '@mui/icons-material/LiveTv';
 import { blueGrey } from '@mui/material/colors';
-import { GameStatus } from '../types/gameStatus';
+import { GameContext } from '../types/gameStatus';
 
 interface Props {
+  context: GameContext;
   // eslint-disable-next-line no-unused-vars
-  setStatus: (state: GameStatus) => void;
+  setContext: (context: GameContext) => void;
 }
 
-const Entrance = ({ setStatus }: Props) => (
+const Entrance = ({ context, setContext }: Props) => (
   <Grid container item xs={12} marginY={5}>
     <Grid item xs={3} />
     <Grid container item xs={6} spacing={2}>
@@ -25,7 +26,7 @@ const Entrance = ({ setStatus }: Props) => (
           sx={{
             color: blueGrey[100],
           }}
-          onClick={() => setStatus('waiting')}
+          onClick={() => setContext({ ...context, gameStatus: 'waiting' })}
         >
           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
             auto match
@@ -42,7 +43,7 @@ const Entrance = ({ setStatus }: Props) => (
           sx={{
             color: blueGrey[100],
           }}
-          onClick={() => setStatus('friend_match')}
+          onClick={() => setContext({ ...context, gameStatus: 'friend_match' })}
         >
           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
             friend match

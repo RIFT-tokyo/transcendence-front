@@ -1,13 +1,14 @@
 import { Grid, Typography, CircularProgress, Button } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
 import ChatIcon from '@mui/icons-material/Chat';
-import { GameStatus } from '../types/gameStatus';
+import { GameContext } from '../types/gameStatus';
 
 interface Props {
+  context: GameContext;
   // eslint-disable-next-line no-unused-vars
-  setStatus: (state: GameStatus) => void;
+  setContext: (context: GameContext) => void;
 }
-const Waiting = ({ setStatus }: Props) => (
+const Waiting = ({ context, setContext }: Props) => (
   <Grid container item xs={12} spacing={4} marginY={5}>
     <Grid
       container
@@ -19,7 +20,7 @@ const Waiting = ({ setStatus }: Props) => (
       direction="column"
     >
       <Typography variant="h4" color={blueGrey[100]}>
-        Room Name: sample-room
+        Room ID: {context.roomId}
       </Typography>
       <Typography variant="h4" color={blueGrey[100]}>
         Waiting for other player to join
@@ -61,7 +62,7 @@ const Waiting = ({ setStatus }: Props) => (
         sx={{
           color: blueGrey[100],
         }}
-        onClick={() => setStatus('entrance')}
+        onClick={() => setContext({ ...context, gameStatus: 'entrance' })}
       >
         Back to Top
       </Button>

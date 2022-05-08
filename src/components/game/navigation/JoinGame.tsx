@@ -1,13 +1,14 @@
 import { Button, Grid, TextField, Typography } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
-import { GameStatus } from '../types/gameStatus';
+import { GameContext } from '../types/gameStatus';
 
 interface Props {
+  context: GameContext;
   // eslint-disable-next-line no-unused-vars
-  setStatus: (state: GameStatus) => void;
+  setContext: (context: GameContext) => void;
 }
 
-const JoinGame = ({ setStatus }: Props) => (
+const JoinGame = ({ context, setContext }: Props) => (
   <Grid container item xs={12} spacing={4} marginY={5}>
     <Grid container item xs={12} spacing={1} alignItems="center">
       <Grid item xs={1} />
@@ -29,7 +30,7 @@ const JoinGame = ({ setStatus }: Props) => (
           sx={{
             color: blueGrey[100],
           }}
-          onClick={() => setStatus('waiting')}
+          onClick={() => setContext({ ...context, gameStatus: 'waiting' })}
         >
           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
             join
@@ -46,7 +47,7 @@ const JoinGame = ({ setStatus }: Props) => (
         sx={{
           color: blueGrey[100],
         }}
-        onClick={() => setStatus('entrance')}
+        onClick={() => setContext({ ...context, gameStatus: 'entrance' })}
       >
         Back to Top
       </Button>
