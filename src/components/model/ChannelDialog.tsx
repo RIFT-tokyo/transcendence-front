@@ -8,6 +8,8 @@ import {
   IconButton,
   TextField,
 } from '@mui/material';
+import { useSnackbar } from 'notistack';
+import Axios from 'axios';
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
 import { Channel, ChannelApi, NewChannel } from '../../api/generated';
 
@@ -24,6 +26,7 @@ const ChannelDialog = (props: Props) => {
   const [showPassword, setShowPassword] = useState(false);
   const [errorPassword, setErrorPassword] = useState(false);
   const channelApi = new ChannelApi();
+  const { enqueueSnackbar } = useSnackbar();
 
   const closeDialog = () => {
     setName('');
@@ -40,18 +43,22 @@ const ChannelDialog = (props: Props) => {
       setErrorPassword(true);
       return;
     }
+    const newChannel: NewChannel = { name: channelName };
+    if (password) {
+      newChannel.password = channelPassword;
+    }
     try {
-      const newChannel: NewChannel = { name: channelName };
-      if (password) {
-        newChannel.password = channelPassword;
-      }
       const res = await channelApi.postChannels(newChannel, {
         withCredentials: true,
       });
       addChannel(res.data);
       closeDialog();
-    } catch (err: any) {
-      // TODO: error handling
+    } catch (err: unknown) {
+      if (Axios.isAxiosError(err) && err.response?.data.message) {
+        enqueueSnackbar(err.response.data.message, { variant: 'error' });
+      } else if (err instanceof Error) {
+        enqueueSnackbar(err.message, { variant: 'error' });
+      }
     }
   };
 
