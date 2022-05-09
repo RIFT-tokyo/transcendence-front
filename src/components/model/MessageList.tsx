@@ -4,6 +4,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import { Channel } from '../../api/generated';
 import MessageContent from './MessageContent';
 import MessageInput from './MessageInput';
+import { CHAT_MESSAGE_CONTENT_HEIGHT } from '../config/constants';
 
 type Props = {
   channel: Channel | null;
@@ -34,7 +35,7 @@ const MessageList = (props: Props) => {
       </Stack>
       <Stack
         spacing={2}
-        height="calc(100vh - 160px - 40px - 54px)"
+        height={CHAT_MESSAGE_CONTENT_HEIGHT}
         sx={{ overflowY: 'auto' }}
       >
         {channel?.id
