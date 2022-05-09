@@ -1,6 +1,7 @@
 import { Container, Divider, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import Axios from 'axios';
 import ChannelList from '../model/ChannelList';
 import { Channel, ChannelApi } from '../../api/generated';
 import MessageList from '../model/MessageList';
@@ -39,8 +40,10 @@ const Chat = () => {
         return;
       }
       setChannel(res.data);
-    } catch (err: any) {
-      // TODO: error handling
+    } catch (err: unknown) {
+      if (Axios.isAxiosError(err) && err.response) {
+        setStatusCode(err.response.status);
+      }
     }
   };
 
