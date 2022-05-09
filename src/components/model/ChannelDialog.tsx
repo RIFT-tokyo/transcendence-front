@@ -1,11 +1,15 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
   Button,
+  Collapse,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControlLabel,
+  FormGroup,
   IconButton,
+  Switch,
   TextField,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
@@ -24,7 +28,9 @@ const ChannelDialog = (props: Props) => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [errorName, setErrorName] = useState(false);
   const [errorPassword, setErrorPassword] = useState(false);
+  const [isPrivate, setIsPrivate] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
   const channelApi = new ChannelApi();
   const { enqueueSnackbar } = useSnackbar();
@@ -32,20 +38,33 @@ const ChannelDialog = (props: Props) => {
   const closeDialog = () => {
     setName('');
     setPassword('');
+    setErrorName(false);
     setErrorPassword(false);
     setOpen(false);
+  };
+
+  const isValidName = (channelName: string): boolean => !!channelName;
+  const isValidPassword = (channelPassword: string): boolean =>
+    !isPrivate || !!channelPassword;
+
+  const validateFields = (
+    channelName: string,
+    channelPassword: string,
+  ): boolean => {
+    setErrorName(!isValidName(channelName));
+    setErrorPassword(!isValidPassword(channelPassword));
+    return isValidName(channelName) && isValidPassword(channelPassword);
   };
 
   const createChannel = async (
     channelName: string,
     channelPassword: string,
   ) => {
-    if (!channelName) {
-      setErrorPassword(true);
+    if (!validateFields(channelName, channelPassword)) {
       return;
     }
     const newChannel: NewChannel = { name: channelName };
-    if (password) {
+    if (isPrivate && password) {
       newChannel.password = channelPassword;
     }
     try {
@@ -73,6 +92,10 @@ const ChannelDialog = (props: Props) => {
     setPassword(e.target.value);
   };
 
+  const handleIsPrivateChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setIsPrivate(e.target.checked);
+  };
+
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
       <DialogTitle>Create a channel</DialogTitle>
@@ -87,32 +110,46 @@ const ChannelDialog = (props: Props) => {
           value={name}
           disabled={isRequesting}
           onChange={handleNameChange}
-          error={errorPassword}
-          helperText={
-            errorPassword ? 'Please fill Channel name field' : undefined
-          }
+          error={errorName}
+          helperText={errorName ? 'Please fill Channel name field' : undefined}
         />
-        <TextField
-          fullWidth
-          margin="dense"
-          id="password"
-          label="Password"
-          type={showPassword ? 'text' : 'password'}
-          value={password}
-          disabled={isRequesting}
-          onChange={handlePasswordChange}
-          InputProps={{
-            endAdornment: (
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={() => setShowPassword(!showPassword)}
-                edge="end"
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            ),
-          }}
-        />
+        <FormGroup>
+          <FormControlLabel
+            sx={{ display: 'flex', justifyContent: 'space-between' }}
+            control={
+              <Switch checked={isPrivate} onChange={handleIsPrivateChange} />
+            }
+            label="Private Channel"
+            labelPlacement="start"
+          />
+        </FormGroup>
+        <Collapse in={isPrivate}>
+          <TextField
+            fullWidth
+            margin="dense"
+            id="password"
+            label="Password"
+            type={showPassword ? 'text' : 'password'}
+            value={password}
+            disabled={isRequesting || !isPrivate}
+            onChange={handlePasswordChange}
+            error={errorPassword}
+            helperText={
+              errorPassword ? 'Please fill Channel password field' : undefined
+            }
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              ),
+            }}
+          />
+        </Collapse>
       </DialogContent>
       <DialogActions>
         <Button onClick={() => closeDialog()}>Cancel</Button>
