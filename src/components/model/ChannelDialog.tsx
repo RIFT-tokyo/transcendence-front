@@ -25,6 +25,7 @@ const ChannelDialog = (props: Props) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorPassword, setErrorPassword] = useState(false);
+  const [isRequesting, setIsRequesting] = useState(false);
   const channelApi = new ChannelApi();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -48,6 +49,7 @@ const ChannelDialog = (props: Props) => {
       newChannel.password = channelPassword;
     }
     try {
+      setIsRequesting(true);
       const res = await channelApi.postChannels(newChannel, {
         withCredentials: true,
       });
@@ -60,6 +62,7 @@ const ChannelDialog = (props: Props) => {
         enqueueSnackbar(err.message, { variant: 'error' });
       }
     }
+    setIsRequesting(false);
   };
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -82,6 +85,7 @@ const ChannelDialog = (props: Props) => {
           id="name"
           label="Channel name"
           value={name}
+          disabled={isRequesting}
           onChange={handleNameChange}
           error={errorPassword}
           helperText={
@@ -95,6 +99,7 @@ const ChannelDialog = (props: Props) => {
           label="Password"
           type={showPassword ? 'text' : 'password'}
           value={password}
+          disabled={isRequesting}
           onChange={handlePasswordChange}
           InputProps={{
             endAdornment: (
@@ -111,7 +116,12 @@ const ChannelDialog = (props: Props) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={() => closeDialog()}>Cancel</Button>
-        <Button onClick={() => createChannel(name, password)}>Create</Button>
+        <Button
+          onClick={() => createChannel(name, password)}
+          disabled={isRequesting}
+        >
+          Create
+        </Button>
       </DialogActions>
     </Dialog>
   );
