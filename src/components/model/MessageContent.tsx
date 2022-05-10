@@ -6,11 +6,11 @@ import stringToColor from '../../functions/stringToColor';
 type Props = {
   user: User | null;
   text: string;
-  created_at: Date;
+  createdAt: Date;
 };
 
 const MessageContent = (props: Props) => {
-  const { user, text, created_at } = props;
+  const { user, text, createdAt } = props;
 
   return (
     <Stack direction="row" spacing={1}>
@@ -32,7 +32,7 @@ const MessageContent = (props: Props) => {
             {user?.display_name ?? user?.username}
           </Typography>
           <Typography variant="body2">
-            {format(created_at, 'yyyy/MM/dd HH:mm')}
+            {format(createdAt, 'yyyy/MM/dd HH:mm')}
           </Typography>
         </Stack>
         <Typography>{text}</Typography>
