@@ -106,12 +106,12 @@ const ChannelDialog = (props: Props) => {
           fullWidth
           margin="dense"
           id="name"
-          label="Channel name"
+          label="Channel Name"
           value={name}
           disabled={isRequesting}
           onChange={handleNameChange}
           error={errorName}
-          helperText={errorName ? 'Please fill Channel name field' : undefined}
+          helperText={errorName ? 'Please fill Channel Name field' : undefined}
         />
         <FormGroup>
           <FormControlLabel
@@ -128,14 +128,14 @@ const ChannelDialog = (props: Props) => {
             fullWidth
             margin="dense"
             id="password"
-            label="Password"
+            label="Channel Password"
             type={showPassword ? 'text' : 'password'}
             value={password}
             disabled={isRequesting || !isPrivate}
             onChange={handlePasswordChange}
             error={errorPassword}
             helperText={
-              errorPassword ? 'Please fill Channel password field' : undefined
+              errorPassword ? 'Please fill Channel Password field' : undefined
             }
             InputProps={{
               endAdornment: (
