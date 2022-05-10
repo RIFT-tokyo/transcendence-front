@@ -5,16 +5,13 @@ import { useParams } from 'react-router-dom';
 import { User, UserApi, FollowApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
 import AchievementList from '../model/AchievementList';
-import { SocketContext } from '../../contexts/SocketContext';
-import { EVENT } from '../config/constants';
-import FollowerList from '../model/FollowerList';
+import FollowingList from '../model/FollowingList';
 import GameResult from '../model/GameResult';
 import UserCard from '../model/UserCard';
 import ErrorRouter from '../ui/ErrorRouter';
 
 const UserProfile = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [followers, setFollowers] = useState<User[]>([]);
   const [isOwner, setIsOwner] = useState<boolean>(false);
   const [isFollower, setIsFollower] = useState<boolean>(false);
   const [statusCode, setStatusCode] = useState<number>(0);
@@ -23,7 +20,6 @@ const UserProfile = () => {
   const followApi = new FollowApi();
   const { username } = useParams();
   const { authUser, setAuthUser } = useContext(AuthContext);
-  const { client } = useContext(SocketContext);
   const { enqueueSnackbar } = useSnackbar();
 
   const followUser = async (userId: number) => {
@@ -75,20 +71,6 @@ const UserProfile = () => {
     }
   };
 
-  const fetchFollowings = async (ownerId: number) => {
-    try {
-      const { data } = await followApi.getUsersUserIDFollowing(
-        ownerId,
-        undefined,
-        undefined,
-        { withCredentials: true },
-      );
-      setFollowers(data.entries || []);
-    } catch (err: any) {
-      setStatusCode(err.response.status);
-    }
-  };
-
   const fetchUserFromUsername = async (ownerId: number, name: string) => {
     try {
       const res = await userApi.getUsersUsername(name, {
@@ -123,32 +105,10 @@ const UserProfile = () => {
       } else {
         await fetchMe();
         setIsOwner(true);
-        fetchFollowings(owner.id!);
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
-
-  useEffect(() => {
-    const onUserStatus = (data: { status: string; userID: number }) => {
-      const updatedFollowers = followers?.map((follower) => {
-        if (follower.id === data.userID) {
-          return { ...follower, status: data.status } as User;
-        }
-        return follower;
-      });
-      setFollowers(updatedFollowers);
-    };
-
-    if (followers && followers?.length > 0 && client) {
-      client.users.on(EVENT.USER_STATUS, onUserStatus);
-    }
-    return () => {
-      if (followers && followers?.length > 0 && client) {
-        client.users.off(EVENT.USER_STATUS, onUserStatus);
-      }
-    };
-  }, [followers, client]);
 
   return (
     <ErrorRouter statusCode={statusCode}>
@@ -171,7 +131,7 @@ const UserProfile = () => {
               followUser={followUser}
               unfollowUser={unfollowUser}
             />
-            {isOwner ? <FollowerList followers={followers} /> : null}
+            {isOwner ? <FollowingList ownerId={user!.id!} /> : null}
             {user?.achievements && user.achievements.length > 0 && (
               <AchievementList achievements={user.achievements} />
             )}

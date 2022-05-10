@@ -19,7 +19,9 @@ const ScrollObserver = (props: Props) => {
     });
     observer.observe(ref.current);
     return () => {
-      observer.unobserve(ref.current);
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
     };
   }, [onIntersect]);
 
