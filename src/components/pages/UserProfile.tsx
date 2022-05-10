@@ -176,8 +176,8 @@ const UserProfile = () => {
               <AchievementList achievements={user.achievements} />
             )}
           </Stack>
-          <Divider orientation="vertical" flexItem variant='middle' />
-          <Stack margin={2} width='100%'>
+          <Divider orientation="vertical" flexItem variant="middle" />
+          <Stack margin={2} width="100%">
             <GameResult />
           </Stack>
         </Stack>

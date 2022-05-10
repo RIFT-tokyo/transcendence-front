@@ -49,10 +49,10 @@ const UserCard: React.VFC<Props> = ({
       return user?.username;
     }
     return user.display_name;
-  }
+  };
 
   return (
-    <Box>
+    <Box component="div">
       <Avatar
         sx={{
           width: 296,
@@ -66,13 +66,15 @@ const UserCard: React.VFC<Props> = ({
       <Typography sx={{ fontWeight: 'bold' }} variant="h4" marginTop={1}>
         {displayName()}
       </Typography>
-      <Typography variant="h6">{user?.display_name ? user?.username : ''}</Typography>
+      <Typography variant="h6">
+        {user?.display_name ? user?.username : ''}
+      </Typography>
       <Typography variant="body1">{user?.status_message}</Typography>
       <Typography variant="subtitle1">
         {user?.followers} followers, {user?.following} followings
       </Typography>
       <Button
-        size='small'
+        size="small"
         fullWidth
         color="inherit"
         variant="contained"

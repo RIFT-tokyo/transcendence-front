@@ -12,10 +12,7 @@ const FollowerList: React.VFC<Props> = ({ followers }: Props) => (
     <Typography sx={{ fontWeight: 'bold' }} variant="h5">
       Followings
     </Typography>
-    <Stack
-      maxHeight={256}
-      sx={{ overflowY: 'auto' }}
-    >
+    <Stack maxHeight={256} sx={{ overflowY: 'auto' }}>
       {followers?.map((follower) => (
         <FollowerStatus key={follower.id} user={follower} />
       ))}
