@@ -1,10 +1,4 @@
-import {
-  Collapse,
-  IconButton,
-  Link,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Collapse, IconButton, Link, Stack, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import TagIcon from '@mui/icons-material/Tag';
 import LockIcon from '@mui/icons-material/Lock';
@@ -37,7 +31,7 @@ const ChannelList = (props: Props) => {
   };
 
   return (
-    <Stack direction="column" spacing={0.5} width={220}>
+    <Stack direction="column" spacing={0.5} width={220} flexShrink={0}>
       <Stack direction="row" alignItems="center">
         <IconButton
           aria-label="Toggle channel visibility"
