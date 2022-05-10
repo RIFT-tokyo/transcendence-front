@@ -28,7 +28,7 @@ const MatchHistory = () => {
       withCredentials: true,
     });
     if (data.has_next === false) {
-      return setIsActiveObserver(false);
+      setIsActiveObserver(false);
     }
     setOffset((prev) => prev + 10);
     setMatches((prev) => [...prev, ...(data.entries || [])]);
