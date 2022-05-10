@@ -1,5 +1,5 @@
 import { Container, Divider, Stack } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Axios from 'axios';
 import ChannelList from '../model/ChannelList';
@@ -7,28 +7,31 @@ import { Channel, ChannelApi } from '../../api/generated';
 import MessageList from '../model/MessageList';
 import ErrorRouter from '../ui/ErrorRouter';
 
+const channelApi = new ChannelApi();
+
 const Chat = () => {
   const { channelId } = useParams();
   const [channels, setChannels] = useState<Channel[]>([]);
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
   const [statusCode, setStatusCode] = useState<number>(0);
-  const channelApi = new ChannelApi();
-
-  const setChannel = (allChannel: Channel[]) => {
-    if (allChannel.length <= 0) {
-      return;
-    }
-    if (channelId) {
-      const channel = allChannel.find((c) => c.id?.toString() === channelId);
-      if (channel) {
-        setSelectedChannel(channel);
-      } else {
-        setStatusCode(404);
+  const setSelectedChannelFromChannels = useCallback(
+    (allChannel: Channel[]) => {
+      if (allChannel.length <= 0 && !channelId) {
+        return;
       }
-    } else {
-      setSelectedChannel(allChannel[0]);
-    }
-  };
+      if (channelId) {
+        const channel = allChannel.find((c) => c.id?.toString() === channelId);
+        if (channel) {
+          setSelectedChannel(channel);
+        } else {
+          setStatusCode(404);
+        }
+      } else {
+        setSelectedChannel(allChannel[0]);
+      }
+    },
+    [channelId],
+  );
 
   const fetchChannels = async () => {
     try {
@@ -39,7 +42,7 @@ const Chat = () => {
       if (res.data.length <= 0) {
         return;
       }
-      setChannel(res.data);
+      setSelectedChannelFromChannels(res.data);
     } catch (err: unknown) {
       if (Axios.isAxiosError(err) && err.response) {
         setStatusCode(err.response.status);
@@ -49,11 +52,12 @@ const Chat = () => {
 
   useEffect(() => {
     fetchChannels();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    setChannel(channels);
-  }, [channelId]);
+    setSelectedChannelFromChannels(channels);
+  }, [setSelectedChannelFromChannels, channels]);
 
   return (
     <ErrorRouter statusCode={statusCode}>
