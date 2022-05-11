@@ -15,7 +15,11 @@ import { useSnackbar } from 'notistack';
 import { AuthApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
 import GlobalMenu from './GlobalMenu';
-import { SETTING_URL } from '../config/constants';
+import {
+  CONTENT_HEIGHT,
+  CONTENT_WITH_FOOTER_HEIGHT,
+  SETTING_URL,
+} from '../config/constants';
 import GlobalFooter from './GlobalFooter';
 import { SocketContext } from '../../contexts/SocketContext';
 
@@ -142,10 +146,10 @@ const AppBarWithMenu = () => {
       <GlobalMenu open={openDrawer} onClose={toggleDrawer(false)} />
       <Box
         component="div"
-        height="calc(100vh - 64px)"
+        height={CONTENT_WITH_FOOTER_HEIGHT}
         sx={{ mt: 8, overflowY: 'auto' }}
       >
-        <Box component="div" minHeight="calc(100vh - 136px)">
+        <Box component="div" minHeight={CONTENT_HEIGHT}>
           <RequiredAuth />
         </Box>
         <GlobalFooter />

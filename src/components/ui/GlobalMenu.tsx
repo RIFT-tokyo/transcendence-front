@@ -35,6 +35,7 @@ const GlobalMenu: React.VFC<Props> = ({ open, onClose }: Props) => {
       }}
     >
       <Box
+        component="div"
         sx={{
           overflow: 'auto',
           pt: 7,

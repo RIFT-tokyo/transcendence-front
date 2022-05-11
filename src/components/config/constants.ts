@@ -18,3 +18,15 @@ export const EVENT = {
 };
 
 export const FT_COLOR = '#00BABC';
+
+const APPBAR_HEIGHT = 64;
+export const FOOTER_HEIGHT = 40;
+export const CONTENT_WITH_FOOTER_HEIGHT = `calc(100vh - ${APPBAR_HEIGHT}px)`;
+export const CONTENT_HEIGHT = `calc(100vh - ${
+  APPBAR_HEIGHT + FOOTER_HEIGHT
+}px)`;
+
+const GAME_PADDING = 16 * 2;
+export const GAME_HEIGHT = `calc(100vh - ${
+  APPBAR_HEIGHT + FOOTER_HEIGHT + GAME_PADDING
+}px)`;

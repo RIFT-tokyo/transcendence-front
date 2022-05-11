@@ -1,4 +1,11 @@
-import { Avatar, Button, Divider, Stack, TextField, Typography } from '@mui/material';
+import {
+  Avatar,
+  Button,
+  Divider,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { VFC, ChangeEvent } from 'react';
 import { User } from '../../api/generated/api';
@@ -13,7 +20,12 @@ type Props = {
   reset: () => void;
 };
 
-const AccountSetting: VFC<Props> = ({ user, setUser, submit, reset }: Props) => {
+const AccountSetting: VFC<Props> = ({
+  user,
+  setUser,
+  submit,
+  reset,
+}: Props) => {
   const fileUploadApi = new FileUploadApi();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -64,7 +76,6 @@ const AccountSetting: VFC<Props> = ({ user, setUser, submit, reset }: Props) => 
           variant="outlined"
           value={user.status_message ?? ''}
           onChange={handleChange('status_message')}
-
         />
         <Button
           fullWidth

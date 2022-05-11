@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Stack, Tab, Tabs } from '@mui/material';
+import { Box, Tab, Tabs } from '@mui/material';
 import MatchHistory from './MatchHistory';
 
 interface TabPanelProps {
@@ -21,7 +21,11 @@ const TabPanel = (props: TabPanelProps) => {
       // eslint-disable-next-line react/jsx-props-no-spreading
       {...other}
     >
-      {value === index && <Box p={3}>{children}</Box>}
+      {value === index && (
+        <Box component="div" p={3}>
+          {children}
+        </Box>
+      )}
     </div>
   );
 };
@@ -33,12 +37,8 @@ const GameResult = () => {
   };
 
   return (
-    <Box>
-      <Tabs
-        value={value}
-        onChange={handleChange}
-        aria-label="game result tabs"
-      >
+    <Box component="div">
+      <Tabs value={value} onChange={handleChange} aria-label="game result tabs">
         <Tab
           label="match"
           id="game-result-0"
