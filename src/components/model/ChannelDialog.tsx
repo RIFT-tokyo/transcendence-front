@@ -97,7 +97,7 @@ const ChannelDialog = (props: Props) => {
   };
 
   return (
-    <Dialog open={open} onClose={() => setOpen(false)}>
+    <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
       <DialogTitle>Create a channel</DialogTitle>
       <DialogContent>
         <TextField
