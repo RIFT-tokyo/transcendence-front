@@ -40,7 +40,7 @@ const ChannelList = (props: Props) => {
           {openChannels ? <ExpandMore /> : <ChevronRight />}
         </IconButton>
         <Typography
-          sx={{ fontWeight: 'bold', flexGrow: 1 }}
+          sx={{ fontWeight: 'bold', flexGrow: 1, cursor: 'pointer' }}
           variant="h5"
           onClick={toggleOpenChannels}
         >
