@@ -59,7 +59,8 @@ const Chat = () => {
 
   useEffect(() => {
     setSelectedChannelFromChannels(channels);
-  }, [setSelectedChannelFromChannels, channels]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setSelectedChannelFromChannels]);
 
   return (
     <ErrorRouter statusCode={statusCode}>
