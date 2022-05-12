@@ -113,16 +113,14 @@ const ChannelDialog = (props: Props) => {
           error={errorName}
           helperText={errorName ? 'Please fill Channel Name field' : undefined}
         />
-        <FormGroup>
-          <FormControlLabel
-            sx={{ display: 'flex', justifyContent: 'space-between' }}
-            control={
-              <Switch checked={isPrivate} onChange={handleIsPrivateChange} />
-            }
-            label="Private Channel"
-            labelPlacement="start"
-          />
-        </FormGroup>
+        <FormControlLabel
+          sx={{ display: 'flex', justifyContent: 'space-between' }}
+          control={
+            <Switch checked={isPrivate} onChange={handleIsPrivateChange} />
+          }
+          label="Private Channel"
+          labelPlacement="start"
+        />
         <Collapse in={isPrivate}>
           <TextField
             fullWidth
