@@ -1,12 +1,13 @@
 import { Stack, Typography } from '@mui/material';
 import TagIcon from '@mui/icons-material/Tag';
 import LockIcon from '@mui/icons-material/Lock';
+import { useOutletContext } from 'react-router-dom';
 import { Channel } from '../../api/generated';
 import MessageContent from './MessageContent';
 import MessageInput from './MessageInput';
 import { CHAT_MESSAGE_CONTENT_HEIGHT } from '../config/constants';
 
-type Props = {
+type Context = {
   channel: Channel | null;
 };
 
@@ -17,8 +18,8 @@ const channelIcon = (isProtected: boolean) => {
   return <TagIcon />;
 };
 
-const MessageList = (props: Props) => {
-  const { channel } = props;
+const MessageList = () => {
+  const { channel } = useOutletContext<Context>();
 
   const fetchMessages = (selectedChannel: Channel) =>
     selectedChannel?.id

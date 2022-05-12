@@ -1,10 +1,9 @@
 import { Container, Divider, Stack } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import Axios from 'axios';
 import ChannelList from '../model/ChannelList';
 import { Channel, ChannelApi } from '../../api/generated';
-import MessageList from '../model/MessageList';
 import ErrorRouter from '../ui/ErrorRouter';
 import { CHANNELS_URL } from '../config/constants';
 
@@ -72,7 +71,7 @@ const Chat = () => {
             setChannels={setChannels}
           />
           <Divider orientation="vertical" flexItem variant="middle" />
-          {selectedChannel && <MessageList channel={selectedChannel} />}
+          {selectedChannel && <Outlet context={{ channel: selectedChannel }} />}
         </Stack>
       </Container>
     </ErrorRouter>
