@@ -1,11 +1,12 @@
 import { Container, Divider, Stack } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Axios from 'axios';
 import ChannelList from '../model/ChannelList';
 import { Channel, ChannelApi } from '../../api/generated';
 import MessageList from '../model/MessageList';
 import ErrorRouter from '../ui/ErrorRouter';
+import { CHANNELS_URL } from '../config/constants';
 
 const channelApi = new ChannelApi();
 
@@ -14,23 +15,25 @@ const Chat = () => {
   const [channels, setChannels] = useState<Channel[]>([]);
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
   const [statusCode, setStatusCode] = useState<number>(0);
+  const navigate = useNavigate();
+
   const setSelectedChannelFromChannels = useCallback(
     (allChannel: Channel[]) => {
       if (allChannel.length <= 0 && !channelId) {
         return;
       }
-      if (channelId) {
-        const channel = allChannel.find((c) => c.id?.toString() === channelId);
-        if (channel) {
-          setSelectedChannel(channel);
-        } else {
-          setStatusCode(404);
-        }
+      if (!channelId) {
+        navigate(`${CHANNELS_URL}/${allChannel[0].id}`, { replace: true });
+        return;
+      }
+      const channel = allChannel.find((c) => c.id?.toString() === channelId);
+      if (channel) {
+        setSelectedChannel(channel);
       } else {
-        setSelectedChannel(allChannel[0]);
+        setStatusCode(404);
       }
     },
-    [channelId],
+    [channelId, navigate],
   );
 
   const fetchChannels = async () => {
