@@ -42,9 +42,6 @@ const Chat = () => {
         withCredentials: true,
       });
       setChannels(res.data);
-      if (res.data.length <= 0) {
-        return;
-      }
       setSelectedChannelFromChannels(res.data);
     } catch (err: unknown) {
       if (Axios.isAxiosError(err) && err.response) {
@@ -59,7 +56,9 @@ const Chat = () => {
   }, []);
 
   useEffect(() => {
-    setSelectedChannelFromChannels(channels);
+    if (channels.length > 0) {
+      setSelectedChannelFromChannels(channels);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setSelectedChannelFromChannels]);
 
