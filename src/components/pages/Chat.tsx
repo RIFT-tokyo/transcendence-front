@@ -5,7 +5,7 @@ import Axios from 'axios';
 import ChannelList from '../model/ChannelList';
 import { Channel, ChannelApi } from '../../api/generated';
 import ErrorRouter from '../ui/ErrorRouter';
-import { CHANNELS_URL, CHAT_URL } from '../config/constants';
+import { CHANNELS_URL } from '../config/constants';
 
 const channelApi = new ChannelApi();
 
@@ -20,10 +20,6 @@ const Chat = () => {
     (allChannel: Channel[]) => {
       if (allChannel.length <= 0 && !channelId) {
         setSelectedChannel(null);
-        return;
-      }
-      if (allChannel.length <= 0) {
-        navigate(CHAT_URL, { replace: true });
         return;
       }
       if (!channelId) {
