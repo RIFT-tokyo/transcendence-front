@@ -11,6 +11,7 @@ import SignUp from './components/pages/SignUp';
 import Settings from './components/pages/Settings';
 import UserProfile from './components/pages/UserProfile';
 import AppBarWithMenu from './components/ui/AppBarWithMenu';
+import MessageList from './components/model/MessageList';
 import { AuthContext } from './contexts/AuthContext';
 
 const App = () => {
@@ -27,7 +28,9 @@ const App = () => {
               <Route path="users">
                 <Route path=":username" element={<UserProfile />} />
               </Route>
-              <Route path="chat" element={<Chat />} />
+              <Route path="chat" element={<Chat />}>
+                <Route path="channels/:channelId" element={<MessageList />} />
+              </Route>
               <Route path="pong" element={<Pong />} />
               <Route path="settings">
                 <Route index element={<Navigate to="account" replace />} />
