@@ -11,12 +11,13 @@ type Props = {
   ownerId: number;
 };
 
+const followApi = new FollowApi();
+
 const FollowingList: React.VFC<Props> = ({ ownerId }: Props) => {
   const [offset, setOffset] = useState(0);
   const [isActiveObserver, setIsActiveObserver] = useState(true);
   const [followings, setFollowings] = useState<User[]>([]);
   const { client } = useContext(SocketContext);
-  const followApi = new FollowApi();
 
   useEffect(() => {
     const onUserStatus = (data: { status: string; userID: number }) => {
@@ -53,7 +54,7 @@ const FollowingList: React.VFC<Props> = ({ ownerId }: Props) => {
     }
     setOffset((prev) => prev + 10);
     setFollowings((prev) => [...prev, ...(data.entries || [])]);
-  }, [offset, followings]);
+  }, [ownerId, offset]);
 
   return (
     <Stack>

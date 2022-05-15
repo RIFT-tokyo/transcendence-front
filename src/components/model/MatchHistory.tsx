@@ -17,11 +17,12 @@ import { Match, MatchApi } from '../../api/generated';
 import stringToColor from '../../functions/stringToColor';
 import ScrollObserver from '../ui/ScrollObserver';
 
+const matchApi = new MatchApi();
+
 const MatchHistory = () => {
   const [offset, setOffset] = useState(0);
   const [isActiveObserver, setIsActiveObserver] = useState(true);
   const [matches, setMatches] = useState<Match[]>([]);
-  const matchApi = new MatchApi();
 
   const fetchNextMatches = useCallback(async () => {
     const { data } = await matchApi.getMatches(undefined, offset, {
@@ -32,7 +33,7 @@ const MatchHistory = () => {
     }
     setOffset((prev) => prev + 10);
     setMatches((prev) => [...prev, ...(data.entries || [])]);
-  }, [offset, matches]);
+  }, [offset]);
 
   return (
     <TableContainer sx={{ height: 700 }}>
