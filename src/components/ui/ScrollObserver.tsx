@@ -8,19 +8,22 @@ type Props = {
 
 const ScrollObserver = (props: Props) => {
   const { onIntersect, isActiveObserver } = props;
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (ref.current === null) return;
+    let observerRefValue: HTMLDivElement | null = null;
+    if (ref.current === null) return undefined;
+    observerRefValue = ref.current;
+
     const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        onIntersect();
-      }
+      entries.forEach((entry) => {
+        if (entry.target === ref.current && entry.isIntersecting) onIntersect();
+      });
     });
     observer.observe(ref.current);
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
+      if (observerRefValue) {
+        observer.unobserve(observerRefValue);
       }
     };
   }, [onIntersect]);
