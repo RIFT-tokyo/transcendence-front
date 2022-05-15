@@ -29,7 +29,7 @@ const ScrollObserver = (props: Props) => {
   }, [onIntersect]);
 
   return isActiveObserver ? (
-    <Grid ref={ref} container justifyContent="center">
+    <Grid ref={ref} container justifyContent="center" padding={1}>
       <CircularProgress />
     </Grid>
   ) : null;
