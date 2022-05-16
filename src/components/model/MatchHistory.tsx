@@ -10,27 +10,30 @@ import {
   Stack,
   Link,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { format } from 'date-fns';
 import { NavLink } from 'react-router-dom';
 import { Match, MatchApi } from '../../api/generated';
 import stringToColor from '../../functions/stringToColor';
+import ScrollObserver from '../ui/ScrollObserver';
+
+const matchApi = new MatchApi();
 
 const MatchHistory = () => {
+  const [offset, setOffset] = useState(0);
+  const [isActiveObserver, setIsActiveObserver] = useState(true);
   const [matches, setMatches] = useState<Match[]>([]);
-  const matchApi = new MatchApi();
 
-  const fetchMatches = async () => {
-    const { data } = await matchApi.getMatches({
+  const fetchNextMatches = useCallback(async () => {
+    const { data } = await matchApi.getMatches(undefined, offset, {
       withCredentials: true,
     });
-    setMatches(data);
-  };
-
-  useEffect(() => {
-    fetchMatches();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (data.has_next === false) {
+      setIsActiveObserver(false);
+    }
+    setOffset((prev) => prev + 10);
+    setMatches((prev) => [...prev, ...(data.entries || [])]);
+  }, [offset]);
 
   return (
     <TableContainer sx={{ height: 700 }}>
@@ -52,7 +55,7 @@ const MatchHistory = () => {
           </TableRow>
         </TableHead>
         <TableBody sx={{ overflowY: 'auto' }}>
-          {matches.map((match) => (
+          {matches?.map((match) => (
             <TableRow key={match.id}>
               <TableCell>
                 <Link
@@ -134,6 +137,10 @@ const MatchHistory = () => {
           ))}
         </TableBody>
       </Table>
+      <ScrollObserver
+        onIntersect={fetchNextMatches}
+        isActiveObserver={isActiveObserver}
+      />
     </TableContainer>
   );
 };

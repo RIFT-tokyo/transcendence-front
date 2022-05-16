@@ -202,6 +202,25 @@ export enum MatchResultEnum {
 /**
  * 
  * @export
+ * @interface MatchList
+ */
+export interface MatchList {
+    /**
+     * 
+     * @type {Array<Match>}
+     * @memberof MatchList
+     */
+    'entries'?: Array<Match>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof MatchList
+     */
+    'has_next'?: boolean;
+}
+/**
+ * 
+ * @export
  * @interface ModelError
  */
 export interface ModelError {
@@ -371,6 +390,25 @@ export enum UserStatusEnum {
     Game = 'game'
 }
 
+/**
+ * 
+ * @export
+ * @interface UserList
+ */
+export interface UserList {
+    /**
+     * 
+     * @type {Array<User>}
+     * @memberof UserList
+     */
+    'entries'?: Array<User>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UserList
+     */
+    'has_next'?: boolean;
+}
 
 /**
  * AuthApi - axios parameter creator
@@ -1314,7 +1352,7 @@ export const FollowApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getUsersUserIDFollowing(userID: number, limit?: number, offset?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>> {
+        async getUsersUserIDFollowing(userID: number, limit?: number, offset?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserList>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getUsersUserIDFollowing(userID, limit, offset, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -1339,7 +1377,7 @@ export const FollowApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getUsersUserIdFriends(userID: number, limit?: number, offset?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>> {
+        async getUsersUserIdFriends(userID: number, limit?: number, offset?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserList>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getUsersUserIdFriends(userID, limit, offset, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -1383,7 +1421,7 @@ export const FollowApiFactory = function (configuration?: Configuration, basePat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUsersUserIDFollowing(userID: number, limit?: number, offset?: number, options?: any): AxiosPromise<Array<User>> {
+        getUsersUserIDFollowing(userID: number, limit?: number, offset?: number, options?: any): AxiosPromise<UserList> {
             return localVarFp.getUsersUserIDFollowing(userID, limit, offset, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1406,7 +1444,7 @@ export const FollowApiFactory = function (configuration?: Configuration, basePat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUsersUserIdFriends(userID: number, limit?: number, offset?: number, options?: any): AxiosPromise<Array<User>> {
+        getUsersUserIdFriends(userID: number, limit?: number, offset?: number, options?: any): AxiosPromise<UserList> {
             return localVarFp.getUsersUserIdFriends(userID, limit, offset, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1448,7 +1486,7 @@ export interface FollowApiInterface {
      * @throws {RequiredError}
      * @memberof FollowApiInterface
      */
-    getUsersUserIDFollowing(userID: number, limit?: number, offset?: number, options?: AxiosRequestConfig): AxiosPromise<Array<User>>;
+    getUsersUserIDFollowing(userID: number, limit?: number, offset?: number, options?: AxiosRequestConfig): AxiosPromise<UserList>;
 
     /**
      * 
@@ -1471,7 +1509,7 @@ export interface FollowApiInterface {
      * @throws {RequiredError}
      * @memberof FollowApiInterface
      */
-    getUsersUserIdFriends(userID: number, limit?: number, offset?: number, options?: AxiosRequestConfig): AxiosPromise<Array<User>>;
+    getUsersUserIdFriends(userID: number, limit?: number, offset?: number, options?: AxiosRequestConfig): AxiosPromise<UserList>;
 
     /**
      * 
@@ -1568,10 +1606,12 @@ export const MatchApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * 
          * @summary Your GET endpoint
+         * @param {number} [limit] 
+         * @param {number} [offset] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getMatches: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getMatches: async (limit?: number, offset?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/matches`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1585,6 +1625,14 @@ export const MatchApiAxiosParamCreator = function (configuration?: Configuration
             const localVarQueryParameter = {} as any;
 
             // authentication sessionAuth required
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+
+            if (offset !== undefined) {
+                localVarQueryParameter['offset'] = offset;
+            }
 
 
     
@@ -1610,11 +1658,13 @@ export const MatchApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Your GET endpoint
+         * @param {number} [limit] 
+         * @param {number} [offset] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getMatches(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Match>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getMatches(options);
+        async getMatches(limit?: number, offset?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MatchList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getMatches(limit, offset, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -1630,11 +1680,13 @@ export const MatchApiFactory = function (configuration?: Configuration, basePath
         /**
          * 
          * @summary Your GET endpoint
+         * @param {number} [limit] 
+         * @param {number} [offset] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getMatches(options?: any): AxiosPromise<Array<Match>> {
-            return localVarFp.getMatches(options).then((request) => request(axios, basePath));
+        getMatches(limit?: number, offset?: number, options?: any): AxiosPromise<MatchList> {
+            return localVarFp.getMatches(limit, offset, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1648,11 +1700,13 @@ export interface MatchApiInterface {
     /**
      * 
      * @summary Your GET endpoint
+     * @param {number} [limit] 
+     * @param {number} [offset] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MatchApiInterface
      */
-    getMatches(options?: AxiosRequestConfig): AxiosPromise<Array<Match>>;
+    getMatches(limit?: number, offset?: number, options?: AxiosRequestConfig): AxiosPromise<MatchList>;
 
 }
 
@@ -1666,12 +1720,14 @@ export class MatchApi extends BaseAPI implements MatchApiInterface {
     /**
      * 
      * @summary Your GET endpoint
+     * @param {number} [limit] 
+     * @param {number} [offset] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MatchApi
      */
-    public getMatches(options?: AxiosRequestConfig) {
-        return MatchApiFp(this.configuration).getMatches(options).then((request) => request(this.axios, this.basePath));
+    public getMatches(limit?: number, offset?: number, options?: AxiosRequestConfig) {
+        return MatchApiFp(this.configuration).getMatches(limit, offset, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -2026,7 +2082,7 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getUsers(limit?: number, offset?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>> {
+        async getUsers(limit?: number, offset?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserList>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getUsers(limit, offset, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2122,7 +2178,7 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUsers(limit?: number, offset?: number, options?: any): AxiosPromise<Array<User>> {
+        getUsers(limit?: number, offset?: number, options?: any): AxiosPromise<UserList> {
             return localVarFp.getUsers(limit, offset, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2213,7 +2269,7 @@ export interface UserApiInterface {
      * @throws {RequiredError}
      * @memberof UserApiInterface
      */
-    getUsers(limit?: number, offset?: number, options?: AxiosRequestConfig): AxiosPromise<Array<User>>;
+    getUsers(limit?: number, offset?: number, options?: AxiosRequestConfig): AxiosPromise<UserList>;
 
     /**
      * Retrieve the information of the user with the matching user ID.
