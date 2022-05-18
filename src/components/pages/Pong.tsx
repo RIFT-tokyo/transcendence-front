@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import { SocketContext } from '../../contexts/SocketContext';
 import usePing from '../../hooks/usePing';
-import { EVENT } from '../config/constants';
+import useUserStatus from '../../hooks/useUserStatus';
 import GameCanvas from '../game/GameCanvas';
 import Navigation from '../game/Navigation';
 import { GameContext } from '../game/types/gameStatus';
@@ -12,6 +12,7 @@ const Pong = () => {
   const { client } = useContext(SocketContext);
   const { authUser } = useContext(AuthContext);
   const { emitPing } = usePing();
+  const { emitUserStatus } = useUserStatus();
 
   const [context, setContext] = useState<GameContext>({
     gameStatus: 'entrance',
@@ -24,18 +25,9 @@ const Pong = () => {
 
   useEffect(() => {
     emitPing();
-    if (client) {
-      client.users.emit(EVENT.USER_STATUS, {
-        status: 'game',
-        userID: authUser?.id,
-      });
-    }
+    if (client) emitUserStatus('game', authUser?.id);
     return () => {
-      if (client)
-        client.users.emit(EVENT.USER_STATUS, {
-          status: 'online',
-          userID: authUser?.id,
-        });
+      if (client) emitUserStatus('online', authUser?.id);
     };
   }, [authUser?.id, client]);
 
