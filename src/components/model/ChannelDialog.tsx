@@ -6,17 +6,30 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
+  Divider,
   FormControlLabel,
   IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  Stack,
   Switch,
   Tab,
   Tabs,
   TextField,
+  Typography,
 } from '@mui/material';
+import TagIcon from '@mui/icons-material/Tag';
+import LockIcon from '@mui/icons-material/Lock';
 import { useSnackbar } from 'notistack';
 import Axios from 'axios';
-import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react';
 import { Channel, ChannelApi, NewChannel } from '../../api/generated';
 
 type Props = {
@@ -63,8 +76,31 @@ const ChannelDialog = (props: Props) => {
   const [isPrivate, setIsPrivate] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
   const [tabIndex, setTabIndex] = useState(0);
+  const [channels, setChannels] = useState<Channel[]>([]);
   const channelApi = new ChannelApi();
   const { enqueueSnackbar } = useSnackbar();
+
+  const fetchChannels = async () => {
+    try {
+      const res = await channelApi.getChannels(undefined, undefined, {
+        withCredentials: true,
+      });
+      setChannels(res.data);
+    } catch (err: unknown) {
+      if (Axios.isAxiosError(err) && err.response?.data.message) {
+        enqueueSnackbar(err.response.data.message, { variant: 'error' });
+      } else if (err instanceof Error) {
+        enqueueSnackbar(err.message, { variant: 'error' });
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (open) {
+      fetchChannels();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   const closeDialog = () => {
     setName('');
@@ -131,6 +167,13 @@ const ChannelDialog = (props: Props) => {
     setTabIndex(newValue);
   };
 
+  const channelIcon = (isProtected: boolean) => {
+    if (isProtected) {
+      return <LockIcon />;
+    }
+    return <TagIcon />;
+  };
+
   return (
     <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
       <DialogContent>
@@ -151,6 +194,24 @@ const ChannelDialog = (props: Props) => {
           />
         </Tabs>
         <TabPanel value={tabIndex} index={0}>
+          <List sx={{ maxHeight: 400, overflowY: 'auto' }}>
+            {channels.map((channel) => (
+              <>
+                <ListItem disablePadding key={`list-${channel.id}`}>
+                  <ListItemButton>
+                    <Stack direction="row" alignItems="center" spacing={0.5}>
+                      {channelIcon(channel.is_protected ?? false)}
+                      <Typography variant="h6" noWrap>
+                        {channel.name}
+                      </Typography>
+                    </Stack>
+                  </ListItemButton>
+                </ListItem>
+                <Divider key={`divider-${channel.id}`} />
+              </>
+            ))}
+          </List>
+        </TabPanel>
         <TabPanel value={tabIndex} index={1}>
           <TextField
             required
