@@ -58,7 +58,7 @@ const TabPanel = (props: TabPanelProps) => {
       {...other}
     >
       {value === index && (
-        <Box component="div" p={3}>
+        <Box component="div" pt={3} pl={3} pr={3}>
           {children}
         </Box>
       )}
@@ -176,7 +176,7 @@ const ChannelDialog = (props: Props) => {
 
   return (
     <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
-      <DialogContent>
+      <DialogContent sx={{ height: 420 }}>
         <Tabs
           value={tabIndex}
           onChange={handleTabIndexChange}
@@ -194,7 +194,7 @@ const ChannelDialog = (props: Props) => {
           />
         </Tabs>
         <TabPanel value={tabIndex} index={0}>
-          <List sx={{ maxHeight: 400, overflowY: 'auto' }}>
+          <List sx={{ height: 330, overflowY: 'auto' }}>
             {channels.map((channel) => (
               <>
                 <ListItem disablePadding key={`list-${channel.id}`}>
@@ -265,17 +265,17 @@ const ChannelDialog = (props: Props) => {
           </Collapse>
         </TabPanel>
       </DialogContent>
-      {tabIndex === 1 && (
-        <DialogActions>
-          <Button onClick={() => closeDialog()}>Cancel</Button>
+      <DialogActions>
+        <Button onClick={() => closeDialog()}>Cancel</Button>
+        {tabIndex === 1 && (
           <Button
             onClick={() => createChannel(name, password)}
             disabled={isRequesting}
           >
             Create
           </Button>
-        </DialogActions>
-      )}
+        )}
+      </DialogActions>
     </Dialog>
   );
 };
