@@ -1,5 +1,6 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
+  Box,
   Button,
   Collapse,
   Dialog,
@@ -7,9 +8,10 @@ import {
   DialogContent,
   DialogTitle,
   FormControlLabel,
-  FormGroup,
   IconButton,
   Switch,
+  Tab,
+  Tabs,
   TextField,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
@@ -23,6 +25,34 @@ type Props = {
   addChannel: (channel: Channel) => void;
 };
 
+interface TabPanelProps {
+  // eslint-disable-next-line react/require-default-props
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+const TabPanel = (props: TabPanelProps) => {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`channel-dialog-tabpanel-${index}`}
+      aria-labelledby={`channel-dialog-tab-${index}`}
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      {...other}
+    >
+      {value === index && (
+        <Box component="div" p={3}>
+          {children}
+        </Box>
+      )}
+    </div>
+  );
+};
+
 const ChannelDialog = (props: Props) => {
   const { open, setOpen, addChannel } = props;
   const [name, setName] = useState('');
@@ -32,6 +62,7 @@ const ChannelDialog = (props: Props) => {
   const [errorPassword, setErrorPassword] = useState(false);
   const [isPrivate, setIsPrivate] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
+  const [tabIndex, setTabIndex] = useState(0);
   const channelApi = new ChannelApi();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -96,68 +127,94 @@ const ChannelDialog = (props: Props) => {
     setIsPrivate(e.target.checked);
   };
 
+  const handleTabIndexChange = (_: React.SyntheticEvent, newValue: number) => {
+    setTabIndex(newValue);
+  };
+
   return (
     <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
-      <DialogTitle>Create a channel</DialogTitle>
       <DialogContent>
-        <TextField
-          required
-          autoFocus
-          fullWidth
-          margin="dense"
-          id="name"
-          label="Channel Name"
-          value={name}
-          disabled={isRequesting}
-          onChange={handleNameChange}
-          error={errorName}
-          helperText={errorName ? 'Please fill Channel Name field' : undefined}
-        />
-        <FormControlLabel
-          sx={{ display: 'flex', justifyContent: 'space-between' }}
-          control={
-            <Switch checked={isPrivate} onChange={handleIsPrivateChange} />
-          }
-          label="Private Channel"
-          labelPlacement="start"
-        />
-        <Collapse in={isPrivate}>
+        <Tabs
+          value={tabIndex}
+          onChange={handleTabIndexChange}
+          aria-label="channdl dialog tabs"
+        >
+          <Tab
+            label="Subscribe Channel"
+            id="channel-dialog-0"
+            aria-controls="channel-dialog-tabpanel-0"
+          />
+          <Tab
+            label="Create Channel"
+            id="channel-dialog-1"
+            aria-controls="channel-dialog-tabpanel-1"
+          />
+        </Tabs>
+        <TabPanel value={tabIndex} index={0}>
+        <TabPanel value={tabIndex} index={1}>
           <TextField
+            required
+            autoFocus
             fullWidth
             margin="dense"
-            id="password"
-            label="Channel Password"
-            type={showPassword ? 'text' : 'password'}
-            value={password}
-            disabled={isRequesting || !isPrivate}
-            onChange={handlePasswordChange}
-            error={errorPassword}
+            id="name"
+            label="Channel Name"
+            value={name}
+            disabled={isRequesting}
+            onChange={handleNameChange}
+            error={errorName}
             helperText={
-              errorPassword ? 'Please fill Channel Password field' : undefined
+              errorName ? 'Please fill Channel Name field' : undefined
             }
-            InputProps={{
-              endAdornment: (
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={() => setShowPassword(!showPassword)}
-                  edge="end"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              ),
-            }}
           />
-        </Collapse>
+          <FormControlLabel
+            sx={{ display: 'flex', justifyContent: 'space-between' }}
+            control={
+              <Switch checked={isPrivate} onChange={handleIsPrivateChange} />
+            }
+            label="Private Channel"
+            labelPlacement="start"
+          />
+          <Collapse in={isPrivate}>
+            <TextField
+              fullWidth
+              margin="dense"
+              id="password"
+              label="Channel Password"
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              disabled={isRequesting || !isPrivate}
+              onChange={handlePasswordChange}
+              error={errorPassword}
+              helperText={
+                errorPassword ? 'Please fill Channel Password field' : undefined
+              }
+              InputProps={{
+                endAdornment: (
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                ),
+              }}
+            />
+          </Collapse>
+        </TabPanel>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={() => closeDialog()}>Cancel</Button>
-        <Button
-          onClick={() => createChannel(name, password)}
-          disabled={isRequesting}
-        >
-          Create
-        </Button>
-      </DialogActions>
+      {tabIndex === 1 && (
+        <DialogActions>
+          <Button onClick={() => closeDialog()}>Cancel</Button>
+          <Button
+            onClick={() => createChannel(name, password)}
+            disabled={isRequesting}
+          >
+            Create
+          </Button>
+        </DialogActions>
+      )}
     </Dialog>
   );
 };
