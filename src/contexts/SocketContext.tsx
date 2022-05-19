@@ -8,9 +8,11 @@ export const SocketProvider: FC = ({ children }) => {
   const [client, setClient] = React.useState<any>(null);
 
   const connect = (id: number) => {
+    // namespace: /
     const indexSclient = socketIOclient(process.env.REACT_APP_SOCKET_URL!, {
       auth: { userID: id },
     });
+    // namespace: /users
     const usersSclient = socketIOclient(
       process.env.REACT_APP_SOCKET_URL! + SOCKET_USERS,
       {
@@ -19,7 +21,6 @@ export const SocketProvider: FC = ({ children }) => {
     );
 
     indexSclient.on(EVENT.PONG, () => {});
-
     setClient({ index: indexSclient, users: usersSclient });
   };
 
