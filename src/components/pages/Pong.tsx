@@ -9,8 +9,6 @@ import Navigation from '../game/Navigation';
 import { GameContext } from '../game/types/gameStatus';
 
 const Pong = () => {
-  const { client } = useContext(SocketContext);
-  const { authUser } = useContext(AuthContext);
   const { emitPing } = usePing();
   const { emitUserStatus } = useUserStatus();
 
@@ -25,11 +23,11 @@ const Pong = () => {
 
   useEffect(() => {
     emitPing();
-    if (client) emitUserStatus('game', authUser?.id);
+    emitUserStatus('game');
     return () => {
-      if (client) emitUserStatus('online', authUser?.id);
+      emitUserStatus('online');
     };
-  }, [authUser?.id, client]);
+  }, [emitPing, emitUserStatus]);
 
   return (
     <Container component="main" maxWidth="xl">
