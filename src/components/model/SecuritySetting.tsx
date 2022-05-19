@@ -23,33 +23,33 @@ type State = {
 };
 
 type Actions =
-  | { type: 'passwords'; value: Partial<State> }
-  | { type: 'currentPassword'; value: string }
-  | { type: 'newPassword'; value: string }
-  | { type: 'confirmPassword'; value: string }
-  | { type: 'showCurrentPassword'; value: boolean }
-  | { type: 'showNewPassword'; value: boolean }
-  | { type: 'showConfirmPassword'; value: boolean }
-  | { type: 'isRequesting'; value: boolean };
+  | { type: 'SET_PASSWORDS'; payload: Partial<State> }
+  | { type: 'SET_CURRENT_PASSWORD'; payload: string }
+  | { type: 'SET_NEW_PASSWORD'; payload: string }
+  | { type: 'SET_CONFIRM_PASSWORD'; payload: string }
+  | { type: 'SHOW_CURRENT_PASSWORD' }
+  | { type: 'SHOW_NEW_PASSWORD' }
+  | { type: 'SHOW_CONFIRM_PASSWORD' }
+  | { type: 'LOADING' };
 
 const reducer = (state: State, action: Actions) => {
   switch (action.type) {
-    case 'passwords':
-      return { ...state, ...action.value };
-    case 'currentPassword':
-      return { ...state, currentPassword: action.value };
-    case 'newPassword':
-      return { ...state, newPassword: action.value };
-    case 'confirmPassword':
-      return { ...state, confirmPassword: action.value };
-    case 'showCurrentPassword':
-      return { ...state, showCurrentPassword: action.value };
-    case 'showNewPassword':
-      return { ...state, showNewPassword: action.value };
-    case 'showConfirmPassword':
-      return { ...state, showConfirmPassword: action.value };
-    case 'isRequesting':
-      return { ...state, isRequesting: action.value };
+    case 'SET_PASSWORDS':
+      return { ...state, ...action.payload };
+    case 'SET_CURRENT_PASSWORD':
+      return { ...state, currentPassword: action.payload };
+    case 'SET_NEW_PASSWORD':
+      return { ...state, newPassword: action.payload };
+    case 'SET_CONFIRM_PASSWORD':
+      return { ...state, confirmPassword: action.payload };
+    case 'SHOW_CURRENT_PASSWORD':
+      return { ...state, showCurrentPassword: !state.showCurrentPassword };
+    case 'SHOW_NEW_PASSWORD':
+      return { ...state, showNewPassword: !state.showNewPassword };
+    case 'SHOW_CONFIRM_PASSWORD':
+      return { ...state, showConfirmPassword: !state.showCurrentPassword };
+    case 'LOADING':
+      return { ...state, isRequesting: !state.isRequesting };
     default:
       return state;
   }
@@ -87,10 +87,10 @@ const SecuritySetting = () => {
       new_password: state.newPassword,
     };
     try {
-      dispatch({ type: 'isRequesting', value: true });
+      dispatch({ type: 'LOADING' });
       await authApi.putAuthPassword(data, { withCredentials: true });
       enqueueSnackbar('Password changed successfully', { variant: 'success' });
-      dispatch({ type: 'passwords', value: {
+      dispatch({ type: 'SET_PASSWORDS', payload: {
         currentPassword: '',
         newPassword: '',
         confirmPassword: '',
@@ -100,7 +100,7 @@ const SecuritySetting = () => {
         enqueueSnackbar(e.response.data.message, { variant: 'error' });
       }
     }
-    dispatch({ type: 'isRequesting', value: false });
+    dispatch({ type: 'LOADING' });
   };
 
   return (
@@ -115,13 +115,13 @@ const SecuritySetting = () => {
           variant="outlined"
           label="current password"
           value={state.currentPassword}
-          onChange={(e) => dispatch({ type: 'currentPassword', value: e.target.value })}
+          onChange={(e) => dispatch({ type: 'SET_CURRENT_PASSWORD', payload: e.target.value })}
           type={state.showCurrentPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
               <IconButton
                 aria-label="toggle password visibility"
-                onClick={() => dispatch({ type: 'showCurrentPassword', value: !state.showCurrentPassword })}
+                onClick={() => dispatch({ type: 'SHOW_CURRENT_PASSWORD' })}
                 edge="end"
               >
                 {state.showCurrentPassword ? <VisibilityOff /> : <Visibility />}
@@ -135,13 +135,13 @@ const SecuritySetting = () => {
           variant="outlined"
           label="new password"
           value={state.newPassword}
-          onChange={(e) => dispatch({ type: 'newPassword', value: e.target.value })}
+          onChange={(e) => dispatch({ type: 'SET_NEW_PASSWORD', payload: e.target.value })}
           type={state.showNewPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
               <IconButton
                 aria-label="toggle password visibility"
-                onClick={() => dispatch({ type: 'showNewPassword', value: !state.showNewPassword })}
+                onClick={() => dispatch({ type: 'SHOW_NEW_PASSWORD' })}
                 edge="end"
               >
                 {state.showNewPassword ? <VisibilityOff /> : <Visibility />}
@@ -155,13 +155,13 @@ const SecuritySetting = () => {
           variant="outlined"
           label="confirm password"
           value={state.confirmPassword}
-          onChange={(e) => dispatch({ type: 'confirmPassword', value: e.target.value })}
+          onChange={(e) => dispatch({ type: 'SET_CONFIRM_PASSWORD', payload: e.target.value })}
           type={state.showConfirmPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
               <IconButton
                 aria-label="toggle password visibility"
-                onClick={() => dispatch({ type: 'showConfirmPassword', value: !state.showConfirmPassword })}
+                onClick={() => dispatch({ type: 'SHOW_CONFIRM_PASSWORD' })}
                 edge="end"
               >
                 {state.showConfirmPassword ? <VisibilityOff /> : <Visibility />}

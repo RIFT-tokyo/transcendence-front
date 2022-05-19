@@ -21,21 +21,21 @@ type State = {
 }
 
 type Actions =
-  | { type: 'username'; value: string }
-  | { type: 'password'; value: string }
-  | { type: 'showPassword'; value: boolean }
-  | { type: 'error'; value: boolean };
+  | { type: 'SET_USERNAME'; payload: string }
+  | { type: 'SET_PASSWORD'; payload: string }
+  | { type: 'SHOW_PASSWORD' }
+  | { type: 'ERROR' };
 
 const reducer = (state: State, action: Actions) => {
   switch (action.type) {
-    case 'username':
-      return { ...state, username: action.value };
-    case 'password':
-      return { ...state, password: action.value };
-    case 'showPassword':
-      return { ...state, showPassword: action.value };
-    case 'error':
-      return { ...state, error: action.value };
+    case 'SET_USERNAME':
+      return { ...state, username: action.payload };
+    case 'SET_PASSWORD':
+      return { ...state, password: action.payload };
+    case 'SHOW_PASSWORD':
+      return { ...state, showPassword: !state.showPassword };
+    case 'ERROR':
+      return { ...state, error: true };
     default:
       return state;
   }
@@ -69,7 +69,7 @@ const SignUp = () => {
       if (Axios.isAxiosError(err) && err.response) {
         enqueueSnackbar(err.response.data.message, { variant: 'error' });
       }
-      dispatch({ type: 'error', value: true });
+      dispatch({ type: 'ERROR' });
     }
   };
 
@@ -130,7 +130,7 @@ const SignUp = () => {
                 label="username"
                 name="username"
                 value={state.username}
-                onChange={(e) => dispatch({ type: 'username', value: e.target.value })}
+                onChange={(e) => dispatch({ type: 'SET_USERNAME', payload: e.target.value })}
                 error={state.error}
                 size="small"
               />
@@ -142,13 +142,13 @@ const SignUp = () => {
                 label="password"
                 id="password"
                 value={state.password}
-                onChange={(e) => dispatch({ type: 'password', value: e.target.value })}
+                onChange={(e) => dispatch({ type: 'SET_PASSWORD', payload: e.target.value })}
                 type={state.showPassword ? 'text' : 'password'}
                 InputProps={{
                   endAdornment: (
                     <IconButton
                       aria-label="toggle password visibility"
-                      onClick={() => dispatch({ type: 'showPassword', value: !state.showPassword })}
+                      onClick={() => dispatch({ type: 'SHOW_PASSWORD' })}
                       edge="end"
                     >
                       {state.showPassword ? <VisibilityOff /> : <Visibility />}

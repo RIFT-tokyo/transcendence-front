@@ -1,17 +1,17 @@
 import { Box, Container } from '@mui/material';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useReducer } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import { SocketContext } from '../../contexts/SocketContext';
 import { EVENT } from '../config/constants';
 import GameCanvas from '../game/GameCanvas';
 import Navigation from '../game/Navigation';
-import { GameContext } from '../game/types/gameStatus';
+import { reducer } from '../game/types/reducer';
 
 const Pong = () => {
   const { client } = useContext(SocketContext);
   const { authUser } = useContext(AuthContext);
 
-  const [context, setContext] = useState<GameContext>({
+  const [state, dispatch] = useReducer(reducer, {
     gameStatus: 'entrance',
     roomId: '',
     hostPlayer: null,
@@ -52,10 +52,10 @@ const Pong = () => {
             position: 'absolute',
           }}
         >
-          <Navigation context={context} setContext={setContext} />
+          <Navigation context={state} dispatch={dispatch} />
         </Box>
         <Box component="div">
-          <GameCanvas context={context} setContext={setContext} />
+          <GameCanvas context={state} dispatch={dispatch} />
         </Box>
       </Box>
     </Container>

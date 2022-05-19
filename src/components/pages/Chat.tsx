@@ -14,18 +14,18 @@ type State = {
 };
 
 type Actions =
-  | { type: 'channels'; value: Channel[] }
-  | { type: 'selectChannel'; value: Channel | null }
-  | { type: 'statusCode'; value: number };
+  | { type: 'SET_CHANNELS'; payload: Channel[] }
+  | { type: 'SELECT_CHANNEL'; payload: Channel | null }
+  | { type: 'SET_STATUS_CODE'; payload: number };
 
 const reducer = (state: State, action: Actions) => {
   switch (action.type) {
-    case 'channels':
-      return { ...state, channels: action.value };
-    case 'selectChannel':
-      return { ...state, selectedChannel: action.value };
-    case 'statusCode':
-      return { ...state, statusCode: action.value };
+    case 'SET_CHANNELS':
+      return { ...state, channels: action.payload };
+    case 'SELECT_CHANNEL':
+      return { ...state, selectedChannel: action.payload };
+    case 'SET_STATUS_CODE':
+      return { ...state, statusCode: action.payload };
     default:
       return state;
   }
@@ -45,7 +45,7 @@ const Chat = () => {
   const selectChannelFromURL = useCallback(
     (allChannel: Channel[]) => {
       if (allChannel.length <= 0 && !channelId) {
-        dispatch({ type: 'selectChannel', value: null });
+        dispatch({ type: 'SELECT_CHANNEL', payload: null });
         return;
       }
       if (!channelId) {
@@ -54,9 +54,9 @@ const Chat = () => {
       }
       const channel = allChannel.find((c) => c.id?.toString() === channelId);
       if (channel) {
-        dispatch({ type: 'selectChannel', value: channel });
+        dispatch({ type: 'SELECT_CHANNEL', payload: channel });
       } else {
-        dispatch({ type: 'statusCode', value: 404 });
+        dispatch({ type: 'SET_STATUS_CODE', payload: 404 });
       }
     },
     [channelId, navigate],
@@ -67,11 +67,11 @@ const Chat = () => {
       const res = await channelApi.getChannels(undefined, undefined, {
         withCredentials: true,
       });
-      dispatch({ type: 'channels', value: res.data });
+      dispatch({ type: 'SET_CHANNELS', payload: res.data });
       selectChannelFromURL(res.data);
     } catch (err: unknown) {
       if (Axios.isAxiosError(err) && err.response) {
-        dispatch({ type: 'statusCode', value: err.response.status });
+        dispatch({ type: 'SET_STATUS_CODE', payload: err.response.status });
       }
     }
   };
@@ -95,7 +95,7 @@ const Chat = () => {
           <ChannelList
             selectedChannel={state.selectedChannel}
             channels={state.channels}
-            addChannel={(channel) => dispatch({ type: 'channels', value: [...state.channels, channel] })}
+            addChannel={(channel) => dispatch({ type: 'SET_CHANNELS', payload: [...state.channels, channel] })}
           />
           <Divider orientation="vertical" flexItem variant="middle" />
           {state.selectedChannel && <Outlet context={{ channel: state.selectedChannel }} />}

@@ -20,23 +20,23 @@ type State = {
 };
 
 type Actions =
-  | { type: 'user'; value: User }
-  | { type: 'isOwner'; value: boolean }
-  | { type: 'isFollowing'; value: boolean }
-  | { type: 'statusCode'; value: number }
-  | { type: 'loading' };
+  | { type: 'SET_USER'; payload: User }
+  | { type: 'SET_IS_OWNER'; payload: boolean }
+  | { type: 'SET_IS_FOLLOWING'; payload: boolean }
+  | { type: 'SET_STATUS_CODE'; payload: number }
+  | { type: 'LOADING' };
 
 const reducer = (state: State, action: Actions) => {
   switch (action.type) {
-    case 'user':
-      return { ...state, user: action.value };
-    case 'isOwner':
-      return { ...state, isOwner: action.value };
-    case 'isFollowing':
-      return { ...state, isFollowing: action.value };
-    case 'statusCode':
-      return { ...state, statusCode: action.value };
-    case 'loading':
+    case 'SET_USER':
+      return { ...state, user: action.payload };
+    case 'SET_IS_OWNER':
+      return { ...state, isOwner: action.payload };
+    case 'SET_IS_FOLLOWING':
+      return { ...state, isFollowing: action.payload };
+    case 'SET_STATUS_CODE':
+      return { ...state, statusCode: action.payload };
+    case 'LOADING':
       return { ...state, isLoading: !state.isLoading };
     default:
       return state;
@@ -63,36 +63,36 @@ const UserProfile = () => {
     if (state.isLoading) {
       return;
     }
-    dispatch({ type: 'loading' });
+    dispatch({ type: 'LOADING' });
     try {
       await followApi.putUsersFollowingUserID(userId, {
         withCredentials: true,
       });
-      dispatch({ type: 'isFollowing', value: true });
+      dispatch({ type: 'SET_IS_FOLLOWING', payload: true });
     } catch (err: unknown) {
       if (Axios.isAxiosError(err) && err.response) {
         enqueueSnackbar(err.message, { variant: 'error' });
       }
     }
-    dispatch({ type: 'loading' });
+    dispatch({ type: 'LOADING' });
   };
 
   const unfollowUser = async (userId: number) => {
     if (state.isLoading) {
       return;
     }
-    dispatch({ type: 'loading' });
+    dispatch({ type: 'LOADING' });
     try {
       await followApi.deleteUsersFollowingUserID(userId, {
         withCredentials: true,
       });
-      dispatch({ type: 'isFollowing', value: false });
+      dispatch({ type: 'SET_IS_FOLLOWING', payload: false });
     } catch (err: unknown) {
       if (Axios.isAxiosError(err) && err.response) {
         enqueueSnackbar(err.message, { variant: 'error' });
       }
     }
-    dispatch({ type: 'loading' });
+    dispatch({ type: 'LOADING' });
   };
 
   const fetchIsFollower = async (ownerId: number, targetId: number) => {
@@ -102,13 +102,13 @@ const UserProfile = () => {
         targetId,
         { withCredentials: true },
       );
-      dispatch({ type: 'isFollowing', value: res.status === 204});
+      dispatch({ type: 'SET_IS_FOLLOWING', payload: res.status === 204});
     } catch (err: unknown) {
       if (Axios.isAxiosError(err) && err.response) {
         if (err.response?.status === 404) {
-          dispatch({ type: 'isFollowing', value: false });
+          dispatch({ type: 'SET_IS_FOLLOWING', payload: false });
         } else {
-          dispatch({ type: 'statusCode', value: err.response?.status });
+          dispatch({ type: 'SET_STATUS_CODE', payload: err.response?.status });
         }
       }
     }
@@ -122,11 +122,11 @@ const UserProfile = () => {
       if (!res.data.id) {
         return;
       }
-      dispatch({ type: 'user', value: res.data });
+      dispatch({ type: 'SET_USER', payload: res.data });
       fetchIsFollower(ownerId, res.data.id);
     } catch (err: unknown) {
       if (Axios.isAxiosError(err) && err.response) {
-        dispatch({ type: 'statusCode', value: err.response?.status });
+        dispatch({ type: 'SET_STATUS_CODE', payload: err.response?.status });
       }
     }
   };
@@ -134,11 +134,11 @@ const UserProfile = () => {
   const fetchMe = async () => {
     try {
       const res = await userApi.getMe({ withCredentials: true });
-      dispatch({ type: 'user', value: res.data });
+      dispatch({ type: 'SET_USER', payload: res.data });
       setAuthUser(res.data);
     } catch (err: unknown) {
       if (Axios.isAxiosError(err) && err.response) {
-        dispatch({ type: 'statusCode', value: err.response?.status });
+        dispatch({ type: 'SET_STATUS_CODE', payload: err.response?.status });
       }
     }
   };
@@ -150,10 +150,10 @@ const UserProfile = () => {
       }
       if (username && authUser.username !== username) {
         fetchUserFromUsername(authUser.id, username);
-        dispatch({ type: 'isOwner', value: false });
+        dispatch({ type: 'SET_IS_OWNER', payload: false });
       } else {
         await fetchMe();
-        dispatch({ type: 'isOwner', value: true });
+        dispatch({ type: 'SET_IS_OWNER', payload: true });
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -20,14 +20,14 @@ type State = {
 };
 
 type Actions =
-  | { type: 'dialog' }
-  | { type: 'channels' };
+  | { type: 'OPEN_DIALOG' }
+  | { type: 'OPEN_CHANNEL_LIST' };
 
 const reducer = (state: State, action: Actions) => {
   switch (action.type) {
-    case 'dialog':
+    case 'OPEN_DIALOG':
       return { ...state, openDialog: !state.openDialog };
-    case 'channels':
+    case 'OPEN_CHANNEL_LIST':
       return { ...state, openChannels: !state.openChannels };
     default:
       return state;
@@ -54,26 +54,26 @@ const ChannelList = (props: Props) => {
       <Stack direction="row" alignItems="center">
         <IconButton
           aria-label="Toggle channel visibility"
-          onClick={() => dispatch({ type: 'channels' })}
+          onClick={() => dispatch({ type: 'OPEN_CHANNEL_LIST' })}
         >
           {state.openChannels ? <ExpandMore /> : <ChevronRight />}
         </IconButton>
         <Typography
           sx={{ fontWeight: 'bold', flexGrow: 1, cursor: 'pointer' }}
           variant="h5"
-          onClick={() => dispatch({ type: 'channels' })}
+          onClick={() => dispatch({ type: 'OPEN_CHANNEL_LIST' })}
         >
           Channels
         </Typography>
         <IconButton
           aria-label="create channel"
-          onClick={() => dispatch({ type: 'dialog' })}
+          onClick={() => dispatch({ type: 'OPEN_DIALOG' })}
         >
           <AddIcon />
         </IconButton>
         <ChannelDialog
           open={state.openDialog}
-          setOpen={() => dispatch({ type: 'dialog' })}
+          setOpen={() => dispatch({ type: 'OPEN_DIALOG' })}
           addChannel={addChannel}
         />
       </Stack>

@@ -20,17 +20,17 @@ type State = {
 };
 
 type Actions =
-  | { type: 'user'; user: User }
-  | { type: 'statusCode'; statusCode: number }
-  | { type: 'loading' };
+  | { type: 'SET_USER'; payload: User }
+  | { type: 'SET_STATUS_CODE'; payload: number }
+  | { type: 'LOADING' };
 
 const reducer = (state: State, action: Actions) => {
   switch (action.type) {
-    case 'user':
-      return { ...state, user: action.user };
-    case 'statusCode':
-      return { ...state, statusCode: action.statusCode };
-    case 'loading':
+    case 'SET_USER':
+      return { ...state, user: action.payload };
+    case 'SET_STATUS_CODE':
+      return { ...state, statusCode: action.payload };
+    case 'LOADING':
       return { ...state, isLoading: !state.isLoading };
     default:
       return state;
@@ -52,23 +52,23 @@ const Settings: React.VFC<Props> = ({ active }: Props) => {
   });
 
   const reset = async () => {
-    dispatch({ type: 'loading' });
+    dispatch({ type: 'LOADING' });
     try {
       const { data } = await userApi.getMe({ withCredentials: true });
-      dispatch({ type: 'user', user: data });
+      dispatch({ type: 'SET_USER', payload: data });
     } catch (err: unknown) {
       if (Axios.isAxiosError(err) && err.response) {
-        dispatch({ type: 'statusCode', statusCode: err.response.status });
+        dispatch({ type: 'SET_STATUS_CODE', payload: err.response.status });
       }
     }
-    dispatch({ type: 'loading' });
+    dispatch({ type: 'LOADING' });
   };
 
   const submit = async () => {
     if (!state.user?.id) {
       return;
     }
-    dispatch({ type: 'loading' });
+    dispatch({ type: 'LOADING' });
     const requestBody = {
       username: state.user.username,
       display_name: state.user.display_name,
@@ -79,13 +79,13 @@ const Settings: React.VFC<Props> = ({ active }: Props) => {
         withCredentials: true,
       });
       enqueueSnackbar('Profile updated', { variant: 'success' });
-      dispatch({ type: 'user', user: data });
+      dispatch({ type: 'SET_USER', payload: data });
     } catch (err: unknown) {
       if (Axios.isAxiosError(err) && err.response) {
         enqueueSnackbar(err.response.data.message, { variant: 'error' });
       }
     }
-    dispatch({ type: 'loading' });
+    dispatch({ type: 'LOADING' });
   };
 
   let settingContent = <CircularProgress />;
@@ -93,7 +93,7 @@ const Settings: React.VFC<Props> = ({ active }: Props) => {
     settingContent = (
       <AccountSetting
         user={state.user}
-        setUser={(user: User) => dispatch({ type: 'user', user })}
+        setUser={(user: User) => dispatch({ type: 'SET_USER', payload: user })}
         submit={submit}
         reset={reset}
       />
