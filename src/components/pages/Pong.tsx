@@ -1,7 +1,5 @@
 import { Box, Container } from '@mui/material';
-import { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../../contexts/AuthContext';
-import { SocketContext } from '../../contexts/SocketContext';
+import { useEffect, useState } from 'react';
 import usePing from '../../hooks/usePing';
 import useUserStatus from '../../hooks/useUserStatus';
 import GameCanvas from '../game/GameCanvas';

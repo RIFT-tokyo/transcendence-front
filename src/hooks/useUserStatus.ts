@@ -19,7 +19,25 @@ const useUserStatus = () => {
     [authUser?.id, client],
   );
 
-  return { emitUserStatus };
+  const onUserStatus = useCallback(
+    (callback: (data: { status: string; userID: number }) => void) => {
+      if (client) {
+        client.users.on(EVENT.USER_STATUS, callback);
+      }
+    },
+    [client],
+  );
+
+  const offUserStatus = useCallback(
+    (callback: (data: { status: string; userID: number }) => void) => {
+      if (client) {
+        client.users.off(EVENT.USER_STATUS, callback);
+      }
+    },
+    [client],
+  );
+
+  return { emitUserStatus, onUserStatus, offUserStatus };
 };
 
 export default useUserStatus;

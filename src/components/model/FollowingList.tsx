@@ -1,11 +1,10 @@
 import { Stack, Typography } from '@mui/material';
 import * as React from 'react';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FollowApi, User } from '../../api/generated/api';
-import { SocketContext } from '../../contexts/SocketContext';
+import useUserStatus from '../../hooks/useUserStatus';
 import ScrollObserver from '../ui/ScrollObserver';
 import FollowerStatus from './FollowerStatus';
-import { EVENT } from '../config/constants';
 
 type Props = {
   ownerId: number;
@@ -17,10 +16,13 @@ const FollowingList: React.VFC<Props> = ({ ownerId }: Props) => {
   const [offset, setOffset] = useState(0);
   const [isActiveObserver, setIsActiveObserver] = useState(true);
   const [followings, setFollowings] = useState<User[]>([]);
-  const { client } = useContext(SocketContext);
+  const { onUserStatus, offUserStatus } = useUserStatus();
 
   useEffect(() => {
-    const onUserStatus = (data: { status: string; userID: number }) => {
+    const updateFollowingsStatus = (data: {
+      status: string;
+      userID: number;
+    }) => {
       const updatedFollowings = followings?.map((following) => {
         if (following.id === data.userID) {
           return { ...following, status: data.status } as User;
@@ -30,15 +32,15 @@ const FollowingList: React.VFC<Props> = ({ ownerId }: Props) => {
       setFollowings(updatedFollowings);
     };
 
-    if (followings && followings?.length > 0 && client) {
-      client.users.on(EVENT.USER_STATUS, onUserStatus);
+    if (followings && followings?.length > 0) {
+      onUserStatus(updateFollowingsStatus);
     }
     return () => {
-      if (followings && followings?.length > 0 && client) {
-        client.users.off(EVENT.USER_STATUS, onUserStatus);
+      if (followings && followings?.length > 0) {
+        offUserStatus(updateFollowingsStatus);
       }
     };
-  }, [followings, client]);
+  }, [followings, onUserStatus, offUserStatus]);
 
   const fetchNextFollowings = useCallback(async () => {
     const { data } = await followApi.getUsersUserIDFollowing(
