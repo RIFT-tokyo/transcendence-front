@@ -194,7 +194,7 @@ const ChannelDialog = (props: Props) => {
           />
         </Tabs>
         <TabPanel value={tabIndex} index={0}>
-          <List sx={{ height: 330, overflowY: 'auto' }}>
+          <List sx={{ height: 330, overflowY: 'auto', pt: 0 }}>
             {channels.map((channel) => (
               <>
                 <ListItem disablePadding key={`list-${channel.id}`}>
