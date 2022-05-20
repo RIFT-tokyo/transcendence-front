@@ -2,7 +2,7 @@ import { Stack, Typography } from '@mui/material';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { FollowApi, User } from '../../api/generated/api';
-import useUserStatus from '../../hooks/useUserStatus';
+import useUsersUserStatus from '../../hooks/useUsersUserStatus';
 import ScrollObserver from '../ui/ScrollObserver';
 import FollowerStatus from './FollowerStatus';
 
@@ -16,7 +16,7 @@ const FollowingList: React.VFC<Props> = ({ ownerId }: Props) => {
   const [offset, setOffset] = useState(0);
   const [isActiveObserver, setIsActiveObserver] = useState(true);
   const [followings, setFollowings] = useState<User[]>([]);
-  const { onUserStatus, offUserStatus } = useUserStatus();
+  const { subscribeUserStatus, unsubscribeUserStatus } = useUsersUserStatus();
 
   useEffect(() => {
     const updateFollowingsStatus = (data: {
@@ -33,14 +33,14 @@ const FollowingList: React.VFC<Props> = ({ ownerId }: Props) => {
     };
 
     if (followings && followings?.length > 0) {
-      onUserStatus(updateFollowingsStatus);
+      subscribeUserStatus(updateFollowingsStatus);
     }
     return () => {
       if (followings && followings?.length > 0) {
-        offUserStatus(updateFollowingsStatus);
+        unsubscribeUserStatus(updateFollowingsStatus);
       }
     };
-  }, [followings, onUserStatus, offUserStatus]);
+  }, [followings, subscribeUserStatus, unsubscribeUserStatus]);
 
   const fetchNextFollowings = useCallback(async () => {
     const { data } = await followApi.getUsersUserIDFollowing(

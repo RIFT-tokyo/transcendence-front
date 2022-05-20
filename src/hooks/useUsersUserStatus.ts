@@ -4,11 +4,11 @@ import { EVENT } from '../components/config/constants';
 import { AuthContext } from '../contexts/AuthContext';
 import { SocketContext } from '../contexts/SocketContext';
 
-const useUserStatus = () => {
+const useUsersUserStatus = () => {
   const { client } = useContext(SocketContext);
   const { authUser } = useContext(AuthContext);
 
-  const emitUserStatus = useCallback(
+  const publishUserStatus = useCallback(
     (status: UserStatusEnum) => {
       if (client) {
         client.users.emit(EVENT.USER_STATUS, {
@@ -20,7 +20,7 @@ const useUserStatus = () => {
     [authUser?.id, client],
   );
 
-  const onUserStatus = useCallback(
+  const subscribeUserStatus = useCallback(
     (callback: (data: { status: string; userID: number }) => void) => {
       if (client) {
         client.users.on(EVENT.USER_STATUS, callback);
@@ -29,7 +29,7 @@ const useUserStatus = () => {
     [client],
   );
 
-  const offUserStatus = useCallback(
+  const unsubscribeUserStatus = useCallback(
     (callback: (data: { status: string; userID: number }) => void) => {
       if (client) {
         client.users.off(EVENT.USER_STATUS, callback);
@@ -38,7 +38,7 @@ const useUserStatus = () => {
     [client],
   );
 
-  return { emitUserStatus, onUserStatus, offUserStatus };
+  return { publishUserStatus, subscribeUserStatus, unsubscribeUserStatus };
 };
 
-export default useUserStatus;
+export default useUsersUserStatus;

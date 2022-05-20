@@ -2,14 +2,14 @@ import { Box, Container } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { UserStatusEnum } from '../../api/generated';
 import usePing from '../../hooks/usePing';
-import useUserStatus from '../../hooks/useUserStatus';
+import useUsersUserStatus from '../../hooks/useUsersUserStatus';
 import GameCanvas from '../game/GameCanvas';
 import Navigation from '../game/Navigation';
 import { GameContext } from '../game/types/gameStatus';
 
 const Pong = () => {
-  const { emitPing } = usePing();
-  const { emitUserStatus } = useUserStatus();
+  const { publishPing } = usePing();
+  const { publishUserStatus } = useUsersUserStatus();
 
   const [context, setContext] = useState<GameContext>({
     gameStatus: 'entrance',
@@ -21,12 +21,12 @@ const Pong = () => {
   });
 
   useEffect(() => {
-    emitPing();
-    emitUserStatus(UserStatusEnum.Game);
+    publishPing();
+    publishUserStatus(UserStatusEnum.Game);
     return () => {
-      emitUserStatus(UserStatusEnum.Online);
+      publishUserStatus(UserStatusEnum.Online);
     };
-  }, [emitPing, emitUserStatus]);
+  }, [publishPing, publishUserStatus]);
 
   return (
     <Container component="main" maxWidth="xl">
