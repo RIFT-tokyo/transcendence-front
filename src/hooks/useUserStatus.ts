@@ -1,4 +1,5 @@
 import { useCallback, useContext } from 'react';
+import { UserStatusEnum } from '../api/generated';
 import { EVENT } from '../components/config/constants';
 import { AuthContext } from '../contexts/AuthContext';
 import { SocketContext } from '../contexts/SocketContext';
@@ -8,7 +9,7 @@ const useUserStatus = () => {
   const { authUser } = useContext(AuthContext);
 
   const emitUserStatus = useCallback(
-    (status: string) => {
+    (status: UserStatusEnum) => {
       if (client) {
         client.users.emit(EVENT.USER_STATUS, {
           status,

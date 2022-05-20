@@ -1,5 +1,6 @@
 import { Box, Container } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { UserStatusEnum } from '../../api/generated';
 import usePing from '../../hooks/usePing';
 import useUserStatus from '../../hooks/useUserStatus';
 import GameCanvas from '../game/GameCanvas';
@@ -21,9 +22,9 @@ const Pong = () => {
 
   useEffect(() => {
     emitPing();
-    emitUserStatus('game');
+    emitUserStatus(UserStatusEnum.Game);
     return () => {
-      emitUserStatus('online');
+      emitUserStatus(UserStatusEnum.Online);
     };
   }, [emitPing, emitUserStatus]);
 
