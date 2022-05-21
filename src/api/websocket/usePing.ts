@@ -1,6 +1,6 @@
 import { useCallback, useContext } from 'react';
-import { EVENT } from '../components/config/constants';
-import { SocketContext } from '../contexts/SocketContext';
+import { EVENT } from '../../components/config/constants';
+import { SocketContext } from '../../contexts/SocketContext';
 
 const usePing = () => {
   const { client } = useContext(SocketContext);

@@ -1,14 +1,16 @@
 import { Box, Container } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { UserStatusEnum } from '../../api/generated';
-import usePing from '../../hooks/usePing';
-import useUsersUserStatus from '../../hooks/useUsersUserStatus';
+import usePing from '../../api/websocket/usePing';
+import useUsersUserStatus from '../../api/websocket/useUsersUserStatus';
+import { AuthContext } from '../../contexts/AuthContext';
 import GameCanvas from '../game/GameCanvas';
 import Navigation from '../game/Navigation';
 import { GameContext } from '../game/types/gameStatus';
 
 const Pong = () => {
   const { publishPing } = usePing();
+  const { authUser } = useContext(AuthContext);
   const { publishUserStatus } = useUsersUserStatus();
 
   const [context, setContext] = useState<GameContext>({
@@ -22,11 +24,16 @@ const Pong = () => {
 
   useEffect(() => {
     publishPing();
-    publishUserStatus(UserStatusEnum.Game);
+    if (authUser)
+      publishUserStatus({ status: UserStatusEnum.Game, userID: authUser.id! });
     return () => {
-      publishUserStatus(UserStatusEnum.Online);
+      if (authUser)
+        publishUserStatus({
+          status: UserStatusEnum.Online,
+          userID: authUser.id!,
+        });
     };
-  }, [publishPing, publishUserStatus]);
+  }, [publishPing, publishUserStatus, authUser]);
 
   return (
     <Container component="main" maxWidth="xl">

@@ -1,27 +1,31 @@
 import { useCallback, useContext } from 'react';
-import { UserStatusEnum } from '../api/generated';
-import { EVENT } from '../components/config/constants';
-import { AuthContext } from '../contexts/AuthContext';
-import { SocketContext } from '../contexts/SocketContext';
+import { UserStatusEnum } from '../generated';
+import { EVENT } from '../../components/config/constants';
+import { SocketContext } from '../../contexts/SocketContext';
+import { WebSocketCallback } from './common';
+
+type UserStatusPayload = {
+  status: UserStatusEnum;
+  userID: number;
+};
 
 const useUsersUserStatus = () => {
   const { client } = useContext(SocketContext);
-  const { authUser } = useContext(AuthContext);
 
   const publishUserStatus = useCallback(
-    (status: UserStatusEnum) => {
+    ({ status, userID }: UserStatusPayload) => {
       if (client) {
         client.users.emit(EVENT.USER_STATUS, {
           status,
-          id: authUser?.id,
+          userID,
         });
       }
     },
-    [authUser?.id, client],
+    [client],
   );
 
   const subscribeUserStatus = useCallback(
-    (callback: (data: { status: string; userID: number }) => void) => {
+    (callback: WebSocketCallback<UserStatusPayload>) => {
       if (client) {
         client.users.on(EVENT.USER_STATUS, callback);
       }
@@ -30,7 +34,7 @@ const useUsersUserStatus = () => {
   );
 
   const unsubscribeUserStatus = useCallback(
-    (callback: (data: { status: string; userID: number }) => void) => {
+    (callback: WebSocketCallback<UserStatusPayload>) => {
       if (client) {
         client.users.off(EVENT.USER_STATUS, callback);
       }

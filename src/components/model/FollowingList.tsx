@@ -2,7 +2,7 @@ import { Stack, Typography } from '@mui/material';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { FollowApi, User } from '../../api/generated/api';
-import useUsersUserStatus from '../../hooks/useUsersUserStatus';
+import useUsersUserStatus from '../../api/websocket/useUsersUserStatus';
 import ScrollObserver from '../ui/ScrollObserver';
 import FollowerStatus from './FollowerStatus';
 
