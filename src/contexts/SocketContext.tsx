@@ -8,19 +8,20 @@ export const SocketProvider: FC = ({ children }) => {
   const [client, setClient] = React.useState<any>(null);
 
   const connect = (id: number) => {
-    const sclient = socketIOclient(process.env.REACT_APP_SOCKET_URL!, {
+    // namespace: /
+    const indexSocketClient = socketIOclient(process.env.REACT_APP_SOCKET_URL!, {
       auth: { userID: id },
     });
-    const usersSclient = socketIOclient(
+    // namespace: /users
+    const usersSocketClient = socketIOclient(
       process.env.REACT_APP_SOCKET_URL! + SOCKET_USERS,
       {
         auth: { userID: id },
       },
     );
 
-    sclient.on(EVENT.PONG, () => {});
-
-    setClient({ index: sclient, users: usersSclient });
+    indexSocketClient.on(EVENT.PONG, () => {});
+    setClient({ index: indexSocketClient, users: usersSocketClient });
   };
 
   const memo = useMemo(() => ({ client, connect }), [client]);

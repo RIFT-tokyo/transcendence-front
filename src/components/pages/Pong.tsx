@@ -1,15 +1,17 @@
 import { Box, Container } from '@mui/material';
 import { useContext, useEffect, useReducer } from 'react';
+import { UserStatusEnum } from '../../api/generated';
+import usePing from '../../api/websocket/usePing';
+import useUsersUserStatus from '../../api/websocket/useUsersUserStatus';
 import { AuthContext } from '../../contexts/AuthContext';
-import { SocketContext } from '../../contexts/SocketContext';
-import { EVENT } from '../config/constants';
 import GameCanvas from '../game/GameCanvas';
 import Navigation from '../game/Navigation';
 import { reducer } from '../game/types/reducer';
 
 const Pong = () => {
-  const { client } = useContext(SocketContext);
+  const { publishPing } = usePing();
   const { authUser } = useContext(AuthContext);
+  const { publishUserStatus } = useUsersUserStatus();
 
   const [state, dispatch] = useReducer(reducer, {
     gameStatus: 'entrance',
@@ -21,21 +23,17 @@ const Pong = () => {
   });
 
   useEffect(() => {
-    if (client) {
-      client.index.emit(EVENT.PING);
-      client.users.emit(EVENT.USER_STATUS, {
-        status: 'game',
-        userID: authUser?.id,
-      });
-    }
+    publishPing();
+    if (authUser)
+      publishUserStatus({ status: UserStatusEnum.Game, userID: authUser.id! });
     return () => {
-      if (client)
-        client.users.emit(EVENT.USER_STATUS, {
-          status: 'online',
-          userID: authUser?.id,
+      if (authUser)
+        publishUserStatus({
+          status: UserStatusEnum.Online,
+          userID: authUser.id!,
         });
     };
-  }, [authUser?.id, client]);
+  }, [publishPing, publishUserStatus, authUser]);
 
   return (
     <Container component="main" maxWidth="xl">
