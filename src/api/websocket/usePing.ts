@@ -4,6 +4,7 @@ import { SocketContext } from '../../contexts/SocketContext';
 
 const usePing = () => {
   const { client } = useContext(SocketContext);
+
   const publishPing = useCallback(() => {
     if (client) {
       client.index.emit(EVENT.PING);
