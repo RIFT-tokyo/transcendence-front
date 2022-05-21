@@ -8,48 +8,99 @@ import {
   IconButton,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import * as React from 'react';
+import Axios from 'axios';
+import { useReducer } from 'react';
 import { AuthApi, Password } from '../../api/generated/api';
 
+type State = {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+  showCurrentPassword: boolean;
+  showNewPassword: boolean;
+  showConfirmPassword: boolean;
+  isRequesting: boolean;
+};
+
+type Actions =
+  | { type: 'SET_PASSWORDS'; payload: Partial<State> }
+  | { type: 'SET_CURRENT_PASSWORD'; payload: string }
+  | { type: 'SET_NEW_PASSWORD'; payload: string }
+  | { type: 'SET_CONFIRM_PASSWORD'; payload: string }
+  | { type: 'SHOW_CURRENT_PASSWORD' }
+  | { type: 'SHOW_NEW_PASSWORD' }
+  | { type: 'SHOW_CONFIRM_PASSWORD' }
+  | { type: 'LOADING' };
+
+const reducer = (state: State, action: Actions) => {
+  switch (action.type) {
+    case 'SET_PASSWORDS':
+      return { ...state, ...action.payload };
+    case 'SET_CURRENT_PASSWORD':
+      return { ...state, currentPassword: action.payload };
+    case 'SET_NEW_PASSWORD':
+      return { ...state, newPassword: action.payload };
+    case 'SET_CONFIRM_PASSWORD':
+      return { ...state, confirmPassword: action.payload };
+    case 'SHOW_CURRENT_PASSWORD':
+      return { ...state, showCurrentPassword: !state.showCurrentPassword };
+    case 'SHOW_NEW_PASSWORD':
+      return { ...state, showNewPassword: !state.showNewPassword };
+    case 'SHOW_CONFIRM_PASSWORD':
+      return { ...state, showConfirmPassword: !state.showCurrentPassword };
+    case 'LOADING':
+      return { ...state, isRequesting: !state.isRequesting };
+    default:
+      return state;
+  }
+};
+
+const authApi = new AuthApi();
+
 const SecuritySetting = () => {
-  const [currentPassword, setCurrentPassword] = React.useState<string>('');
-  const [newPassword, setNewPassword] = React.useState<string>('');
-  const [confirmPassword, setConfirmPassword] = React.useState<string>('');
-  const [showCurrentPassword, setShowCurrentPassword] = React.useState(false);
-  const [showNewPassword, setShowNewPassword] = React.useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
-  const [isRequesting, setIsRequesting] = React.useState(false);
-  const authApi = new AuthApi();
   const { enqueueSnackbar } = useSnackbar();
+  const [state, dispatch] = useReducer(reducer, {
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+    showCurrentPassword: false,
+    showNewPassword: false,
+    showConfirmPassword: false,
+    isRequesting: false,
+  });
 
   const changePassword = async () => {
-    if (isRequesting) {
+    if (state.isRequesting) {
       return;
     }
     if (
-      !currentPassword ||
-      !newPassword ||
-      !confirmPassword ||
-      newPassword !== confirmPassword
+      !state.currentPassword ||
+      !state.newPassword ||
+      !state.confirmPassword ||
+      state.newPassword !== state.confirmPassword
     ) {
       enqueueSnackbar('Please fill all fields correctly', { variant: 'error' });
       return;
     }
     const data: Password = {
-      old_password: currentPassword,
-      new_password: newPassword,
+      old_password: state.currentPassword,
+      new_password: state.newPassword,
     };
     try {
-      setIsRequesting(true);
+      dispatch({ type: 'LOADING' });
       await authApi.putAuthPassword(data, { withCredentials: true });
       enqueueSnackbar('Password changed successfully', { variant: 'success' });
-      setCurrentPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
-    } catch (e: any) {
-      enqueueSnackbar(e.response.data.message, { variant: 'error' });
+      dispatch({ type: 'SET_PASSWORDS', payload: {
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+      }});
+    } catch (e: unknown) {
+      if (Axios.isAxiosError(e) && e.response) {
+        enqueueSnackbar(e.response.data.message, { variant: 'error' });
+      }
     }
-    setIsRequesting(false);
+    dispatch({ type: 'LOADING' });
   };
 
   return (
@@ -63,17 +114,17 @@ const SecuritySetting = () => {
           size="small"
           variant="outlined"
           label="current password"
-          value={currentPassword}
-          onChange={(e) => setCurrentPassword(e.target.value)}
-          type={showCurrentPassword ? 'text' : 'password'}
+          value={state.currentPassword}
+          onChange={(e) => dispatch({ type: 'SET_CURRENT_PASSWORD', payload: e.target.value })}
+          type={state.showCurrentPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
               <IconButton
                 aria-label="toggle password visibility"
-                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                onClick={() => dispatch({ type: 'SHOW_CURRENT_PASSWORD' })}
                 edge="end"
               >
-                {showCurrentPassword ? <VisibilityOff /> : <Visibility />}
+                {state.showCurrentPassword ? <VisibilityOff /> : <Visibility />}
               </IconButton>
             ),
           }}
@@ -83,17 +134,17 @@ const SecuritySetting = () => {
           size="small"
           variant="outlined"
           label="new password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          type={showNewPassword ? 'text' : 'password'}
+          value={state.newPassword}
+          onChange={(e) => dispatch({ type: 'SET_NEW_PASSWORD', payload: e.target.value })}
+          type={state.showNewPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
               <IconButton
                 aria-label="toggle password visibility"
-                onClick={() => setShowNewPassword(!showNewPassword)}
+                onClick={() => dispatch({ type: 'SHOW_NEW_PASSWORD' })}
                 edge="end"
               >
-                {showNewPassword ? <VisibilityOff /> : <Visibility />}
+                {state.showNewPassword ? <VisibilityOff /> : <Visibility />}
               </IconButton>
             ),
           }}
@@ -103,17 +154,17 @@ const SecuritySetting = () => {
           size="small"
           variant="outlined"
           label="confirm password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          type={showConfirmPassword ? 'text' : 'password'}
+          value={state.confirmPassword}
+          onChange={(e) => dispatch({ type: 'SET_CONFIRM_PASSWORD', payload: e.target.value })}
+          type={state.showConfirmPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
               <IconButton
                 aria-label="toggle password visibility"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                onClick={() => dispatch({ type: 'SHOW_CONFIRM_PASSWORD' })}
                 edge="end"
               >
-                {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                {state.showConfirmPassword ? <VisibilityOff /> : <Visibility />}
               </IconButton>
             ),
           }}

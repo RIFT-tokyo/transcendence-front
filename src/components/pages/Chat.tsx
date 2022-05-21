@@ -1,5 +1,5 @@
 import { Container, Divider, Stack } from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useReducer } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import Axios from 'axios';
 import ChannelList from '../model/ChannelList';
@@ -7,19 +7,45 @@ import { Channel, ChannelApi } from '../../api/generated';
 import ErrorRouter from '../ui/ErrorRouter';
 import { CHANNELS_URL } from '../config/constants';
 
+type State = {
+  channels: Channel[];
+  selectedChannel: Channel | null;
+  statusCode: number;
+};
+
+type Actions =
+  | { type: 'SET_CHANNELS'; payload: Channel[] }
+  | { type: 'SELECT_CHANNEL'; payload: Channel | null }
+  | { type: 'SET_STATUS_CODE'; payload: number };
+
+const reducer = (state: State, action: Actions) => {
+  switch (action.type) {
+    case 'SET_CHANNELS':
+      return { ...state, channels: action.payload };
+    case 'SELECT_CHANNEL':
+      return { ...state, selectedChannel: action.payload };
+    case 'SET_STATUS_CODE':
+      return { ...state, statusCode: action.payload };
+    default:
+      return state;
+  }
+};
+
 const channelApi = new ChannelApi();
 
 const Chat = () => {
   const { channelId } = useParams();
-  const [channels, setChannels] = useState<Channel[]>([]);
-  const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
-  const [statusCode, setStatusCode] = useState<number>(0);
   const navigate = useNavigate();
+  const [state, dispatch] = useReducer(reducer, {
+    channels: [],
+    selectedChannel: null,
+    statusCode: 0,
+  });
 
-  const setSelectedChannelFromChannels = useCallback(
+  const selectChannelFromURL = useCallback(
     (allChannel: Channel[]) => {
       if (allChannel.length <= 0 && !channelId) {
-        setSelectedChannel(null);
+        dispatch({ type: 'SELECT_CHANNEL', payload: null });
         return;
       }
       if (!channelId) {
@@ -28,9 +54,9 @@ const Chat = () => {
       }
       const channel = allChannel.find((c) => c.id?.toString() === channelId);
       if (channel) {
-        setSelectedChannel(channel);
+        dispatch({ type: 'SELECT_CHANNEL', payload: channel });
       } else {
-        setStatusCode(404);
+        dispatch({ type: 'SET_STATUS_CODE', payload: 404 });
       }
     },
     [channelId, navigate],
@@ -41,11 +67,11 @@ const Chat = () => {
       const res = await channelApi.getChannels(undefined, undefined, {
         withCredentials: true,
       });
-      setChannels(res.data);
-      setSelectedChannelFromChannels(res.data);
+      dispatch({ type: 'SET_CHANNELS', payload: res.data });
+      selectChannelFromURL(res.data);
     } catch (err: unknown) {
       if (Axios.isAxiosError(err) && err.response) {
-        setStatusCode(err.response.status);
+        dispatch({ type: 'SET_STATUS_CODE', payload: err.response.status });
       }
     }
   };
@@ -56,23 +82,23 @@ const Chat = () => {
   }, []);
 
   useEffect(() => {
-    if (channels.length > 0) {
-      setSelectedChannelFromChannels(channels);
+    if (state.channels.length > 0) {
+      selectChannelFromURL(state.channels);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setSelectedChannelFromChannels]);
+  }, [selectChannelFromURL]);
 
   return (
-    <ErrorRouter statusCode={statusCode}>
+    <ErrorRouter statusCode={state.statusCode}>
       <Container component="main">
         <Stack direction="row" spacing={2} paddingX={2} paddingTop={2}>
           <ChannelList
-            selectedChannel={selectedChannel}
-            channels={channels}
-            setChannels={setChannels}
+            selectedChannel={state.selectedChannel}
+            channels={state.channels}
+            addChannel={(channel) => dispatch({ type: 'SET_CHANNELS', payload: [...state.channels, channel] })}
           />
           <Divider orientation="vertical" flexItem variant="middle" />
-          {selectedChannel && <Outlet context={{ channel: selectedChannel }} />}
+          {state.selectedChannel && <Outlet context={{ channel: state.selectedChannel }} />}
         </Stack>
       </Container>
     </ErrorRouter>

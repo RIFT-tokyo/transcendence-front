@@ -1,6 +1,7 @@
 import { CircularProgress, Grid, Stack } from '@mui/material';
-import * as React from 'react';
 import { useSnackbar } from 'notistack';
+import { useContext, useReducer } from 'react';
+import Axios from 'axios';
 import { User, UserApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
 import AccountSetting from '../model/AccountSetting';
@@ -12,69 +13,97 @@ type Props = {
   active: string;
 };
 
+type State = {
+  user: User | null;
+  statusCode: number;
+  isLoading: boolean;
+};
+
+type Actions =
+  | { type: 'SET_USER'; payload: User }
+  | { type: 'SET_STATUS_CODE'; payload: number }
+  | { type: 'LOADING' };
+
+const reducer = (state: State, action: Actions) => {
+  switch (action.type) {
+    case 'SET_USER':
+      return { ...state, user: action.payload };
+    case 'SET_STATUS_CODE':
+      return { ...state, statusCode: action.payload };
+    case 'LOADING':
+      return { ...state, isLoading: !state.isLoading };
+    default:
+      return state;
+  }
+};
+
+const actions = ['Account', 'Security'];
+
+const userApi = new UserApi();
+
 const Settings: React.VFC<Props> = ({ active }: Props) => {
-  const actions = ['Account', 'Security'];
-  const [user, setUser] = React.useState<User | null>(null);
-  const userApi = new UserApi();
-  const [statusCode, setStatusCode] = React.useState<number>(0);
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const { authUser } = React.useContext(AuthContext);
+  const { authUser } = useContext(AuthContext);
   const { enqueueSnackbar } = useSnackbar();
 
-  React.useEffect(() => {
-    setUser(authUser);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const [state, dispatch] = useReducer(reducer, {
+    user: authUser,
+    statusCode: 0,
+    isLoading: false,
+  });
 
   const reset = async () => {
-    setLoading(true);
+    dispatch({ type: 'LOADING' });
     try {
       const { data } = await userApi.getMe({ withCredentials: true });
-      setUser(data);
-    } catch (err: any) {
-      setStatusCode(err.response.status);
+      dispatch({ type: 'SET_USER', payload: data });
+    } catch (err: unknown) {
+      if (Axios.isAxiosError(err) && err.response) {
+        dispatch({ type: 'SET_STATUS_CODE', payload: err.response.status });
+      }
     }
-    setLoading(false);
+    dispatch({ type: 'LOADING' });
   };
 
   const submit = async () => {
-    if (!user?.id) {
+    if (!state.user?.id) {
       return;
     }
-    setLoading(true);
+    dispatch({ type: 'LOADING' });
     const requestBody = {
-      username: user.username,
-      display_name: user.display_name,
-      status_message: user.status_message,
+      username: state.user.username,
+      display_name: state.user.display_name,
+      status_message: state.user.status_message,
     };
     try {
-      const { data } = await userApi.putUsersUserId(user.id!, requestBody, {
+      const { data } = await userApi.putUsersUserId(state.user.id, requestBody, {
         withCredentials: true,
       });
       enqueueSnackbar('Profile updated', { variant: 'success' });
-      setUser(data);
-    } catch (err: any) {
-      enqueueSnackbar(err.response.data.message, { variant: 'error' });
+      dispatch({ type: 'SET_USER', payload: data });
+    } catch (err: unknown) {
+      if (Axios.isAxiosError(err) && err.response) {
+        enqueueSnackbar(err.response.data.message, { variant: 'error' });
+      }
     }
-    setLoading(false);
+    dispatch({ type: 'LOADING' });
   };
 
   let settingContent = <CircularProgress />;
-  if (active === 'Account' && !loading && user) {
+  if (active === 'Account' && !state.isLoading && state.user) {
     settingContent = (
       <AccountSetting
-        user={user}
-        setUser={setUser}
+        user={state.user}
+        setUser={(user: User) => dispatch({ type: 'SET_USER', payload: user })}
         submit={submit}
         reset={reset}
       />
     );
-  } else if (active === 'Security' && !loading) {
+  } else if (active === 'Security' && !state.isLoading) {
     settingContent = <SecuritySetting />;
   }
 
   return (
-    <ErrorRouter statusCode={statusCode}>
+    <ErrorRouter statusCode={state.statusCode}>
       <Grid container justifyContent="center">
         <Stack direction="row" margin={2} spacing={2}>
           <SettingTab actions={actions} />

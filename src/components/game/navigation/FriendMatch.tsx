@@ -1,14 +1,13 @@
 import { Grid, Button, Typography } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
-import { GameContext } from '../types/gameStatus';
+import { Dispatch } from 'react';
+import { Actions } from '../types/reducer';
 
 interface Props {
-  context: GameContext;
-  // eslint-disable-next-line no-unused-vars
-  setContext: (context: GameContext) => void;
+  dispatch: Dispatch<Actions>;
 }
 
-const FriendMatch = ({ context, setContext }: Props) => (
+const FriendMatch = ({ dispatch }: Props) => (
   <Grid container item xs={12} marginY={5}>
     <Grid item xs={3} />
     <Grid container item xs={6} spacing={2}>
@@ -21,7 +20,7 @@ const FriendMatch = ({ context, setContext }: Props) => (
           sx={{
             color: blueGrey[100],
           }}
-          onClick={() => setContext({ ...context, gameStatus: 'host' })}
+          onClick={() => dispatch({ type: 'SET_GAME_STATUS', payload: 'host' })}
         >
           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
             create room
@@ -37,7 +36,7 @@ const FriendMatch = ({ context, setContext }: Props) => (
           sx={{
             color: blueGrey[100],
           }}
-          onClick={() => setContext({ ...context, gameStatus: 'join' })}
+          onClick={() => dispatch({ type: 'SET_GAME_STATUS', payload: 'join' })}
         >
           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
             join room
@@ -51,7 +50,7 @@ const FriendMatch = ({ context, setContext }: Props) => (
           sx={{
             color: blueGrey[100],
           }}
-          onClick={() => setContext({ ...context, gameStatus: 'entrance' })}
+          onClick={() => dispatch({ type: 'SET_GAME_STATUS', payload: 'entrance' })}
         >
           Back to Top
         </Button>

@@ -1,7 +1,8 @@
 import { Container, Divider, LinearProgress, Stack } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useReducer } from 'react';
 import { useParams } from 'react-router-dom';
+import Axios from 'axios';
 import { User, UserApi, FollowApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
 import AchievementList from '../model/AchievementList';
@@ -10,48 +11,88 @@ import GameResult from '../model/GameResult';
 import UserCard from '../model/UserCard';
 import ErrorRouter from '../ui/ErrorRouter';
 
+type State = {
+  user: User | null;
+  isOwner: boolean;
+  isFollowing: boolean;
+  statusCode: number;
+  isLoading: boolean;
+};
+
+type Actions =
+  | { type: 'SET_USER'; payload: User }
+  | { type: 'SET_IS_OWNER'; payload: boolean }
+  | { type: 'SET_IS_FOLLOWING'; payload: boolean }
+  | { type: 'SET_STATUS_CODE'; payload: number }
+  | { type: 'LOADING' };
+
+const reducer = (state: State, action: Actions) => {
+  switch (action.type) {
+    case 'SET_USER':
+      return { ...state, user: action.payload };
+    case 'SET_IS_OWNER':
+      return { ...state, isOwner: action.payload };
+    case 'SET_IS_FOLLOWING':
+      return { ...state, isFollowing: action.payload };
+    case 'SET_STATUS_CODE':
+      return { ...state, statusCode: action.payload };
+    case 'LOADING':
+      return { ...state, isLoading: !state.isLoading };
+    default:
+      return state;
+  }
+};
+
+const userApi = new UserApi();
+const followApi = new FollowApi();
+
 const UserProfile = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isOwner, setIsOwner] = useState<boolean>(false);
-  const [isFollower, setIsFollower] = useState<boolean>(false);
-  const [statusCode, setStatusCode] = useState<number>(0);
-  const [isRequesting, setRequesting] = useState<boolean>(false);
-  const userApi = new UserApi();
-  const followApi = new FollowApi();
   const { username } = useParams();
   const { authUser, setAuthUser } = useContext(AuthContext);
   const { enqueueSnackbar } = useSnackbar();
 
+  const [state, dispatch] = useReducer(reducer, {
+    user: null,
+    isOwner: false,
+    isFollowing: false,
+    statusCode: 0,
+    isLoading: false,
+  });
+
   const followUser = async (userId: number) => {
-    if (isRequesting) {
+    if (state.isLoading) {
       return;
     }
-    setRequesting(true);
+    dispatch({ type: 'LOADING' });
     try {
       await followApi.putUsersFollowingUserID(userId, {
         withCredentials: true,
       });
-      setIsFollower(true);
-    } catch (err: any) {
-      enqueueSnackbar(err.message, { variant: 'error' });
+      dispatch({ type: 'SET_IS_FOLLOWING', payload: true });
+    } catch (err: unknown) {
+      if (Axios.isAxiosError(err) && err.response) {
+        enqueueSnackbar(err.message, { variant: 'error' });
+      }
     }
-    setRequesting(false);
+    dispatch({ type: 'LOADING' });
   };
 
   const unfollowUser = async (userId: number) => {
-    if (isRequesting) {
+    if (state.isLoading) {
       return;
     }
-    setRequesting(true);
+    dispatch({ type: 'LOADING' });
     try {
       await followApi.deleteUsersFollowingUserID(userId, {
         withCredentials: true,
       });
-      setIsFollower(false);
-    } catch (err: any) {
-      enqueueSnackbar(err.message, { variant: 'error' });
+      dispatch({ type: 'SET_IS_FOLLOWING', payload: false });
+    } catch (err: unknown) {
+      if (Axios.isAxiosError(err) && err.response) {
+        enqueueSnackbar(err.message, { variant: 'error' });
+      }
     }
-    setRequesting(false);
+    dispatch({ type: 'LOADING' });
   };
 
   const fetchIsFollower = async (ownerId: number, targetId: number) => {
@@ -61,12 +102,14 @@ const UserProfile = () => {
         targetId,
         { withCredentials: true },
       );
-      setIsFollower(res.status === 204);
-    } catch (err: any) {
-      if (err.response.status === 404) {
-        setIsFollower(false);
-      } else {
-        setStatusCode(err.response.status);
+      dispatch({ type: 'SET_IS_FOLLOWING', payload: res.status === 204});
+    } catch (err: unknown) {
+      if (Axios.isAxiosError(err) && err.response) {
+        if (err.response?.status === 404) {
+          dispatch({ type: 'SET_IS_FOLLOWING', payload: false });
+        } else {
+          dispatch({ type: 'SET_STATUS_CODE', payload: err.response?.status });
+        }
       }
     }
   };
@@ -79,40 +122,46 @@ const UserProfile = () => {
       if (!res.data.id) {
         return;
       }
-      setUser(res.data);
+      dispatch({ type: 'SET_USER', payload: res.data });
       fetchIsFollower(ownerId, res.data.id);
-    } catch (err: any) {
-      setStatusCode(err.response.status);
+    } catch (err: unknown) {
+      if (Axios.isAxiosError(err) && err.response) {
+        dispatch({ type: 'SET_STATUS_CODE', payload: err.response?.status });
+      }
     }
   };
 
   const fetchMe = async () => {
     try {
       const res = await userApi.getMe({ withCredentials: true });
-      setUser(res.data);
+      dispatch({ type: 'SET_USER', payload: res.data });
       setAuthUser(res.data);
-    } catch (err: any) {
-      setStatusCode(err.response.status);
+    } catch (err: unknown) {
+      if (Axios.isAxiosError(err) && err.response) {
+        dispatch({ type: 'SET_STATUS_CODE', payload: err.response?.status });
+      }
     }
   };
 
   useEffect(() => {
     (async () => {
-      const owner = authUser!;
-      if (username && owner.username !== username) {
-        fetchUserFromUsername(owner.id!, username);
-        setIsOwner(false);
+      if (!authUser || !authUser.id) {
+        return;
+      }
+      if (username && authUser.username !== username) {
+        fetchUserFromUsername(authUser.id, username);
+        dispatch({ type: 'SET_IS_OWNER', payload: false });
       } else {
         await fetchMe();
-        setIsOwner(true);
+        dispatch({ type: 'SET_IS_OWNER', payload: true });
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
 
   return (
-    <ErrorRouter statusCode={statusCode}>
-      {isRequesting ? (
+    <ErrorRouter statusCode={state.statusCode}>
+      {state.isLoading ? (
         <LinearProgress
           sx={{
             width: '100%',
@@ -124,16 +173,16 @@ const UserProfile = () => {
         <Stack direction="row">
           <Stack direction="column" margin={2} spacing={2} width={296}>
             <UserCard
-              user={user}
-              isOwner={isOwner}
-              isFollower={isFollower}
-              disabled={isRequesting}
+              user={state.user}
+              isOwner={state.isOwner}
+              isFollower={state.isFollowing}
+              disabled={state.isLoading}
               followUser={followUser}
               unfollowUser={unfollowUser}
             />
-            {isOwner ? <FollowingList ownerId={user!.id!} /> : null}
-            {user?.achievements && user.achievements.length > 0 && (
-              <AchievementList achievements={user.achievements} />
+            {state.isOwner && authUser?.id && <FollowingList ownerId={authUser.id} />}
+            {state.user?.achievements && state.user.achievements.length > 0 && (
+              <AchievementList achievements={state.user.achievements} />
             )}
           </Stack>
           <Divider orientation="vertical" flexItem variant="middle" />

@@ -1,6 +1,7 @@
 import { Box, Grid, Typography } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
-import { GameContext } from './types/gameStatus';
+import { Dispatch } from 'react';
+import { Actions, GameState } from './types/reducer';
 import HostGame from './navigation/HostGame';
 import JoinGame from './navigation/JoinGame';
 import Waiting from './navigation/Waiting';
@@ -12,12 +13,11 @@ import WatchGame from './navigation/WatchGame';
 import { CONTENT_HEIGHT } from '../config/constants';
 
 interface Props {
-  context: GameContext;
-  // eslint-disable-next-line no-unused-vars
-  setContext: (context: GameContext) => void;
+  context: GameState;
+  dispatch: Dispatch<Actions>;
 }
 
-const Navigation = ({ context, setContext }: Props) => (
+const Navigation = ({ context, dispatch }: Props) => (
   <Box
     component="div"
     maxHeight={CONTENT_HEIGHT}
@@ -51,39 +51,39 @@ const Navigation = ({ context, setContext }: Props) => (
                 sx={{
                   fontFamily: 'Zen Tokyo Zoo',
                 }}
-                onClick={() => setContext({ ...context, gameStatus: 'play' })}
+                onClick={() => dispatch({ type: 'SET_GAME_STATUS', payload: 'play' })}
               >
                 PONG
               </Typography>
             </Grid>
             {context.gameStatus === 'entrance' && (
-              <Entrance context={context} setContext={setContext} />
+              <Entrance dispatch={dispatch} />
             )}
             {context.gameStatus === 'friend_match' && (
-              <FriendMatch context={context} setContext={setContext} />
+              <FriendMatch dispatch={dispatch} />
             )}
             {context.gameStatus === 'watch_match' && (
-              <WatchGame context={context} setContext={setContext} />
+              <WatchGame dispatch={dispatch} />
             )}
             {context.gameStatus === 'host' && (
-              <HostGame context={context} setContext={setContext} />
+              <HostGame context={context} dispatch={dispatch} />
             )}
             {context.gameStatus === 'join' && (
-              <JoinGame context={context} setContext={setContext} />
+              <JoinGame context={context} dispatch={dispatch} />
             )}
             {context.gameStatus === 'waiting' && (
-              <Waiting context={context} setContext={setContext} />
+              <Waiting context={context} dispatch={dispatch} />
             )}
           </Grid>
         )}
       {context.gameStatus === 'play' && (
-        <DisplayPoints context={context} setContext={setContext} />
+        <DisplayPoints context={context} dispatch={dispatch} />
       )}
       {context.gameStatus === 'watch' && (
-        <DisplayPoints context={context} setContext={setContext} />
+        <DisplayPoints context={context} dispatch={dispatch} />
       )}
       {context.gameStatus === 'end' && (
-        <DisplayResult context={context} setContext={setContext} />
+        <DisplayResult context={context} dispatch={dispatch} />
       )}
     </Box>
   </Box>

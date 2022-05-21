@@ -4,15 +4,14 @@ import ShuffleIcon from '@mui/icons-material/Shuffle';
 import GroupIcon from '@mui/icons-material/Group';
 import LiveTvIcon from '@mui/icons-material/LiveTv';
 import { blueGrey } from '@mui/material/colors';
-import { GameContext } from '../types/gameStatus';
+import { Dispatch } from 'react';
+import { Actions } from '../types/reducer';
 
 interface Props {
-  context: GameContext;
-  // eslint-disable-next-line no-unused-vars
-  setContext: (context: GameContext) => void;
+  dispatch: Dispatch<Actions>;
 }
 
-const Entrance = ({ context, setContext }: Props) => (
+const Entrance = ({ dispatch }: Props) => (
   <Grid container item xs={12} marginY={5}>
     <Grid item xs={3} />
     <Grid container item xs={6} spacing={2}>
@@ -27,7 +26,7 @@ const Entrance = ({ context, setContext }: Props) => (
             color: blueGrey[100],
           }}
           onClick={() =>
-            setContext({ ...context, roomId: '', gameStatus: 'waiting' })
+            dispatch({ type: 'AUTO_MATCHING' })
           }
         >
           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
@@ -45,7 +44,7 @@ const Entrance = ({ context, setContext }: Props) => (
           sx={{
             color: blueGrey[100],
           }}
-          onClick={() => setContext({ ...context, gameStatus: 'friend_match' })}
+          onClick={() => dispatch({ type: 'SET_GAME_STATUS', payload: 'friend_match' })}
         >
           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
             friend match
@@ -62,7 +61,7 @@ const Entrance = ({ context, setContext }: Props) => (
           sx={{
             color: blueGrey[100],
           }}
-          onClick={() => setContext({ ...context, gameStatus: 'watch_match' })}
+          onClick={() => dispatch({ type: 'SET_GAME_STATUS', payload: 'watch_match' })}
         >
           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
             watch match

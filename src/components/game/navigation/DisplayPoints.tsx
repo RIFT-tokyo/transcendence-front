@@ -1,14 +1,14 @@
 import { Grid, Typography } from '@mui/material';
 import { blue, blueGrey, pink } from '@mui/material/colors';
-import { GameContext } from '../types/gameStatus';
+import { Dispatch } from 'react';
+import { Actions, GameState } from '../types/reducer';
 
 interface Props {
-  context: GameContext;
-  // eslint-disable-next-line no-unused-vars
-  setContext: (context: GameContext) => void;
+  context: GameState;
+  dispatch: Dispatch<Actions>;
 }
 
-const DisplayPoints = ({ context, setContext }: Props) => (
+const DisplayPoints = ({ context, dispatch }: Props) => (
   <Grid container padding={4} spacing={2}>
     <Grid
       item
@@ -36,7 +36,7 @@ const DisplayPoints = ({ context, setContext }: Props) => (
         sx={{
           fontFamily: 'Zen Tokyo Zoo',
         }}
-        onClick={() => setContext({ ...context, gameStatus: 'end' })}
+        onClick={() => dispatch({ type: 'SET_GAME_STATUS', payload: 'end' })}
       >
         POINTS
       </Typography>
