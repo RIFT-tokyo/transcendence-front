@@ -9,19 +9,19 @@ export const SocketProvider: FC = ({ children }) => {
 
   const connect = (id: number) => {
     // namespace: /
-    const indexSclient = socketIOclient(process.env.REACT_APP_SOCKET_URL!, {
+    const indexSocketClient = socketIOclient(process.env.REACT_APP_SOCKET_URL!, {
       auth: { userID: id },
     });
     // namespace: /users
-    const usersSclient = socketIOclient(
+    const usersSocketClient = socketIOclient(
       process.env.REACT_APP_SOCKET_URL! + SOCKET_USERS,
       {
         auth: { userID: id },
       },
     );
 
-    indexSclient.on(EVENT.PONG, () => {});
-    setClient({ index: indexSclient, users: usersSclient });
+    indexSocketClient.on(EVENT.PONG, () => {});
+    setClient({ index: indexSocketClient, users: usersSocketClient });
   };
 
   const memo = useMemo(() => ({ client, connect }), [client]);
