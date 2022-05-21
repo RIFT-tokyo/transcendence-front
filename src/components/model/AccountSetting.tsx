@@ -8,17 +8,19 @@ import {
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { VFC, ChangeEvent } from 'react';
+import Axios from 'axios';
 import { User } from '../../api/generated/api';
 import { FileUploadApi } from '../../api/upload/fileUpload';
 import ImageForm from '../ui/ImageForm';
 
 type Props = {
   user: User;
-  // eslint-disable-next-line no-unused-vars
   setUser: (user: User) => void;
   submit: () => void;
   reset: () => void;
 };
+
+const fileUploadApi = new FileUploadApi();
 
 const AccountSetting: VFC<Props> = ({
   user,
@@ -26,7 +28,6 @@ const AccountSetting: VFC<Props> = ({
   submit,
   reset,
 }: Props) => {
-  const fileUploadApi = new FileUploadApi();
   const { enqueueSnackbar } = useSnackbar();
 
   const handleChange =
@@ -43,8 +44,10 @@ const AccountSetting: VFC<Props> = ({
       });
       setUser({ ...user, profile_image: res.data.file_path });
       enqueueSnackbar('Profile image updated', { variant: 'success' });
-    } catch (e: any) {
-      enqueueSnackbar('Failed to upload image', { variant: 'error' });
+    } catch (e: unknown) {
+      if (Axios.isAxiosError(e) && e.response) {
+        enqueueSnackbar('Failed to upload image', { variant: 'error' });
+      }
     }
   };
 

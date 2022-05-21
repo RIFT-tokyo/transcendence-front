@@ -1,14 +1,13 @@
 import { Button, Grid, TextField, Typography } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
-import { GameContext } from '../types/gameStatus';
+import { Dispatch } from 'react';
+import { Actions } from '../types/reducer';
 
 interface Props {
-  context: GameContext;
-  // eslint-disable-next-line no-unused-vars
-  setContext: (context: GameContext) => void;
+  dispatch: Dispatch<Actions>;
 }
 
-const WatchGame = ({ context, setContext }: Props) => (
+const WatchGame = ({ dispatch }: Props) => (
   <Grid container item xs={12} spacing={4} marginY={5}>
     <Grid container item xs={12} spacing={1} alignItems="center">
       <Grid item xs={1} />
@@ -30,7 +29,7 @@ const WatchGame = ({ context, setContext }: Props) => (
           sx={{
             color: blueGrey[100],
           }}
-          onClick={() => setContext({ ...context, gameStatus: 'watch' })}
+          onClick={() => dispatch({ type: 'SET_GAME_STATUS', payload: 'watch' })}
         >
           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
             watch
@@ -47,7 +46,7 @@ const WatchGame = ({ context, setContext }: Props) => (
         sx={{
           color: blueGrey[100],
         }}
-        onClick={() => setContext({ ...context, gameStatus: 'entrance' })}
+        onClick={() => dispatch({ type: 'SET_GAME_STATUS', payload: 'entrance' })}
       >
         Back to Top
       </Button>

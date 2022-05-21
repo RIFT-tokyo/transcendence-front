@@ -1,14 +1,14 @@
 import { Grid, Typography, CircularProgress, Button } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
 import ChatIcon from '@mui/icons-material/Chat';
-import { GameContext } from '../types/gameStatus';
+import { Dispatch } from 'react';
+import { Actions, GameState } from '../types/reducer';
 
 interface Props {
-  context: GameContext;
-  // eslint-disable-next-line no-unused-vars
-  setContext: (context: GameContext) => void;
+  context: GameState;
+  dispatch: Dispatch<Actions>;
 }
-const Waiting = ({ context, setContext }: Props) => (
+const Waiting = ({ context, dispatch }: Props) => (
   <Grid container item xs={12} spacing={4} marginY={5}>
     <Grid
       container
@@ -68,7 +68,7 @@ const Waiting = ({ context, setContext }: Props) => (
         sx={{
           color: blueGrey[100],
         }}
-        onClick={() => setContext({ ...context, gameStatus: 'entrance' })}
+        onClick={() => dispatch({ type: 'SET_GAME_STATUS', payload: 'entrance' })}
       >
         Back to Top
       </Button>

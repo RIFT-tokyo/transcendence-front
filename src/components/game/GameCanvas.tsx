@@ -6,23 +6,22 @@ import {
   RoundedBox,
 } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import { Suspense, useEffect, useState, useContext } from 'react';
+import { Suspense, useEffect, useState, useContext, Dispatch } from 'react';
 import Stage from './geometry/Stage';
-import { GameContext } from './types/gameStatus';
+import { Actions, GameState } from './types/reducer';
 import { AuthContext } from '../../contexts/AuthContext';
 import { GAME_HEIGHT } from '../config/constants';
 
 interface Props {
-  context: GameContext;
-  // eslint-disable-next-line no-unused-vars
-  setContext: (context: GameContext) => void;
+  context: GameState;
+  dispatch: Dispatch<Actions>;
 }
 
 interface State {
   cameraPosition: [x: number, y: number, z: number];
 }
 
-const GameCanvas = ({ context, setContext }: Props) => {
+const GameCanvas = ({ context, dispatch }: Props) => {
   const { authUser } = useContext(AuthContext);
   const [state, setState] = useState<State>({
     cameraPosition: [7, 9, 0],
@@ -34,7 +33,7 @@ const GameCanvas = ({ context, setContext }: Props) => {
       } else if (context.guestPlayer?.id === authUser?.id) {
         setState({ ...state, cameraPosition: [0, 3, -15] });
       }
-      setContext({ ...context, hostPoints: 11, guestPoints: 8 });
+      dispatch({ type: 'ADD_POINTS', payload: 'host'});
     } else if (context.gameStatus === 'watch') {
       setState({ ...state, cameraPosition: [7, 9, 0] });
     }

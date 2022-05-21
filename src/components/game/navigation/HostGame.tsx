@@ -1,20 +1,16 @@
 import { Grid, TextField, Button, Typography } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
-import { useEffect } from 'react';
-import { GameContext } from '../types/gameStatus';
+import { Dispatch, useEffect } from 'react';
+import { Actions, GameState } from '../types/reducer';
 
 interface Props {
-  context: GameContext;
-  // eslint-disable-next-line no-unused-vars
-  setContext: (context: GameContext) => void;
+  context: GameState;
+  dispatch: Dispatch<Actions>;
 }
 
-const HostGame = ({ context, setContext }: Props) => {
+const HostGame = ({ context, dispatch }: Props) => {
   useEffect(() => {
-    setContext({
-      ...context,
-      roomId: Math.random().toString(32).substring(2, 15),
-    });
+    dispatch({ type: 'SET_ROOM_ID', payload: Math.random().toString(32).substring(2, 15)})
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -30,9 +26,7 @@ const HostGame = ({ context, setContext }: Props) => {
               borderRadius: 1,
               backgroundColor: blueGrey[100],
             }}
-            onChange={(e) => {
-              setContext({ ...context, roomId: e.target.value });
-            }}
+            onChange={(e) => dispatch({ type: 'SET_ROOM_ID', payload: e.target.value })}
           />
         </Grid>
         <Grid item xs={3}>
@@ -44,7 +38,7 @@ const HostGame = ({ context, setContext }: Props) => {
             sx={{
               color: blueGrey[100],
             }}
-            onClick={() => setContext({ ...context, gameStatus: 'waiting' })}
+            onClick={() => dispatch({ type: 'SET_GAME_STATUS', payload: 'waiting' })}
           >
             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
               create
@@ -61,7 +55,7 @@ const HostGame = ({ context, setContext }: Props) => {
           sx={{
             color: blueGrey[100],
           }}
-          onClick={() => setContext({ ...context, gameStatus: 'entrance' })}
+          onClick={() => dispatch({ type: 'SET_GAME_STATUS', payload: 'entrance' })}
         >
           Back to Top
         </Button>

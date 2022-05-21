@@ -1,67 +1,68 @@
-import * as React from 'react';
+import { FormEvent, useContext, useEffect, useReducer } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router-dom';
-import { useContext, useEffect } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { IconButton, Typography } from '@mui/material';
 import { AuthApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
 import { FT_COLOR, HOME_URL, ROOT_URL } from '../config/constants';
 
-interface State {
+type State = {
   username: string;
   password: string;
   showPassword: boolean;
   error: boolean;
 }
 
+type Actions =
+  | { type: 'SET_USERNAME'; payload: string }
+  | { type: 'SET_PASSWORD'; payload: string }
+  | { type: 'SHOW_PASSWORD' }
+  | { type: 'ERROR' };
+
+const reducer = (state: State, action: Actions) => {
+  switch (action.type) {
+    case 'SET_USERNAME':
+      return { ...state, username: action.payload };
+    case 'SET_PASSWORD':
+      return { ...state, password: action.payload };
+    case 'SHOW_PASSWORD':
+      return { ...state, showPassword: !state.showPassword };
+    case 'ERROR':
+      return { ...state, error: true };
+    default:
+      return state;
+  }
+};
+
+const authApi = new AuthApi();
+
 const SignIn = () => {
-  const [values, setValues] = React.useState<State>({
+  const navigate = useNavigate();
+  const { authUser, login } = useContext(AuthContext);
+  const [state, dispatch] = useReducer(reducer, {
     username: '',
     password: '',
     showPassword: false,
     error: false,
   });
-  const navigate = useNavigate();
-  const authApi = new AuthApi();
-  const { authUser, login } = useContext(AuthContext);
 
-  const handleChange =
-    (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      setValues({ ...values, [prop]: event.target.value });
-    };
-
-  const handleClickShowPassword = () => {
-    setValues({
-      ...values,
-      showPassword: !values.showPassword,
-    });
-  };
-
-  const handleErrorOccurred = () => {
-    setValues({
-      ...values,
-      error: true,
-    });
-  };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const payload = {
-      username: values.username,
-      password: values.password,
+      username: state.username,
+      password: state.password,
     };
-
     try {
       await authApi.postAuthLogin(payload, { withCredentials: true });
       await login();
       navigate(HOME_URL);
     } catch (err) {
-      handleErrorOccurred();
+      dispatch({ type: 'ERROR' });
     }
   };
 
@@ -121,9 +122,9 @@ const SignIn = () => {
                 id="username"
                 label="username"
                 name="username"
-                value={values.username}
-                onChange={handleChange('username')}
-                error={values.error}
+                value={state.username}
+                onChange={(e) => dispatch({ type: 'SET_USERNAME', payload: e.target.value })}
+                error={state.error}
                 size="small"
               />
             </Grid>
@@ -133,23 +134,23 @@ const SignIn = () => {
                 name="password"
                 label="password"
                 id="password"
-                value={values.password}
-                onChange={handleChange('password')}
-                type={values.showPassword ? 'text' : 'password'}
+                value={state.password}
+                onChange={(e) => dispatch({ type: 'SET_PASSWORD', payload: e.target.value })}
+                type={state.showPassword ? 'text' : 'password'}
                 InputProps={{
                   endAdornment: (
                     <IconButton
                       aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
+                      onClick={() => dispatch({ type: 'SHOW_PASSWORD' })}
                       edge="end"
                     >
-                      {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                      {state.showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   ),
                 }}
-                error={values.error}
+                error={state.error}
                 size="small"
-                helperText={values.error ? 'Sign in failed...' : ''}
+                helperText={state.error ? 'Sign in failed...' : ''}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
