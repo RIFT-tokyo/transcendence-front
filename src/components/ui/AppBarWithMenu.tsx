@@ -38,6 +38,7 @@ const RequiredAuth = () => {
 
 const AppBarWithMenu = () => {
   const { logout } = React.useContext(AuthContext);
+  const { disconnect } = React.useContext(SocketContext);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const navigate = useNavigate();
@@ -67,6 +68,7 @@ const AppBarWithMenu = () => {
     try {
       await authApi.postAuthLogout({ withCredentials: true });
       logout();
+      disconnect();
       goHome();
     } catch (err: any) {
       enqueueSnackbar(err.response.data.message, { variant: 'error' });
