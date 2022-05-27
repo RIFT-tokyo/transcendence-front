@@ -108,7 +108,6 @@ const SignUp = () => {
           <Grid container item spacing={2}>
             <Grid item xs={12}>
               <Button
-                type="submit"
                 size="large"
                 fullWidth
                 sx={{ color: 'white', backgroundColor: FT_COLOR }}
