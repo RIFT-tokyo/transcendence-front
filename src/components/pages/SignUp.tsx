@@ -18,7 +18,7 @@ type State = {
   password: string;
   showPassword: boolean;
   error: boolean;
-}
+};
 
 type Actions =
   | { type: 'SET_USERNAME'; payload: string }
@@ -104,24 +104,26 @@ const SignUp = () => {
           TRANSCENDENCE
         </Typography>
         <img src="/auth/signup.svg" alt="Sign Up" height={320} />
-        <Box component="form" noValidate onSubmit={handleSubmit} my={10}>
+        <Grid container item my={3}>
+          <Grid item xs={12}>
+            <Button
+              size="large"
+              fullWidth
+              sx={{ color: 'white', backgroundColor: FT_COLOR }}
+              onClick={handleOauthLogin}
+            >
+              sign up with{' '}
+              <img
+                src="/auth/42.svg"
+                alt="42"
+                height={15}
+                style={{ marginLeft: 10 }}
+              />
+            </Button>
+          </Grid>
+        </Grid>
+        <Box component="form" onSubmit={handleSubmit}>
           <Grid container item spacing={2}>
-            <Grid item xs={12}>
-              <Button
-                size="large"
-                fullWidth
-                sx={{ color: 'white', backgroundColor: FT_COLOR }}
-                onClick={handleOauthLogin}
-              >
-                sign up with{' '}
-                <img
-                  src="/auth/42.svg"
-                  alt="42"
-                  height={15}
-                  style={{ marginLeft: 10 }}
-                />
-              </Button>
-            </Grid>
             <Grid item xs={12}>
               <TextField
                 fullWidth
@@ -129,7 +131,9 @@ const SignUp = () => {
                 label="username"
                 name="username"
                 value={state.username}
-                onChange={(e) => dispatch({ type: 'SET_USERNAME', payload: e.target.value })}
+                onChange={(e) =>
+                  dispatch({ type: 'SET_USERNAME', payload: e.target.value })
+                }
                 error={state.error}
                 size="small"
               />
@@ -141,7 +145,9 @@ const SignUp = () => {
                 label="password"
                 id="password"
                 value={state.password}
-                onChange={(e) => dispatch({ type: 'SET_PASSWORD', payload: e.target.value })}
+                onChange={(e) =>
+                  dispatch({ type: 'SET_PASSWORD', payload: e.target.value })
+                }
                 type={state.showPassword ? 'text' : 'password'}
                 InputProps={{
                   endAdornment: (
