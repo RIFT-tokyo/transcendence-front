@@ -9,9 +9,12 @@ export const SocketProvider: FC = ({ children }) => {
 
   const connect = (id: number) => {
     // namespace: /
-    const indexSocketClient = socketIOclient(process.env.REACT_APP_SOCKET_URL!, {
-      auth: { userID: id },
-    });
+    const indexSocketClient = socketIOclient(
+      process.env.REACT_APP_SOCKET_URL!,
+      {
+        auth: { userID: id },
+      },
+    );
     // namespace: /users
     const usersSocketClient = socketIOclient(
       process.env.REACT_APP_SOCKET_URL! + SOCKET_USERS,
@@ -24,7 +27,13 @@ export const SocketProvider: FC = ({ children }) => {
     setClient({ index: indexSocketClient, users: usersSocketClient });
   };
 
-  const memo = useMemo(() => ({ client, connect }), [client]);
+  const disconnect = () => {
+    client.index.disconnect();
+    client.users.disconnect();
+    setClient(null);
+  };
+
+  const memo = useMemo(() => ({ client, connect, disconnect }), [client]);
 
   return (
     <SocketContext.Provider value={memo}>{children}</SocketContext.Provider>
