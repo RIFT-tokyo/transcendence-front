@@ -97,7 +97,7 @@ const SignIn = () => {
           TRANSCENDENCE
         </Typography>
         <img src="/auth/signin.svg" alt="Sign Up" height={320} />
-        <Grid container item my={3}>
+        <Grid container my={3}>
           <Grid item xs={12}>
             <Button
               size="large"
@@ -116,7 +116,7 @@ const SignIn = () => {
           </Grid>
         </Grid>
         <Box component="form" onSubmit={handleSubmit}>
-          <Grid container item spacing={2}>
+          <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
                 fullWidth
