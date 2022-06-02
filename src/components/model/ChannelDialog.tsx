@@ -82,9 +82,7 @@ const ChannelDialog = (props: Props) => {
 
   const fetchChannels = async () => {
     try {
-      const res = await channelApi.getChannels(undefined, undefined, {
-        withCredentials: true,
-      });
+      const res = await channelApi.getChannels({ withCredentials: true });
       setChannels(res.data);
     } catch (err: unknown) {
       if (Axios.isAxiosError(err) && err.response?.data.message) {
