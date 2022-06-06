@@ -37,7 +37,7 @@ const FollowingList: React.VFC<Props> = ({ ownerId }: Props) => {
     }
     return () => {
       if (followings && followings?.length > 0) {
-        unsubscribeUserStatus(updateFollowingsStatus);
+        unsubscribeUserStatus();
       }
     };
   }, [followings, subscribeUserStatus, unsubscribeUserStatus]);

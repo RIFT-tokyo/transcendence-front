@@ -33,14 +33,11 @@ const useUsersUserStatus = () => {
     [client],
   );
 
-  const unsubscribeUserStatus = useCallback(
-    (callback: WebSocketCallback<UserStatusPayload>) => {
-      if (client) {
-        client.users.off(EVENT.USER_STATUS, callback);
-      }
-    },
-    [client],
-  );
+  const unsubscribeUserStatus = useCallback(() => {
+    if (client) {
+      client.users.off(EVENT.USER_STATUS);
+    }
+  }, [client]);
 
   return { publishUserStatus, subscribeUserStatus, unsubscribeUserStatus };
 };
