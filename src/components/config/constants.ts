@@ -9,6 +9,7 @@ export const NOT_FOUND_URL = '/404';
 export const INTERNAL_SERVER_ERROR_URL = '/500';
 
 export const SOCKET_USERS = '/users';
+export const SOCKET_CHANNELS = '/channels';
 
 export const EVENT = {
   // /
@@ -16,6 +17,12 @@ export const EVENT = {
   PONG: 'pong',
   // /users
   USER_STATUS: 'userStatus',
+  // /channels
+  SEND_MESSAGE: 'sendMessage',
+  SEND_MESSAGE_FROM_SERVER: 'sendMessageFromServer',
+  JOIN_CHANNEL: 'joinChannel',
+  JOIN_CHANNEL_FROM_SERVER: 'joinChannelFromServer',
+  LEAVE_CHANNEL: 'leaveChannel',
 };
 
 export const FT_COLOR = '#00BABC';
