@@ -13,8 +13,6 @@ export const SOCKET_CHANNELS = '/channels';
 
 export const EVENT = {
   // /
-  PING: 'ping',
-  PONG: 'pong',
   // /users
   USER_STATUS: 'userStatus',
   // /channels

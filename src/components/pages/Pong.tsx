@@ -1,7 +1,6 @@
 import { Box, Container } from '@mui/material';
 import { useContext, useEffect, useReducer } from 'react';
 import { UserStatusEnum } from '../../api/generated';
-import usePing from '../../api/websocket/usePing';
 import useUsersUserStatus from '../../api/websocket/useUsersUserStatus';
 import { AuthContext } from '../../contexts/AuthContext';
 import GameCanvas from '../game/GameCanvas';
@@ -9,7 +8,6 @@ import Navigation from '../game/Navigation';
 import { reducer } from '../game/types/reducer';
 
 const Pong = () => {
-  const { publishPing } = usePing();
   const { authUser } = useContext(AuthContext);
   const { publishUserStatus } = useUsersUserStatus();
 
@@ -23,7 +21,6 @@ const Pong = () => {
   });
 
   useEffect(() => {
-    publishPing();
     if (authUser)
       publishUserStatus({ status: UserStatusEnum.Game, userID: authUser.id! });
     return () => {
@@ -33,7 +30,7 @@ const Pong = () => {
           userID: authUser.id!,
         });
     };
-  }, [publishPing, publishUserStatus, authUser]);
+  }, [publishUserStatus, authUser]);
 
   return (
     <Container component="main" maxWidth="xl">

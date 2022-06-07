@@ -34,7 +34,6 @@ export const SocketProvider: FC = ({ children }) => {
       },
     );
 
-    indexSocketClient.on(EVENT.PONG, () => {});
     setClient({
       index: indexSocketClient,
       users: usersSocketClient,
