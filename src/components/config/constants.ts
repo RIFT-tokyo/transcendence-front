@@ -14,7 +14,8 @@ export const SOCKET_CHANNELS = '/channels';
 export const EVENT = {
   // /
   // /users
-  USER_STATUS: 'userStatus',
+  USER_STATUS_SET: 'user-status:set',
+  USER_STATUS_RECEIVE: 'user-status:receive',
   // /channels
   SEND_MESSAGE: 'sendMessage',
   SEND_MESSAGE_FROM_SERVER: 'sendMessageFromServer',
