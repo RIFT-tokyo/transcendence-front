@@ -2,18 +2,13 @@ import { Stack, Typography } from '@mui/material';
 import TagIcon from '@mui/icons-material/Tag';
 import LockIcon from '@mui/icons-material/Lock';
 import { useOutletContext } from 'react-router-dom';
-import {
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Channel } from '../../api/generated';
 import MessageContent from './MessageContent';
 import MessageInput from './MessageInput';
-import { CHAT_MESSAGE_CONTENT_HEIGHT, EVENT } from '../config/constants';
-import { SocketContext } from '../../contexts/SocketContext';
+import { CHAT_MESSAGE_CONTENT_HEIGHT } from '../config/constants';
+import useChannel from '../../api/websocket/useChannel';
+import useMessage, { Message } from '../../api/websocket/useMessage';
 
 type Context = {
   channel: Channel | null;
@@ -28,26 +23,29 @@ const channelIcon = (isProtected: boolean) => {
 
 const MessageList = () => {
   const { channel } = useOutletContext<Context>();
-  const { client } = useContext(SocketContext);
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const scrollBottomRef = useRef<HTMLDivElement>(null);
+  const { joinChannel, leaveChannel } = useChannel();
+  const {
+    receiveMessage,
+    receiveAllMessage,
+    unsubscribeReceiveMessage,
+    unsubscribeReceiveAllMessage,
+  } = useMessage();
 
   useEffect(() => {
-    client.channels.on(EVENT.JOIN_CHANNEL_FROM_SERVER, (data: any) => {
+    receiveAllMessage((data: { messages: Message[] }) => {
       setMessages(data.messages);
     });
-    client.channels.on(EVENT.SEND_MESSAGE_FROM_SERVER, (data: any) => {
-      setMessages((prev) => [...prev, data]);
+    receiveMessage((data: { message: Message }) => {
+      setMessages((prev) => [...prev, data.message]);
     });
-    client.channels.emit(EVENT.JOIN_CHANNEL, {
-      channelID: channel?.id,
-    });
+    joinChannel(channel!.id!);
+
     return () => {
-      client.channels.off(EVENT.JOIN_CHANNEL_FROM_SERVER);
-      client.channels.off(EVENT.SEND_MESSAGE_FROM_SERVER);
-      client.channels.emit(EVENT.LEAVE_CHANNEL, {
-        channelID: channel?.id,
-      });
+      unsubscribeReceiveAllMessage();
+      unsubscribeReceiveMessage();
+      leaveChannel(channel!.id!);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [channel]);

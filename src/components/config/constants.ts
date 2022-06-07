@@ -12,16 +12,15 @@ export const SOCKET_USERS = '/users';
 export const SOCKET_CHANNELS = '/channels';
 
 export const EVENT = {
-  // /
   // /users
   USER_STATUS_SET: 'user-status:set',
   USER_STATUS_RECEIVE: 'user-status:receive',
   // /channels
-  SEND_MESSAGE: 'sendMessage',
-  SEND_MESSAGE_FROM_SERVER: 'sendMessageFromServer',
-  JOIN_CHANNEL: 'joinChannel',
-  JOIN_CHANNEL_FROM_SERVER: 'joinChannelFromServer',
-  LEAVE_CHANNEL: 'leaveChannel',
+  MESSAGE_SEND: 'message:send',
+  MESSAGE_RECEIVE: 'message:receive',
+  MESSAGE_RECEIVE_ALL: 'message:receive-all',
+  CHANNEL_JOIN: 'channel:join',
+  CHANNEL_LEAVE: 'channel:leave',
 };
 
 export const FT_COLOR = '#00BABC';
