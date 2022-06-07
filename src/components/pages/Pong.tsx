@@ -1,7 +1,7 @@
 import { Box, Container } from '@mui/material';
 import { useContext, useEffect, useReducer } from 'react';
 import { UserStatusEnum } from '../../api/generated';
-import useUsersUserStatus from '../../api/websocket/useUsersUserStatus';
+import useUserStatus from '../../api/websocket/useUserStatus';
 import { AuthContext } from '../../contexts/AuthContext';
 import GameCanvas from '../game/GameCanvas';
 import Navigation from '../game/Navigation';
@@ -9,7 +9,7 @@ import { reducer } from '../game/types/reducer';
 
 const Pong = () => {
   const { authUser } = useContext(AuthContext);
-  const { publishUserStatus } = useUsersUserStatus();
+  const { setUserStatus } = useUserStatus();
 
   const [state, dispatch] = useReducer(reducer, {
     gameStatus: 'entrance',
@@ -21,16 +21,11 @@ const Pong = () => {
   });
 
   useEffect(() => {
-    if (authUser)
-      publishUserStatus({ status: UserStatusEnum.Game, userID: authUser.id! });
+    if (authUser) setUserStatus(UserStatusEnum.Game, authUser.id!);
     return () => {
-      if (authUser)
-        publishUserStatus({
-          status: UserStatusEnum.Online,
-          userID: authUser.id!,
-        });
+      if (authUser) setUserStatus(UserStatusEnum.Online, authUser.id!);
     };
-  }, [publishUserStatus, authUser]);
+  }, [setUserStatus, authUser]);
 
   return (
     <Container component="main" maxWidth="xl">
