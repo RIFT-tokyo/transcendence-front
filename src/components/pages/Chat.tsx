@@ -2,7 +2,7 @@ import { Container, Divider, Stack } from '@mui/material';
 import { useCallback, useEffect, useReducer } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import Axios from 'axios';
-import ChannelList from '../model/ChannelList';
+import ChannelList from '../chat/ChannelList';
 import { Channel, ChannelApi } from '../../api/generated';
 import ErrorRouter from '../ui/ErrorRouter';
 import { CHANNELS_URL } from '../config/constants';
