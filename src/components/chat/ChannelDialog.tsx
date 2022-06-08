@@ -1,36 +1,19 @@
-import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
   Box,
   Button,
-  Collapse,
   Dialog,
   DialogActions,
   DialogContent,
-  Divider,
-  FormControlLabel,
-  IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  Stack,
-  Switch,
   Tab,
   Tabs,
-  TextField,
-  Typography,
 } from '@mui/material';
-import TagIcon from '@mui/icons-material/Tag';
-import LockIcon from '@mui/icons-material/Lock';
 import { useSnackbar } from 'notistack';
 import Axios from 'axios';
-import {
-  ChangeEvent,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
+import { Dispatch, SetStateAction, useEffect, useReducer } from 'react';
 import { Channel, ChannelApi, NewChannel } from '../../api/generated';
+import SubscribeChannelPanel from './SubscribeChannelPanel';
+import { reducer } from './types/reducer';
+import CreateChannelPanel from './CreateChannelPanel';
 
 type Props = {
   open: boolean;
@@ -148,30 +131,11 @@ const ChannelDialog = (props: Props) => {
         enqueueSnackbar(err.message, { variant: 'error' });
       }
     }
-    setIsRequesting(false);
-  };
-
-  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
-  };
-
-  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-
-  const handleIsPrivateChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setIsPrivate(e.target.checked);
+    dispatch({ type: 'SET_IS_REQUESTING', payload: false });
   };
 
   const handleTabIndexChange = (_: React.SyntheticEvent, newValue: number) => {
-    setTabIndex(newValue);
-  };
-
-  const channelIcon = (isProtected: boolean) => {
-    if (isProtected) {
-      return <LockIcon />;
-    }
-    return <TagIcon />;
+    dispatch({ type: 'SET_TAB_INDEX', payload: newValue });
   };
 
   return (
@@ -193,76 +157,11 @@ const ChannelDialog = (props: Props) => {
             aria-controls="channel-dialog-tabpanel-1"
           />
         </Tabs>
-        <TabPanel value={tabIndex} index={0}>
-          <List sx={{ height: 330, overflowY: 'auto', pt: 0 }}>
-            {channels.map((channel) => (
-              <>
-                <ListItem disablePadding key={`list-${channel.id}`}>
-                  <ListItemButton>
-                    <Stack direction="row" alignItems="center" spacing={0.5}>
-                      {channelIcon(channel.is_protected ?? false)}
-                      <Typography variant="h6" noWrap>
-                        {channel.name}
-                      </Typography>
-                    </Stack>
-                  </ListItemButton>
-                </ListItem>
-                <Divider key={`divider-${channel.id}`} />
-              </>
-            ))}
-          </List>
+        <TabPanel value={state.tabIndex} index={0}>
+          <SubscribeChannelPanel channels={state.channels} />
         </TabPanel>
-        <TabPanel value={tabIndex} index={1}>
-          <TextField
-            required
-            autoFocus
-            fullWidth
-            margin="dense"
-            id="name"
-            label="Channel Name"
-            value={name}
-            disabled={isRequesting}
-            onChange={handleNameChange}
-            error={errorName}
-            helperText={
-              errorName ? 'Please fill Channel Name field' : undefined
-            }
-          />
-          <FormControlLabel
-            sx={{ display: 'flex', justifyContent: 'space-between' }}
-            control={
-              <Switch checked={isPrivate} onChange={handleIsPrivateChange} />
-            }
-            label="Private Channel"
-            labelPlacement="start"
-          />
-          <Collapse in={isPrivate}>
-            <TextField
-              fullWidth
-              margin="dense"
-              id="password"
-              label="Channel Password"
-              type={showPassword ? 'text' : 'password'}
-              value={password}
-              disabled={isRequesting || !isPrivate}
-              onChange={handlePasswordChange}
-              error={errorPassword}
-              helperText={
-                errorPassword ? 'Please fill Channel Password field' : undefined
-              }
-              InputProps={{
-                endAdornment: (
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={() => setShowPassword(!showPassword)}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                ),
-              }}
-            />
-          </Collapse>
+        <TabPanel value={state.tabIndex} index={1}>
+          <CreateChannelPanel state={state} dispatch={dispatch} />
         </TabPanel>
       </DialogContent>
       <DialogActions>
