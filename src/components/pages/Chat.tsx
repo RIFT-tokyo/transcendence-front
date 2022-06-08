@@ -64,7 +64,7 @@ const Chat = () => {
 
   const fetchChannels = async () => {
     try {
-      const res = await channelApi.getChannels({ withCredentials: true });
+      const res = await channelApi.getChannelsMe({ withCredentials: true });
       dispatch({ type: 'SET_CHANNELS', payload: res.data });
       selectChannelFromURL(res.data);
     } catch (err: unknown) {
