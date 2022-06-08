@@ -68,22 +68,24 @@ const TabPanel = (props: TabPanelProps) => {
 
 const ChannelDialog = (props: Props) => {
   const { open, setOpen, addChannel } = props;
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [errorName, setErrorName] = useState(false);
-  const [errorPassword, setErrorPassword] = useState(false);
-  const [isPrivate, setIsPrivate] = useState(false);
-  const [isRequesting, setIsRequesting] = useState(false);
-  const [tabIndex, setTabIndex] = useState(0);
-  const [channels, setChannels] = useState<Channel[]>([]);
+  const [state, dispatch] = useReducer(reducer, {
+    name: '',
+    password: '',
+    showPassword: false,
+    errorName: false,
+    errorPassword: false,
+    isPrivate: false,
+    isRequesting: false,
+    tabIndex: 1,
+    channels: [],
+  });
   const channelApi = new ChannelApi();
   const { enqueueSnackbar } = useSnackbar();
 
   const fetchChannels = async () => {
     try {
       const res = await channelApi.getChannels({ withCredentials: true });
-      setChannels(res.data);
+      dispatch({ type: 'SET_CHANNELS', payload: res.data });
     } catch (err: unknown) {
       if (Axios.isAxiosError(err) && err.response?.data.message) {
         enqueueSnackbar(err.response.data.message, { variant: 'error' });
@@ -101,23 +103,23 @@ const ChannelDialog = (props: Props) => {
   }, [open]);
 
   const closeDialog = () => {
-    setName('');
-    setPassword('');
-    setErrorName(false);
-    setErrorPassword(false);
+    dispatch({ type: 'CLOSE_DIALOG' });
     setOpen(false);
   };
 
   const isValidName = (channelName: string): boolean => !!channelName;
   const isValidPassword = (channelPassword: string): boolean =>
-    !isPrivate || !!channelPassword;
+    !state.isPrivate || !!channelPassword;
 
   const validateFields = (
     channelName: string,
     channelPassword: string,
   ): boolean => {
-    setErrorName(!isValidName(channelName));
-    setErrorPassword(!isValidPassword(channelPassword));
+    dispatch({ type: 'SET_ERROR_NAME', payload: !isValidName(channelName) });
+    dispatch({
+      type: 'SET_ERROR_PASSWORD',
+      payload: !isValidPassword(channelPassword),
+    });
     return isValidName(channelName) && isValidPassword(channelPassword);
   };
 
@@ -129,11 +131,11 @@ const ChannelDialog = (props: Props) => {
       return;
     }
     const newChannel: NewChannel = { name: channelName };
-    if (isPrivate && password) {
+    if (state.isPrivate && state.password) {
       newChannel.password = channelPassword;
     }
     try {
-      setIsRequesting(true);
+      dispatch({ type: 'SET_IS_REQUESTING', payload: true });
       const res = await channelApi.postChannels(newChannel, {
         withCredentials: true,
       });
@@ -176,7 +178,7 @@ const ChannelDialog = (props: Props) => {
     <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
       <DialogContent sx={{ height: 420 }}>
         <Tabs
-          value={tabIndex}
+          value={state.tabIndex}
           onChange={handleTabIndexChange}
           aria-label="channdl dialog tabs"
         >
@@ -265,10 +267,10 @@ const ChannelDialog = (props: Props) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={() => closeDialog()}>Cancel</Button>
-        {tabIndex === 1 && (
+        {state.tabIndex === 1 && (
           <Button
-            onClick={() => createChannel(name, password)}
-            disabled={isRequesting}
+            onClick={() => createChannel(state.name, state.password)}
+            disabled={state.isRequesting}
           >
             Create
           </Button>
