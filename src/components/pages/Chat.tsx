@@ -48,8 +48,10 @@ const Chat = () => {
         dispatch({ type: 'SELECT_CHANNEL', payload: null });
         return;
       }
-      if (!channelId) {
-        navigate(`${CHANNELS_URL}/${allChannel[0].id}`, { replace: true });
+      if (!channelId && allChannel[0].id) {
+        navigate(`${CHANNELS_URL}/${allChannel[0].id}`, {
+          replace: true,
+        });
         return;
       }
       const channel = allChannel.find((c) => c.id?.toString() === channelId);
