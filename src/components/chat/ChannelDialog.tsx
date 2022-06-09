@@ -59,7 +59,7 @@ const ChannelDialog = (props: Props) => {
     errorPassword: false,
     isPrivate: false,
     isRequesting: false,
-    tabIndex: 1,
+    tabIndex: 0,
     channels: [],
   });
   const channelApi = new ChannelApi();
