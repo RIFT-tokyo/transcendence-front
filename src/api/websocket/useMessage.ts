@@ -1,13 +1,6 @@
 import { useCallback, useContext } from 'react';
-import { UserStatusEnum } from '../generated';
 import { EVENT, WebSocketCallback } from './common';
 import { SocketContext } from '../../contexts/SocketContext';
-
-// TODO けす
-type ReceiveMessagePayload = {
-  status: UserStatusEnum;
-  userID: number;
-};
 
 interface User {
   id: number;

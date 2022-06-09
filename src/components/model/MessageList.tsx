@@ -38,6 +38,7 @@ const MessageList = () => {
       setMessages(data.messages);
     });
     receiveMessage((data: { message: Message }) => {
+      // TODO sort by created_at
       setMessages((prev) => [...prev, data.message]);
     });
     joinChannel(channel!.id!);
