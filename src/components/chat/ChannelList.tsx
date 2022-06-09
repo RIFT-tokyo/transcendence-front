@@ -1,12 +1,10 @@
 import { Collapse, IconButton, Link, Stack, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import TagIcon from '@mui/icons-material/Tag';
-import LockIcon from '@mui/icons-material/Lock';
 import { useReducer } from 'react';
-import { NavLink } from 'react-router-dom';
 import { ChevronRight, ExpandMore } from '@mui/icons-material';
 import { Channel } from '../../api/generated';
 import ChannelDialog from './ChannelDialog';
+import ChannelListItem from './ChannelListItem';
 
 type Props = {
   selectedChannel: Channel | null;
@@ -42,13 +40,6 @@ const ChannelList = (props: Props) => {
     openChannels: true,
   });
 
-  const channelIcon = (isProtected: boolean) => {
-    if (isProtected) {
-      return <LockIcon />;
-    }
-    return <TagIcon />;
-  };
-
   return (
     <Stack direction="column" spacing={0.5} width={220} flexShrink={0}>
       <Stack direction="row" alignItems="center">
@@ -80,20 +71,11 @@ const ChannelList = (props: Props) => {
       <Collapse in={state.openChannels}>
         <Stack pl={4} spacing={0.5}>
           {channels.map((channel) => (
-            <Link
+            <ChannelListItem
               key={channel.id}
-              component={NavLink}
-              underline="none"
-              to={`/chat/channels/${channel.id}`}
-              color={channel.id === selectedChannel?.id ? undefined : 'inherit'}
-            >
-              <Stack direction="row" alignItems="center" spacing={0.5}>
-                {channelIcon(channel.is_protected ?? false)}
-                <Typography variant="h6" noWrap>
-                  {channel.name}
-                </Typography>
-              </Stack>
-            </Link>
+              channel={channel}
+              selected={channel.id === selectedChannel?.id}
+            />
           ))}
         </Stack>
       </Collapse>
