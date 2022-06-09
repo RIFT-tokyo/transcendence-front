@@ -1,10 +1,6 @@
 import React, { FC, useMemo } from 'react';
 import socketIOclient from 'socket.io-client';
-import {
-  EVENT,
-  SOCKET_CHANNELS,
-  SOCKET_USERS,
-} from '../components/config/constants';
+import { SOCKET_CHANNELS, SOCKET_USERS } from '../components/config/constants';
 
 export const SocketContext = React.createContext<any>(null);
 

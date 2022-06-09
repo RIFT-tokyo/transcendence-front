@@ -11,18 +11,6 @@ export const INTERNAL_SERVER_ERROR_URL = '/500';
 export const SOCKET_USERS = '/users';
 export const SOCKET_CHANNELS = '/channels';
 
-export const EVENT = {
-  // /users
-  USER_STATUS_SET: 'user-status:set',
-  USER_STATUS_RECEIVE: 'user-status:receive',
-  // /channels
-  MESSAGE_SEND: 'message:send',
-  MESSAGE_RECEIVE: 'message:receive',
-  MESSAGE_RECEIVE_ALL: 'message:receive-all',
-  CHANNEL_JOIN: 'channel:join',
-  CHANNEL_LEAVE: 'channel:leave',
-};
-
 export const FT_COLOR = '#00BABC';
 
 const APPBAR_HEIGHT = 64;

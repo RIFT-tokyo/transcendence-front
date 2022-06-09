@@ -1,8 +1,7 @@
 import { useCallback, useContext } from 'react';
 import { UserStatusEnum } from '../generated';
-import { EVENT } from '../../components/config/constants';
+import { EVENT, WebSocketCallback } from './common';
 import { SocketContext } from '../../contexts/SocketContext';
-import { WebSocketCallback } from './common';
 
 type ReceiveUserStatusPayload = {
   status: UserStatusEnum;
