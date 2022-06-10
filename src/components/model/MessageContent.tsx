@@ -32,7 +32,7 @@ const MessageContent = (props: Props) => {
             {user?.display_name ?? user?.username}
           </Typography>
           <Typography variant="body2">
-            {format(createdAt, 'yyyy/MM/dd HH:mm')}
+            {format(new Date(createdAt), 'yyyy/MM/dd HH:mm')}
           </Typography>
         </Stack>
         <Typography>{text}</Typography>

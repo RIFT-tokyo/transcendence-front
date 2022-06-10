@@ -2,18 +2,16 @@ import { useCallback, useContext } from 'react';
 import { EVENT, WebSocketCallback } from './common';
 import { SocketContext } from '../../contexts/SocketContext';
 
-interface User {
-  id: number;
-  username: string;
-  profile_image: string;
-  display_name: string;
-}
-
 export interface Message {
   id: number;
   text: string;
   createdAt: Date;
-  user: User;
+  user: {
+    id: number;
+    username: string;
+    profile_image: string;
+    display_name: string;
+  };
 }
 
 const useMessage = () => {
@@ -33,7 +31,7 @@ const useMessage = () => {
   );
 
   const receiveMessage = useCallback(
-    (callback: WebSocketCallback<{ message: Message }>) => {
+    (callback: WebSocketCallback<Message>) => {
       if (client) {
         client.channels.on(EVENT.MESSAGE_RECEIVE, callback);
       }
@@ -48,7 +46,7 @@ const useMessage = () => {
   }, [client]);
 
   const receiveAllMessage = useCallback(
-    (callback: WebSocketCallback<{ messages: Message[] }>) => {
+    (callback: WebSocketCallback<Message[]>) => {
       if (client) {
         client.channels.on(EVENT.MESSAGE_RECEIVE_ALL, callback);
       }

@@ -34,12 +34,12 @@ const MessageList = () => {
   } = useMessage();
 
   useEffect(() => {
-    receiveAllMessage((data: { messages: Message[] }) => {
-      setMessages(data.messages);
+    receiveAllMessage((receivedMessages: Message[]) => {
+      setMessages(receivedMessages);
     });
-    receiveMessage((data: { message: Message }) => {
+    receiveMessage((message: Message) => {
       setMessages((prev) =>
-        [...prev, data.message].sort(
+        [...prev, message].sort(
           (a, b) => Number(a.createdAt) - Number(b.createdAt),
         ),
       );
