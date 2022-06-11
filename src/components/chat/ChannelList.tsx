@@ -1,10 +1,12 @@
-import { Collapse, IconButton, Link, Stack, Typography } from '@mui/material';
+import { Collapse, IconButton, Stack, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import SearchIcon from '@mui/icons-material/Search';
 import { useReducer } from 'react';
 import { ChevronRight, ExpandMore } from '@mui/icons-material';
 import { Channel } from '../../api/generated';
-import ChannelDialog from './ChannelDialog';
 import ChannelListItem from './ChannelListItem';
+import CreateChannelDialog from './CreateChannelDialog';
+import JoinChannelDialog from './JoinChannelDialog';
 
 type Props = {
   selectedChannel: Channel | null;
@@ -13,18 +15,28 @@ type Props = {
 };
 
 type State = {
-  openDialog: boolean;
+  openCreateChannelDialog: boolean;
+  openJoinChannelDialog: boolean;
   openChannels: boolean;
 };
 
 type Actions =
-  | { type: 'OPEN_DIALOG' }
+  | { type: 'OPEN_CREATE_CHANNEL_DIALOG' }
+  | { type: 'OPEN_JOIN_CHANNEL_DIALOG' }
   | { type: 'OPEN_CHANNEL_LIST' };
 
 const reducer = (state: State, action: Actions) => {
   switch (action.type) {
-    case 'OPEN_DIALOG':
-      return { ...state, openDialog: !state.openDialog };
+    case 'OPEN_CREATE_CHANNEL_DIALOG':
+      return {
+        ...state,
+        openCreateChannelDialog: !state.openCreateChannelDialog,
+      };
+    case 'OPEN_JOIN_CHANNEL_DIALOG':
+      return {
+        ...state,
+        openJoinChannelDialog: !state.openJoinChannelDialog,
+      };
     case 'OPEN_CHANNEL_LIST':
       return { ...state, openChannels: !state.openChannels };
     default:
@@ -36,7 +48,8 @@ const ChannelList = (props: Props) => {
   const { selectedChannel, channels, addChannel } = props;
 
   const [state, dispatch] = useReducer(reducer, {
-    openDialog: false,
+    openCreateChannelDialog: false,
+    openJoinChannelDialog: false,
     openChannels: true,
   });
 
@@ -57,14 +70,26 @@ const ChannelList = (props: Props) => {
           Channels
         </Typography>
         <IconButton
+          aria-label="join channel"
+          onClick={() => dispatch({ type: 'OPEN_JOIN_CHANNEL_DIALOG' })}
+        >
+          <SearchIcon />
+        </IconButton>
+        <IconButton
           aria-label="create channel"
-          onClick={() => dispatch({ type: 'OPEN_DIALOG' })}
+          onClick={() => dispatch({ type: 'OPEN_CREATE_CHANNEL_DIALOG' })}
         >
           <AddIcon />
         </IconButton>
-        <ChannelDialog
-          open={state.openDialog}
-          setOpen={() => dispatch({ type: 'OPEN_DIALOG' })}
+        <JoinChannelDialog
+          open={state.openJoinChannelDialog}
+          setOpen={() => dispatch({ type: 'OPEN_JOIN_CHANNEL_DIALOG' })}
+          joinedChannels={channels}
+          addChannel={addChannel}
+        />
+        <CreateChannelDialog
+          open={state.openCreateChannelDialog}
+          setOpen={() => dispatch({ type: 'OPEN_CREATE_CHANNEL_DIALOG' })}
           addChannel={addChannel}
         />
       </Stack>
