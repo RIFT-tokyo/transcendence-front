@@ -41,7 +41,8 @@ type State = {
   selectedChannel: Channel | null;
   password: string;
   showPassword: boolean;
-  errorPassword: boolean;
+  errorPasswordField: boolean;
+  errorPasswordLogin: boolean;
   isRequesting: boolean;
 };
 
@@ -50,7 +51,8 @@ type Actions =
   | { type: 'SET_SELECTED_CHANNEL'; payload: Channel | null }
   | { type: 'TOGGLE_SHOW_PASSWORD' }
   | { type: 'SET_PASSWORD'; payload: string }
-  | { type: 'SET_ERROR_PASSWORD'; payload: boolean }
+  | { type: 'SET_ERROR_PASSWORD_FIELD'; payload: boolean }
+  | { type: 'SET_ERROR_PASSWORD_LOGIN'; payload: boolean }
   | { type: 'SET_IS_REQUESTING'; payload: boolean }
   | { type: 'CLOSE_DIALOG' };
 
@@ -64,8 +66,10 @@ const reducer = (state: State, action: Actions) => {
       return { ...state, password: action.payload };
     case 'TOGGLE_SHOW_PASSWORD':
       return { ...state, showPassword: !state.showPassword };
-    case 'SET_ERROR_PASSWORD':
-      return { ...state, errorPassword: action.payload };
+    case 'SET_ERROR_PASSWORD_FIELD':
+      return { ...state, errorPasswordField: action.payload };
+    case 'SET_ERROR_PASSWORD_LOGIN':
+      return { ...state, errorPasswordLogin: action.payload };
     case 'SET_IS_REQUESTING':
       return { ...state, isRequesting: action.payload };
     case 'CLOSE_DIALOG':
@@ -73,7 +77,9 @@ const reducer = (state: State, action: Actions) => {
         ...state,
         selectedChannel: null,
         password: '',
-        errorPassword: false,
+        errorPasswordField: false,
+        errorPasswordLogin: false,
+        isRequesting: false,
       };
     default: {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -90,7 +96,8 @@ const JoinChannelDialog = (props: Props) => {
     selectedChannel: null,
     password: '',
     showPassword: false,
-    errorPassword: false,
+    errorPasswordField: false,
+    errorPasswordLogin: false,
     isRequesting: false,
   });
   const channelApi = new ChannelApi();
@@ -117,7 +124,7 @@ const JoinChannelDialog = (props: Props) => {
     !state.selectedChannel?.is_protected || !!state.password;
 
   const validateFields = (): boolean => {
-    dispatch({ type: 'SET_ERROR_PASSWORD', payload: isValidPassword() });
+    dispatch({ type: 'SET_ERROR_PASSWORD_FIELD', payload: !isValidPassword() });
     return isValidPassword();
   };
 
@@ -141,12 +148,13 @@ const JoinChannelDialog = (props: Props) => {
       closeDialog();
       addChannel(res.data);
     } catch (err: unknown) {
-      if (Axios.isAxiosError(err) && err.response?.data.message) {
-        enqueueSnackbar(err.response.data.message, { variant: 'error' });
+      if (Axios.isAxiosError(err)) {
+        dispatch({ type: 'SET_ERROR_PASSWORD_LOGIN', payload: true });
       } else if (err instanceof Error) {
         enqueueSnackbar(err.message, { variant: 'error' });
       }
     }
+    dispatch({ type: 'SET_IS_REQUESTING', payload: false });
   };
 
   const fetchChannels = async () => {
@@ -160,6 +168,16 @@ const JoinChannelDialog = (props: Props) => {
         enqueueSnackbar(err.message, { variant: 'error' });
       }
     }
+  };
+
+  const matchHelperText = () => {
+    if (state.errorPasswordLogin) {
+      return 'Invalid Password';
+    }
+    if (state.errorPasswordField) {
+      return 'Please fill Channel Password field';
+    }
+    return undefined;
   };
 
   useEffect(() => {
@@ -216,11 +234,7 @@ const JoinChannelDialog = (props: Props) => {
               disabled={state.isRequesting}
               onChange={handlePasswordChange}
               error={state.errorPasswordField || state.errorPasswordLogin}
-              helperText={
-                state.errorPassword
-                  ? 'Please fill Channel Password field'
-                  : undefined
-              }
+              helperText={matchHelperText()}
               InputProps={{
                 endAdornment: (
                   <IconButton
