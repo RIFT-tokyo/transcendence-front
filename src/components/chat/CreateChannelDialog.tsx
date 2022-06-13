@@ -157,7 +157,7 @@ const CreateChannelDialog = (props: Props) => {
     <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
       <DialogTitle>Create Channel</DialogTitle>
       <DialogContent>
-        <Box component="form" autoComplete="off">
+        <Box component="form">
           <TextField
             required
             autoFocus
@@ -169,7 +169,6 @@ const CreateChannelDialog = (props: Props) => {
             disabled={state.isRequesting}
             onChange={handleNameChange}
             error={state.errorName}
-            autoComplete="username"
             helperText={
               state.errorName ? 'Please fill Channel Name field' : undefined
             }
