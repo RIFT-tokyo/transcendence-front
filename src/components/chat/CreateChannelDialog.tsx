@@ -157,34 +157,35 @@ const CreateChannelDialog = (props: Props) => {
     <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
       <DialogTitle>Create Channel</DialogTitle>
       <DialogContent>
-        <TextField
-          required
-          autoFocus
-          fullWidth
-          margin="dense"
-          id="name"
-          label="Channel Name"
-          value={state.name}
-          disabled={state.isRequesting}
-          onChange={handleNameChange}
-          error={state.errorName}
-          helperText={
-            state.errorName ? 'Please fill Channel Name field' : undefined
-          }
-        />
-        <FormControlLabel
-          sx={{ display: 'flex', justifyContent: 'space-between' }}
-          control={
-            <Switch
-              checked={state.isPrivate}
-              onChange={handleIsPrivateChange}
-            />
-          }
-          label="Private Channel"
-          labelPlacement="start"
-        />
-        <Collapse in={state.isPrivate}>
-          <Box component="form">
+        <Box component="form" autoComplete="off">
+          <TextField
+            required
+            autoFocus
+            fullWidth
+            margin="dense"
+            id="name"
+            label="Channel Name"
+            value={state.name}
+            disabled={state.isRequesting}
+            onChange={handleNameChange}
+            error={state.errorName}
+            autoComplete="username"
+            helperText={
+              state.errorName ? 'Please fill Channel Name field' : undefined
+            }
+          />
+          <FormControlLabel
+            sx={{ display: 'flex', justifyContent: 'space-between' }}
+            control={
+              <Switch
+                checked={state.isPrivate}
+                onChange={handleIsPrivateChange}
+              />
+            }
+            label="Private Channel"
+            labelPlacement="start"
+          />
+          <Collapse in={state.isPrivate}>
             <TextField
               fullWidth
               margin="dense"
@@ -212,8 +213,8 @@ const CreateChannelDialog = (props: Props) => {
                 ),
               }}
             />
-          </Box>
-        </Collapse>
+          </Collapse>
+        </Box>
       </DialogContent>
       <DialogActions>
         <Button onClick={closeDialog}>Cancel</Button>
