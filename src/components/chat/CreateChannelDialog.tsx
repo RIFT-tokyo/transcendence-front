@@ -13,13 +13,7 @@ import {
 } from '@mui/material';
 import Axios from 'axios';
 import { useSnackbar } from 'notistack';
-import {
-  ChangeEvent,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useReducer,
-} from 'react';
+import { ChangeEvent, Dispatch, SetStateAction, useReducer } from 'react';
 import { Channel, ChannelApi, NewChannel } from '../../api/generated';
 
 type Props = {
@@ -146,8 +140,8 @@ const CreateChannelDialog = (props: Props) => {
       const res = await channelApi.postChannels(newChannel, {
         withCredentials: true,
       });
-      addChannel(res.data);
       closeDialog();
+      addChannel(res.data);
     } catch (err: unknown) {
       if (Axios.isAxiosError(err) && err.response?.data.message) {
         enqueueSnackbar(err.response.data.message, { variant: 'error' });
@@ -157,14 +151,6 @@ const CreateChannelDialog = (props: Props) => {
     }
     dispatch({ type: 'SET_IS_REQUESTING', payload: false });
   };
-
-  useEffect(() => {
-    const cleanup = () => {
-      closeDialog();
-    };
-    return cleanup;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">

@@ -95,12 +95,13 @@ const Chat = () => {
           <ChannelList
             selectedChannel={state.selectedChannel}
             channels={state.channels}
-            addChannel={(channel) =>
+            addChannel={(channel) => {
               dispatch({
                 type: 'SET_CHANNELS',
                 payload: [...state.channels, channel],
-              })
-            }
+              });
+              navigate(`${CHANNELS_URL}/${channel.id}`);
+            }}
           />
           <Divider orientation="vertical" flexItem variant="middle" />
           {state.selectedChannel && (

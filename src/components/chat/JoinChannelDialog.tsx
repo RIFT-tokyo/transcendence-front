@@ -137,6 +137,7 @@ const JoinChannelDialog = (props: Props) => {
           withCredentials: true,
         },
       );
+      closeDialog();
       addChannel(res.data);
     } catch (err: unknown) {
       if (Axios.isAxiosError(err) && err.response?.data.message) {
@@ -159,14 +160,6 @@ const JoinChannelDialog = (props: Props) => {
       }
     }
   };
-
-  useEffect(() => {
-    const cleanup = () => {
-      closeDialog();
-    };
-    return cleanup;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     if (open) {
