@@ -1,5 +1,6 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
+  Box,
   Button,
   Collapse,
   Dialog,
@@ -204,33 +205,35 @@ const JoinChannelDialog = (props: Props) => {
             ))}
         </List>
         <Collapse in={state.selectedChannel?.is_protected ?? false}>
-          <TextField
-            fullWidth
-            margin="dense"
-            id="password"
-            label="Channel Password"
-            type={state.showPassword ? 'text' : 'password'}
-            value={state.password}
-            disabled={state.isRequesting}
-            onChange={handlePasswordChange}
-            error={state.errorPassword}
-            helperText={
-              state.errorPassword
-                ? 'Please fill Channel Password field'
-                : undefined
-            }
-            InputProps={{
-              endAdornment: (
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleVisibilityChange}
-                  edge="end"
-                >
-                  {state.showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              ),
-            }}
-          />
+          <Box component="form">
+            <TextField
+              fullWidth
+              margin="dense"
+              id="password"
+              label="Channel Password"
+              type={state.showPassword ? 'text' : 'password'}
+              value={state.password}
+              disabled={state.isRequesting}
+              onChange={handlePasswordChange}
+              error={state.errorPasswordField || state.errorPasswordLogin}
+              helperText={
+                state.errorPassword
+                  ? 'Please fill Channel Password field'
+                  : undefined
+              }
+              InputProps={{
+                endAdornment: (
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleVisibilityChange}
+                    edge="end"
+                  >
+                    {state.showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                ),
+              }}
+            />
+          </Box>
         </Collapse>
       </DialogContent>
       <DialogActions>

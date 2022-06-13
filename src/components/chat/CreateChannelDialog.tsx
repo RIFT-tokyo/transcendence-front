@@ -183,33 +183,35 @@ const CreateChannelDialog = (props: Props) => {
           labelPlacement="start"
         />
         <Collapse in={state.isPrivate}>
-          <TextField
-            fullWidth
-            margin="dense"
-            id="password"
-            label="Channel Password"
-            type={state.showPassword ? 'text' : 'password'}
-            value={state.password}
-            disabled={state.isRequesting || !state.isPrivate}
-            onChange={handlePasswordChange}
-            error={state.errorPassword}
-            helperText={
-              state.errorPassword
-                ? 'Please fill Channel Password field'
-                : undefined
-            }
-            InputProps={{
-              endAdornment: (
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleVisibilityChange}
-                  edge="end"
-                >
-                  {state.showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              ),
-            }}
-          />
+          <Box component="form">
+            <TextField
+              fullWidth
+              margin="dense"
+              id="password"
+              label="Channel Password"
+              type={state.showPassword ? 'text' : 'password'}
+              value={state.password}
+              disabled={state.isRequesting || !state.isPrivate}
+              onChange={handlePasswordChange}
+              error={state.errorPassword}
+              helperText={
+                state.errorPassword
+                  ? 'Please fill Channel Password field'
+                  : undefined
+              }
+              InputProps={{
+                endAdornment: (
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleVisibilityChange}
+                    edge="end"
+                  >
+                    {state.showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                ),
+              }}
+            />
+          </Box>
         </Collapse>
       </DialogContent>
       <DialogActions>
