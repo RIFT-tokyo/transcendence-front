@@ -1,5 +1,3 @@
-export type WebSocketCallback<T> = (data: T) => void;
-
 export const EVENT = {
   // /users
   USER_STATUS_SET: 'user-status:set',

@@ -19,13 +19,10 @@ const FollowingList: React.VFC<Props> = ({ ownerId }: Props) => {
   const { receiveUserStatus, unsubscribeReceiveUserStatus } = useUserStatus();
 
   useEffect(() => {
-    const updateFollowingsStatus = (data: {
-      status: string;
-      userID: number;
-    }) => {
+    const updateFollowingsStatus = (status: string, userID: number) => {
       const updatedFollowings = followings?.map((following) => {
-        if (following.id === data.userID) {
-          return { ...following, status: data.status } as User;
+        if (following.id === userID) {
+          return { ...following, status } as User;
         }
         return following;
       });

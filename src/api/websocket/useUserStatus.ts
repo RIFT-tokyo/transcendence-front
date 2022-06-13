@@ -1,12 +1,7 @@
 import { useCallback, useContext } from 'react';
 import { UserStatusEnum } from '../generated';
-import { EVENT, WebSocketCallback } from './common';
+import { EVENT } from './common';
 import { SocketContext } from '../../contexts/SocketContext';
-
-type ReceiveUserStatusPayload = {
-  status: UserStatusEnum;
-  userID: number;
-};
 
 const useUserStatus = () => {
   const { client } = useContext(SocketContext);
@@ -21,7 +16,7 @@ const useUserStatus = () => {
   );
 
   const receiveUserStatus = useCallback(
-    (callback: WebSocketCallback<ReceiveUserStatusPayload>) => {
+    (callback: (status: UserStatusEnum, userID: number) => void) => {
       if (client) {
         client.users.on(EVENT.USER_STATUS_RECEIVE, callback);
       }
