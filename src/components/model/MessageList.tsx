@@ -2,10 +2,13 @@ import { Stack, Typography } from '@mui/material';
 import TagIcon from '@mui/icons-material/Tag';
 import LockIcon from '@mui/icons-material/Lock';
 import { useOutletContext } from 'react-router-dom';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Channel } from '../../api/generated';
 import MessageContent from './MessageContent';
 import MessageInput from './MessageInput';
 import { CHAT_MESSAGE_CONTENT_HEIGHT } from '../config/constants';
+import useChannel from '../../api/websocket/useChannel';
+import useMessage, { Message } from '../../api/websocket/useMessage';
 
 type Context = {
   channel: Channel | null;
@@ -20,26 +23,43 @@ const channelIcon = (isProtected: boolean) => {
 
 const MessageList = () => {
   const { channel } = useOutletContext<Context>();
+  const [messages, setMessages] = useState<Message[]>([]);
+  const scrollBottomRef = useRef<HTMLDivElement>(null);
+  const { joinChannel, leaveChannel } = useChannel();
+  const {
+    receiveMessage,
+    receiveAllMessage,
+    unsubscribeReceiveMessage,
+    unsubscribeReceiveAllMessage,
+  } = useMessage();
 
-  const fetchMessages = (selectedChannel: Channel) =>
-    selectedChannel?.id
-      ? [...Array(selectedChannel.id)].map((_, index) => (
-          <MessageContent
-            // eslint-disable-next-line react/no-array-index-key
-            key={index}
-            user={
-              index % 2
-                ? { id: 1, username: 'testUser' }
-                : { id: 2, username: 'dummyUser' }
-            }
-            text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-            createdAt={new Date()}
-          />
-        ))
-      : null;
+  useEffect(() => {
+    receiveAllMessage((receivedMessages: Message[]) => {
+      setMessages(receivedMessages);
+    });
+    receiveMessage((message: Message) => {
+      setMessages((prev) =>
+        [...prev, message].sort(
+          (a, b) => Number(a.createdAt) - Number(b.createdAt),
+        ),
+      );
+    });
+    joinChannel(channel!.id!);
+
+    return () => {
+      unsubscribeReceiveAllMessage();
+      unsubscribeReceiveMessage();
+      leaveChannel(channel!.id!);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [channel]);
+
+  useLayoutEffect(() => {
+    scrollBottomRef?.current?.scrollIntoView();
+  }, [messages]);
 
   return (
-    <Stack>
+    <Stack width={880}>
       <Stack
         direction="row"
         alignItems="center"
@@ -56,7 +76,16 @@ const MessageList = () => {
         height={CHAT_MESSAGE_CONTENT_HEIGHT}
         sx={{ overflowY: 'auto' }}
       >
-        {channel && fetchMessages(channel)}
+        {channel &&
+          messages.map((message) => (
+            <MessageContent
+              key={message.id}
+              user={message.user}
+              text={message.text}
+              createdAt={message.createdAt}
+            />
+          ))}
+        <div ref={scrollBottomRef} />
       </Stack>
       <MessageInput />
     </Stack>

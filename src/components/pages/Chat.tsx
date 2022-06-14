@@ -95,10 +95,17 @@ const Chat = () => {
           <ChannelList
             selectedChannel={state.selectedChannel}
             channels={state.channels}
-            addChannel={(channel) => dispatch({ type: 'SET_CHANNELS', payload: [...state.channels, channel] })}
+            addChannel={(channel) =>
+              dispatch({
+                type: 'SET_CHANNELS',
+                payload: [...state.channels, channel],
+              })
+            }
           />
           <Divider orientation="vertical" flexItem variant="middle" />
-          {state.selectedChannel && <Outlet context={{ channel: state.selectedChannel }} />}
+          {state.selectedChannel && (
+            <Outlet context={{ channel: state.selectedChannel }} />
+          )}
         </Stack>
       </Container>
     </ErrorRouter>

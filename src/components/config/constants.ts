@@ -9,14 +9,7 @@ export const NOT_FOUND_URL = '/404';
 export const INTERNAL_SERVER_ERROR_URL = '/500';
 
 export const SOCKET_USERS = '/users';
-
-export const EVENT = {
-  // /
-  PING: 'ping',
-  PONG: 'pong',
-  // /users
-  USER_STATUS: 'userStatus',
-};
+export const SOCKET_CHANNELS = '/channels';
 
 export const FT_COLOR = '#00BABC';
 
