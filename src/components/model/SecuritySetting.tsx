@@ -11,11 +11,14 @@ import { useSnackbar } from 'notistack';
 import Axios from 'axios';
 import { useReducer } from 'react';
 import { AuthApi, Password } from '../../api/generated/api';
+import TwoFactorDialog from './TwoFactorDialog';
 
 type State = {
   currentPassword: string;
   newPassword: string;
   confirmPassword: string;
+  qrcode: string;
+  openDialog: boolean;
   showCurrentPassword: boolean;
   showNewPassword: boolean;
   showConfirmPassword: boolean;
@@ -27,6 +30,8 @@ type Actions =
   | { type: 'SET_CURRENT_PASSWORD'; payload: string }
   | { type: 'SET_NEW_PASSWORD'; payload: string }
   | { type: 'SET_CONFIRM_PASSWORD'; payload: string }
+  | { type: 'SET_QRCODE'; payload: string }
+  | { type: 'OPEN_DIALOG' }
   | { type: 'SHOW_CURRENT_PASSWORD' }
   | { type: 'SHOW_NEW_PASSWORD' }
   | { type: 'SHOW_CONFIRM_PASSWORD' }
@@ -42,6 +47,10 @@ const reducer = (state: State, action: Actions) => {
       return { ...state, newPassword: action.payload };
     case 'SET_CONFIRM_PASSWORD':
       return { ...state, confirmPassword: action.payload };
+    case 'SET_QRCODE':
+      return { ...state, qrcode: action.payload };
+    case 'OPEN_DIALOG':
+      return { ...state, openDialog: !state.openDialog };
     case 'SHOW_CURRENT_PASSWORD':
       return { ...state, showCurrentPassword: !state.showCurrentPassword };
     case 'SHOW_NEW_PASSWORD':
@@ -63,6 +72,8 @@ const SecuritySetting = () => {
     currentPassword: '',
     newPassword: '',
     confirmPassword: '',
+    qrcode: '',
+    openDialog: false,
     showCurrentPassword: false,
     showNewPassword: false,
     showConfirmPassword: false,
@@ -90,11 +101,14 @@ const SecuritySetting = () => {
       dispatch({ type: 'LOADING' });
       await authApi.putAuthPassword(data, { withCredentials: true });
       enqueueSnackbar('Password changed successfully', { variant: 'success' });
-      dispatch({ type: 'SET_PASSWORDS', payload: {
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: '',
-      }});
+      dispatch({
+        type: 'SET_PASSWORDS',
+        payload: {
+          currentPassword: '',
+          newPassword: '',
+          confirmPassword: '',
+        },
+      });
     } catch (e: unknown) {
       if (Axios.isAxiosError(e) && e.response) {
         enqueueSnackbar(e.response.data.message, { variant: 'error' });
@@ -115,7 +129,9 @@ const SecuritySetting = () => {
           variant="outlined"
           label="current password"
           value={state.currentPassword}
-          onChange={(e) => dispatch({ type: 'SET_CURRENT_PASSWORD', payload: e.target.value })}
+          onChange={(e) =>
+            dispatch({ type: 'SET_CURRENT_PASSWORD', payload: e.target.value })
+          }
           type={state.showCurrentPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
@@ -135,7 +151,9 @@ const SecuritySetting = () => {
           variant="outlined"
           label="new password"
           value={state.newPassword}
-          onChange={(e) => dispatch({ type: 'SET_NEW_PASSWORD', payload: e.target.value })}
+          onChange={(e) =>
+            dispatch({ type: 'SET_NEW_PASSWORD', payload: e.target.value })
+          }
           type={state.showNewPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
@@ -155,7 +173,9 @@ const SecuritySetting = () => {
           variant="outlined"
           label="confirm password"
           value={state.confirmPassword}
-          onChange={(e) => dispatch({ type: 'SET_CONFIRM_PASSWORD', payload: e.target.value })}
+          onChange={(e) =>
+            dispatch({ type: 'SET_CONFIRM_PASSWORD', payload: e.target.value })
+          }
           type={state.showConfirmPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
@@ -178,9 +198,17 @@ const SecuritySetting = () => {
           Two-factor authentication adds an additional layer of security to your
           account by requiring more than just a password to sign in.
         </Typography>
-        <Button variant="contained" color="primary">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => dispatch({ type: 'OPEN_DIALOG' })}
+        >
           activate
         </Button>
+        <TwoFactorDialog
+          open={state.openDialog}
+          setOpen={() => dispatch({ type: 'OPEN_DIALOG' })}
+        />
       </Stack>
     </Stack>
   );
