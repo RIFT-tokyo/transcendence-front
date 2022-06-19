@@ -7,27 +7,20 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Divider,
   IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  Stack,
   TextField,
-  Typography,
 } from '@mui/material';
 import Axios from 'axios';
 import { useSnackbar } from 'notistack';
 import {
   ChangeEvent,
   Dispatch,
-  Fragment,
   SetStateAction,
   useEffect,
   useReducer,
 } from 'react';
 import { Channel, ChannelApi, ChannelPassword } from '../../api/generated';
-import ChannelIcon from './ChannelIcon';
+import JoinChannelDialogList from './JoinChannelDialogList';
 
 type Props = {
   open: boolean;
@@ -191,37 +184,13 @@ const JoinChannelDialog = (props: Props) => {
     <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
       <DialogTitle>Join Channel</DialogTitle>
       <DialogContent sx={{ maxHeight: 420 }}>
-        <List sx={{ maxHeight: 330, overflowY: 'auto', pt: 0 }}>
-          {state.allChannels
-            .filter(
-              (channel) => !joinedChannels.find((c) => c.id === channel.id),
-            )
-            .map((channel) => (
-              <Fragment key={`channel-list-${channel.id}`}>
-                <ListItem disablePadding>
-                  <ListItemButton
-                    selected={channel.id === state.selectedChannel?.id}
-                    onClick={() => handleClick(channel)}
-                  >
-                    <Stack
-                      direction="row"
-                      alignItems="center"
-                      spacing={0.5}
-                      width="100%"
-                    >
-                      <ChannelIcon
-                        isProtected={channel.is_protected ?? false}
-                      />
-                      <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
-                        {channel.name}
-                      </Typography>
-                    </Stack>
-                  </ListItemButton>
-                </ListItem>
-                <Divider />
-              </Fragment>
-            ))}
-        </List>
+        <JoinChannelDialogList
+          channels={state.allChannels.filter(
+            (channel) => !joinedChannels.find((c) => c.id === channel.id),
+          )}
+          selectedChannel={state.selectedChannel}
+          handleClick={handleClick}
+        />
         <Collapse in={state.selectedChannel?.is_protected ?? false}>
           <Box component="form">
             <TextField
