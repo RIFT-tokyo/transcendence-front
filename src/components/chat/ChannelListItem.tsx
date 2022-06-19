@@ -47,9 +47,11 @@ const ChannelListItem = (props: Props) => {
         <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
           {channel.name}
         </Typography>
-        <IconButton onClick={() => dispatch({ type: 'TOGGLE_OPEN_DIALOG' })}>
-          <SettingsIcon />
-        </IconButton>
+        {channel.role && (
+          <IconButton onClick={() => dispatch({ type: 'TOGGLE_OPEN_DIALOG' })}>
+            <SettingsIcon />
+          </IconButton>
+        )}
         <ChannelSettingsDialog
           open={state.openDialog}
           setOpen={() => dispatch({ type: 'TOGGLE_OPEN_DIALOG' })}
