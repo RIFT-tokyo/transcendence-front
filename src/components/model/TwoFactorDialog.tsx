@@ -16,7 +16,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { AuthApi, ChannelApi, NewChannel } from '../../api/generated';
+import { AuthApi } from '../../api/generated';
 
 type Props = {
   open: boolean;
@@ -25,35 +25,36 @@ type Props = {
 
 const TwoFactorDialog = (props: Props) => {
   const { open, setOpen } = props;
-  const [name, setName] = useState('');
+  const [authcode, setAuthcode] = useState('');
   const [qrcode, setQrcode] = useState('');
-  const [errorName, setErrorName] = useState(false);
+  const [errorAuthcode, setErrorAuthcode] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
-  const channelApi = new ChannelApi();
+  const [isQrLoading, setIsQrLoadingg] = useState(false);
   const authApi = new AuthApi();
   const { enqueueSnackbar } = useSnackbar();
 
   const closeDialog = () => {
-    setName('');
-    setErrorName(false);
+    setAuthcode('');
+    setErrorAuthcode(false);
     setOpen(false);
   };
 
-  const isValidName = (channelName: string): boolean => !!channelName;
+  const isValidAuthcode = (twoFaAuthcode: string): boolean =>
+    !!twoFaAuthcode && twoFaAuthcode.length === 6;
 
-  const validateFields = (channelName: string): boolean => {
-    setErrorName(!isValidName(channelName));
-    return isValidName(channelName);
+  const validateFields = (twoFaAuthcode: string): boolean => {
+    setErrorAuthcode(!isValidAuthcode(twoFaAuthcode));
+    return isValidAuthcode(twoFaAuthcode);
   };
 
-  const createChannel = async (channelName: string) => {
-    if (!validateFields(channelName)) {
+  const submitAuthcode = async (twoFaAuthcode: string) => {
+    if (!validateFields(twoFaAuthcode)) {
       return;
     }
-    const newChannel: NewChannel = { name: channelName };
+    const twoFaActivate: { authcode: string } = { authcode: twoFaAuthcode };
     try {
       setIsRequesting(true);
-      const res = await channelApi.postChannels(newChannel, {
+      await authApi.postAuth2faActivate(twoFaActivate, {
         withCredentials: true,
       });
       closeDialog();
@@ -67,30 +68,35 @@ const TwoFactorDialog = (props: Props) => {
     setIsRequesting(false);
   };
 
-  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
+  const handleAuthcodeChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setAuthcode(e.target.value);
   };
 
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await authApi.getAuth2faQrcode({ withCredentials: true });
-        setQrcode(res.data!.qrcode!);
-      } catch (err: unknown) {
-        if (Axios.isAxiosError(err) && err.response) {
-          enqueueSnackbar(err.response.data.message, { variant: 'error' });
+    if (open) {
+      (async () => {
+        setIsQrLoadingg(true);
+        try {
+          const res = await authApi.getAuth2faQrcode({ withCredentials: true });
+          setQrcode(res.data!.qrcode!);
+        } catch (err: unknown) {
+          if (Axios.isAxiosError(err) && err.response) {
+            enqueueSnackbar(err.response.data.message, { variant: 'error' });
+          }
         }
-      }
-    })();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+        setIsQrLoadingg(false);
+      })();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   return (
     <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
-      <DialogTitle>Create a channel</DialogTitle>
+      <DialogTitle>Activate two-factor authentication</DialogTitle>
       <DialogContent>
-        <Box component="img" alt="The house from the offer." src={qrcode} />
-
+        {isQrLoading ? null : (
+          <Box component="img" alt="The house from the offer." src={qrcode} />
+        )}
         <TextField
           required
           autoFocus
@@ -98,16 +104,19 @@ const TwoFactorDialog = (props: Props) => {
           margin="dense"
           id="code"
           label="Code (Generate by google authenticator)"
-          value={name}
+          value={authcode}
           disabled={isRequesting}
-          onChange={handleNameChange}
-          error={errorName}
-          helperText={errorName ? 'Please fill Channel Name field' : undefined}
+          onChange={handleAuthcodeChange}
+          error={errorAuthcode}
+          helperText={errorAuthcode ? 'Please enter 6-digit code' : undefined}
         />
       </DialogContent>
       <DialogActions>
         <Button onClick={() => closeDialog()}>Cancel</Button>
-        <Button onClick={() => createChannel(name)} disabled={isRequesting}>
+        <Button
+          onClick={() => submitAuthcode(authcode)}
+          disabled={isRequesting}
+        >
           Submit
         </Button>
       </DialogActions>
