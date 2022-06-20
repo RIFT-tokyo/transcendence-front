@@ -168,12 +168,6 @@ export interface InlineObject1 {
      * @memberof InlineObject1
      */
     'authcode'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject1
-     */
-    'password'?: string;
 }
 /**
  * 
