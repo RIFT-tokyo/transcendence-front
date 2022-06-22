@@ -1,8 +1,9 @@
 import { Collapse, IconButton, Stack, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
+import ChevronRight from '@mui/icons-material/ChevronRight';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import { useReducer } from 'react';
-import { ChevronRight, ExpandMore } from '@mui/icons-material';
 import { Channel } from '../../api/generated';
 import ChannelListItem from './ChannelListItem';
 import CreateChannelDialog from './CreateChannelDialog';
