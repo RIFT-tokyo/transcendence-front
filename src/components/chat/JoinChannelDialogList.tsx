@@ -1,3 +1,4 @@
+import AddIcon from '@mui/icons-material/Add';
 import {
   Divider,
   List,
@@ -23,7 +24,11 @@ const JoinChannelDialogList = (props: Props) => {
     return (
       <>
         <Typography>There are no channels to join.</Typography>
-        <Typography>Create a channel from the + button.</Typography>
+        <Typography sx={{ display: 'inline' }}>
+          Create a channel from the{' '}
+        </Typography>
+        <AddIcon sx={{ fontSize: 14 }} />
+        <Typography sx={{ display: 'inline' }}> button.</Typography>
       </>
     );
   }
