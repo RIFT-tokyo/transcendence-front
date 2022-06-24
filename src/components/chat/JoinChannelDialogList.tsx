@@ -34,7 +34,20 @@ const JoinChannelDialogList = (props: Props) => {
   }
 
   return (
-    <List sx={{ maxHeight: 330, overflowY: 'auto', pt: 0 }}>
+    <List
+      sx={[
+        {
+          maxHeight: 330,
+          overflowY: 'auto',
+          pt: 0,
+        },
+        (theme) => ({
+          '&& .Mui-selected, && .Mui-selected:hover': {
+            backgroundColor: theme.palette.selected.main,
+          },
+        }),
+      ]}
+    >
       {channels.map((channel) => (
         <Fragment key={`channel-list-${channel.id}`}>
           <ListItem disablePadding>
