@@ -14,6 +14,9 @@ const theme = createTheme({
     neutral: {
       main: '#BBBBBB',
     },
+    selected: {
+      main: '#DBEEFF',
+    },
   },
   typography: {
     fontSize: 12,
@@ -40,11 +43,13 @@ const theme = createTheme({
 declare module '@mui/material/styles' {
   interface Palette {
     neutral: Palette['primary'];
+    selected: Palette['primary'];
   }
 
   // allow configuration using `createTheme`
   interface PaletteOptions {
     neutral?: PaletteOptions['primary'];
+    selected?: PaletteOptions['primary'];
   }
 }
 
