@@ -2,7 +2,7 @@ import { Container, Divider, Stack } from '@mui/material';
 import { useCallback, useEffect, useReducer } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import Axios from 'axios';
-import ChannelList from '../model/ChannelList';
+import ChannelList from '../chat/ChannelList';
 import { Channel, ChannelApi } from '../../api/generated';
 import ErrorRouter from '../ui/ErrorRouter';
 import { CHANNELS_URL } from '../config/constants';
@@ -48,8 +48,10 @@ const Chat = () => {
         dispatch({ type: 'SELECT_CHANNEL', payload: null });
         return;
       }
-      if (!channelId) {
-        navigate(`${CHANNELS_URL}/${allChannel[0].id}`, { replace: true });
+      if (!channelId && allChannel[0].id) {
+        navigate(`${CHANNELS_URL}/${allChannel[0].id}`, {
+          replace: true,
+        });
         return;
       }
       const channel = allChannel.find((c) => c.id?.toString() === channelId);
@@ -64,9 +66,7 @@ const Chat = () => {
 
   const fetchChannels = async () => {
     try {
-      const res = await channelApi.getChannels(undefined, undefined, {
-        withCredentials: true,
-      });
+      const res = await channelApi.getChannelsMe({ withCredentials: true });
       dispatch({ type: 'SET_CHANNELS', payload: res.data });
       selectChannelFromURL(res.data);
     } catch (err: unknown) {
@@ -95,12 +95,13 @@ const Chat = () => {
           <ChannelList
             selectedChannel={state.selectedChannel}
             channels={state.channels}
-            addChannel={(channel) =>
+            addChannel={(channel) => {
               dispatch({
                 type: 'SET_CHANNELS',
                 payload: [...state.channels, channel],
-              })
-            }
+              });
+              navigate(`${CHANNELS_URL}/${channel.id}`);
+            }}
           />
           <Divider orientation="vertical" flexItem variant="middle" />
           {state.selectedChannel && (
