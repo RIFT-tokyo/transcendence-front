@@ -90,10 +90,10 @@ export interface Channel {
     'is_protected'?: boolean;
     /**
      * 
-     * @type {string}
+     * @type {Role}
      * @memberof Channel
      */
-    'role'?: ChannelRoleEnum;
+    'role'?: Role | null;
     /**
      * 
      * @type {string}
@@ -107,16 +107,6 @@ export interface Channel {
      */
     'updated_at'?: string;
 }
-
-/**
-    * @export
-    * @enum {string}
-    */
-export enum ChannelRoleEnum {
-    Owner = 'owner',
-    Administrator = 'administrator'
-}
-
 /**
  * 
  * @export
@@ -129,6 +119,44 @@ export interface ChannelPassword {
      * @memberof ChannelPassword
      */
     'password'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ChannelUser
+ */
+export interface ChannelUser {
+    /**
+     * 
+     * @type {User}
+     * @memberof ChannelUser
+     */
+    'user'?: User;
+    /**
+     * 
+     * @type {Role}
+     * @memberof ChannelUser
+     */
+    'role'?: Role | null;
+}
+/**
+ * 
+ * @export
+ * @interface ChannelUserPermission
+ */
+export interface ChannelUserPermission {
+    /**
+     * 
+     * @type {Role}
+     * @memberof ChannelUserPermission
+     */
+    'role'?: Role | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ChannelUserPermission
+     */
+    'is_ban'?: boolean;
 }
 /**
  * 
@@ -335,6 +363,17 @@ export interface RankedUser {
      */
     'loss'?: number;
 }
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+
+export enum Role {
+    Owner = 'owner',
+    Administrator = 'administrator'
+}
+
 /**
  * 
  * @export
@@ -1035,6 +1074,42 @@ export const ChannelApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary List users participating in a channel
+         * @param {number} channelID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getChannelsUsersUserID: async (channelID: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'channelID' is not null or undefined
+            assertParamExists('getChannelsUsersUserID', 'channelID', channelID)
+            const localVarPath = `/channels/{channelID}/users`
+                .replace(`{${"channelID"}}`, encodeURIComponent(String(channelID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication sessionAuth required
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Create new channel
          * @param {NewChannel} [newChannel] 
          * @param {*} [options] Override http request option.
@@ -1063,6 +1138,90 @@ export const ChannelApiAxiosParamCreator = function (configuration?: Configurati
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(newChannel, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Update a channel
+         * @param {number} channelID 
+         * @param {NewChannel} [newChannel] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        putChannelsChannelID: async (channelID: number, newChannel?: NewChannel, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'channelID' is not null or undefined
+            assertParamExists('putChannelsChannelID', 'channelID', channelID)
+            const localVarPath = `/channels/{channelID}`
+                .replace(`{${"channelID"}}`, encodeURIComponent(String(channelID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication sessionAuth required
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(newChannel, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Update the status of user participating in the channel
+         * @param {number} channelID 
+         * @param {number} userID 
+         * @param {ChannelUserPermission} [channelUserPermission] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        putChannelsChannelIDUsersUserID: async (channelID: number, userID: number, channelUserPermission?: ChannelUserPermission, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'channelID' is not null or undefined
+            assertParamExists('putChannelsChannelIDUsersUserID', 'channelID', channelID)
+            // verify required parameter 'userID' is not null or undefined
+            assertParamExists('putChannelsChannelIDUsersUserID', 'userID', userID)
+            const localVarPath = `/users/{userID}/channels/{channelID}`
+                .replace(`{${"channelID"}}`, encodeURIComponent(String(channelID)))
+                .replace(`{${"userID"}}`, encodeURIComponent(String(userID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication sessionAuth required
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(channelUserPermission, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1152,6 +1311,17 @@ export const ChannelApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary List users participating in a channel
+         * @param {number} channelID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getChannelsUsersUserID(channelID: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ChannelUser>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getChannelsUsersUserID(channelID, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Create new channel
          * @param {NewChannel} [newChannel] 
          * @param {*} [options] Override http request option.
@@ -1159,6 +1329,31 @@ export const ChannelApiFp = function(configuration?: Configuration) {
          */
         async postChannels(newChannel?: NewChannel, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Channel>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.postChannels(newChannel, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Update a channel
+         * @param {number} channelID 
+         * @param {NewChannel} [newChannel] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async putChannelsChannelID(channelID: number, newChannel?: NewChannel, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.putChannelsChannelID(channelID, newChannel, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Update the status of user participating in the channel
+         * @param {number} channelID 
+         * @param {number} userID 
+         * @param {ChannelUserPermission} [channelUserPermission] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async putChannelsChannelIDUsersUserID(channelID: number, userID: number, channelUserPermission?: ChannelUserPermission, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ChannelUser>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.putChannelsChannelIDUsersUserID(channelID, userID, channelUserPermission, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1213,6 +1408,16 @@ export const ChannelApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
+         * @summary List users participating in a channel
+         * @param {number} channelID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getChannelsUsersUserID(channelID: number, options?: any): AxiosPromise<Array<ChannelUser>> {
+            return localVarFp.getChannelsUsersUserID(channelID, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Create new channel
          * @param {NewChannel} [newChannel] 
          * @param {*} [options] Override http request option.
@@ -1220,6 +1425,29 @@ export const ChannelApiFactory = function (configuration?: Configuration, basePa
          */
         postChannels(newChannel?: NewChannel, options?: any): AxiosPromise<Channel> {
             return localVarFp.postChannels(newChannel, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Update a channel
+         * @param {number} channelID 
+         * @param {NewChannel} [newChannel] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        putChannelsChannelID(channelID: number, newChannel?: NewChannel, options?: any): AxiosPromise<void> {
+            return localVarFp.putChannelsChannelID(channelID, newChannel, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Update the status of user participating in the channel
+         * @param {number} channelID 
+         * @param {number} userID 
+         * @param {ChannelUserPermission} [channelUserPermission] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        putChannelsChannelIDUsersUserID(channelID: number, userID: number, channelUserPermission?: ChannelUserPermission, options?: any): AxiosPromise<ChannelUser> {
+            return localVarFp.putChannelsChannelIDUsersUserID(channelID, userID, channelUserPermission, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1271,6 +1499,16 @@ export interface ChannelApiInterface {
 
     /**
      * 
+     * @summary List users participating in a channel
+     * @param {number} channelID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ChannelApiInterface
+     */
+    getChannelsUsersUserID(channelID: number, options?: AxiosRequestConfig): AxiosPromise<Array<ChannelUser>>;
+
+    /**
+     * 
      * @summary Create new channel
      * @param {NewChannel} [newChannel] 
      * @param {*} [options] Override http request option.
@@ -1278,6 +1516,29 @@ export interface ChannelApiInterface {
      * @memberof ChannelApiInterface
      */
     postChannels(newChannel?: NewChannel, options?: AxiosRequestConfig): AxiosPromise<Channel>;
+
+    /**
+     * 
+     * @summary Update a channel
+     * @param {number} channelID 
+     * @param {NewChannel} [newChannel] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ChannelApiInterface
+     */
+    putChannelsChannelID(channelID: number, newChannel?: NewChannel, options?: AxiosRequestConfig): AxiosPromise<void>;
+
+    /**
+     * 
+     * @summary Update the status of user participating in the channel
+     * @param {number} channelID 
+     * @param {number} userID 
+     * @param {ChannelUserPermission} [channelUserPermission] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ChannelApiInterface
+     */
+    putChannelsChannelIDUsersUserID(channelID: number, userID: number, channelUserPermission?: ChannelUserPermission, options?: AxiosRequestConfig): AxiosPromise<ChannelUser>;
 
     /**
      * 
@@ -1335,6 +1596,18 @@ export class ChannelApi extends BaseAPI implements ChannelApiInterface {
 
     /**
      * 
+     * @summary List users participating in a channel
+     * @param {number} channelID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ChannelApi
+     */
+    public getChannelsUsersUserID(channelID: number, options?: AxiosRequestConfig) {
+        return ChannelApiFp(this.configuration).getChannelsUsersUserID(channelID, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary Create new channel
      * @param {NewChannel} [newChannel] 
      * @param {*} [options] Override http request option.
@@ -1343,6 +1616,33 @@ export class ChannelApi extends BaseAPI implements ChannelApiInterface {
      */
     public postChannels(newChannel?: NewChannel, options?: AxiosRequestConfig) {
         return ChannelApiFp(this.configuration).postChannels(newChannel, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Update a channel
+     * @param {number} channelID 
+     * @param {NewChannel} [newChannel] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ChannelApi
+     */
+    public putChannelsChannelID(channelID: number, newChannel?: NewChannel, options?: AxiosRequestConfig) {
+        return ChannelApiFp(this.configuration).putChannelsChannelID(channelID, newChannel, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Update the status of user participating in the channel
+     * @param {number} channelID 
+     * @param {number} userID 
+     * @param {ChannelUserPermission} [channelUserPermission] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ChannelApi
+     */
+    public putChannelsChannelIDUsersUserID(channelID: number, userID: number, channelUserPermission?: ChannelUserPermission, options?: AxiosRequestConfig) {
+        return ChannelApiFp(this.configuration).putChannelsChannelIDUsersUserID(channelID, userID, channelUserPermission, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
