@@ -21,10 +21,11 @@ import { AuthApi } from '../../api/generated';
 type Props = {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
+  turnOnIsTwoFaEnabled: () => void;
 };
 
 const TwoFactorDialog = (props: Props) => {
-  const { open, setOpen } = props;
+  const { open, setOpen, turnOnIsTwoFaEnabled } = props;
   const [authcode, setAuthcode] = useState('');
   const [qrcode, setQrcode] = useState('');
   const [errorAuthcode, setErrorAuthcode] = useState(false);
@@ -57,6 +58,7 @@ const TwoFactorDialog = (props: Props) => {
       await authApi.postAuth2faActivate(twoFaActivate, {
         withCredentials: true,
       });
+      turnOnIsTwoFaEnabled();
       closeDialog();
     } catch (err: unknown) {
       if (Axios.isAxiosError(err) && err.response?.data.message) {
@@ -108,7 +110,7 @@ const TwoFactorDialog = (props: Props) => {
           disabled={isRequesting}
           onChange={handleAuthcodeChange}
           error={errorAuthcode}
-          helperText={errorAuthcode ? 'Please enter 6-digit code' : undefined}
+          helperText={errorAuthcode ? 'Please enter 6 digits code' : undefined}
         />
       </DialogContent>
       <DialogActions>
