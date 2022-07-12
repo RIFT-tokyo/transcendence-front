@@ -9,8 +9,8 @@ import {
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import Axios from 'axios';
-import { useReducer } from 'react';
-import { AuthApi, Password } from '../../api/generated/api';
+import { useEffect, useReducer } from 'react';
+import { AuthApi, Password, UserApi } from '../../api/generated/api';
 import TwoFactorDialog from './TwoFactorDialog';
 
 type State = {
@@ -18,6 +18,7 @@ type State = {
   newPassword: string;
   confirmPassword: string;
   qrcode: string;
+  isTwoFaEnabled: boolean;
   openDialog: boolean;
   showCurrentPassword: boolean;
   showNewPassword: boolean;
@@ -31,6 +32,7 @@ type Actions =
   | { type: 'SET_NEW_PASSWORD'; payload: string }
   | { type: 'SET_CONFIRM_PASSWORD'; payload: string }
   | { type: 'SET_QRCODE'; payload: string }
+  | { type: 'SET_IS_TWO_FA_ENABLED'; payload: boolean }
   | { type: 'OPEN_DIALOG' }
   | { type: 'SHOW_CURRENT_PASSWORD' }
   | { type: 'SHOW_NEW_PASSWORD' }
@@ -49,6 +51,8 @@ const reducer = (state: State, action: Actions) => {
       return { ...state, confirmPassword: action.payload };
     case 'SET_QRCODE':
       return { ...state, qrcode: action.payload };
+    case 'SET_IS_TWO_FA_ENABLED':
+      return { ...state, isTwoFaEnabled: action.payload };
     case 'OPEN_DIALOG':
       return { ...state, openDialog: !state.openDialog };
     case 'SHOW_CURRENT_PASSWORD':
@@ -65,6 +69,7 @@ const reducer = (state: State, action: Actions) => {
 };
 
 const authApi = new AuthApi();
+const userApi = new UserApi();
 
 const SecuritySetting = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -73,6 +78,7 @@ const SecuritySetting = () => {
     newPassword: '',
     confirmPassword: '',
     qrcode: '',
+    isTwoFaEnabled: false,
     openDialog: false,
     showCurrentPassword: false,
     showNewPassword: false,
@@ -116,6 +122,39 @@ const SecuritySetting = () => {
     }
     dispatch({ type: 'LOADING' });
   };
+
+  const turnOffTwoFa = async () => {
+    try {
+      await authApi.getAuth2faDeactivate({ withCredentials: true });
+      dispatch({
+        type: 'SET_IS_TWO_FA_ENABLED',
+        payload: false,
+      });
+    } catch (e: unknown) {
+      if (Axios.isAxiosError(e) && e.response) {
+        enqueueSnackbar(e.response.data.message, { variant: 'error' });
+      }
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      dispatch({ type: 'LOADING' });
+      try {
+        const { data } = await userApi.getMe({ withCredentials: true });
+        dispatch({
+          type: 'SET_IS_TWO_FA_ENABLED',
+          payload: data.is_two_fa_enabled!,
+        });
+      } catch (err: unknown) {
+        if (Axios.isAxiosError(err) && err.response) {
+          enqueueSnackbar(err.response.data.message, { variant: 'error' });
+        }
+      }
+      dispatch({ type: 'LOADING' });
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Stack bgcolor="background.paper" width={500}>
@@ -198,16 +237,25 @@ const SecuritySetting = () => {
           Two-factor authentication adds an additional layer of security to your
           account by requiring more than just a password to sign in.
         </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => dispatch({ type: 'OPEN_DIALOG' })}
-        >
-          activate
-        </Button>
+        {state.isRequesting ? null : (
+          <Button
+            variant="contained"
+            color={state.isTwoFaEnabled ? 'error' : 'primary'}
+            onClick={
+              state.isTwoFaEnabled
+                ? () => turnOffTwoFa()
+                : () => dispatch({ type: 'OPEN_DIALOG' })
+            }
+          >
+            {state.isTwoFaEnabled ? 'deactivate' : 'activate'}
+          </Button>
+        )}
         <TwoFactorDialog
           open={state.openDialog}
           setOpen={() => dispatch({ type: 'OPEN_DIALOG' })}
+          turnOnIsTwoFaEnabled={() =>
+            dispatch({ type: 'SET_IS_TWO_FA_ENABLED', payload: true })
+          }
         />
       </Stack>
     </Stack>
