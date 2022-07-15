@@ -377,6 +377,25 @@ export enum Role {
 /**
  * 
  * @export
+ * @interface UpdateChannelUser
+ */
+export interface UpdateChannelUser {
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof UpdateChannelUser
+     */
+    'userIds'?: Array<number>;
+    /**
+     * 
+     * @type {ChannelUserPermission}
+     * @memberof UpdateChannelUser
+     */
+    'permission'?: ChannelUserPermission;
+}
+/**
+ * 
+ * @export
  * @interface User
  */
 export interface User {
@@ -1186,21 +1205,17 @@ export const ChannelApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
-         * @summary Update the status of user participating in the channel
+         * @summary Update the status of users participating in the channel
          * @param {number} channelID 
-         * @param {number} userID 
-         * @param {ChannelUserPermission} [channelUserPermission] 
+         * @param {UpdateChannelUser} [updateChannelUser] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        putChannelsChannelIDUsersUserID: async (channelID: number, userID: number, channelUserPermission?: ChannelUserPermission, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        putChannelsChannelIDUsers: async (channelID: number, updateChannelUser?: UpdateChannelUser, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'channelID' is not null or undefined
-            assertParamExists('putChannelsChannelIDUsersUserID', 'channelID', channelID)
-            // verify required parameter 'userID' is not null or undefined
-            assertParamExists('putChannelsChannelIDUsersUserID', 'userID', userID)
-            const localVarPath = `/users/{userID}/channels/{channelID}`
-                .replace(`{${"channelID"}}`, encodeURIComponent(String(channelID)))
-                .replace(`{${"userID"}}`, encodeURIComponent(String(userID)));
+            assertParamExists('putChannelsChannelIDUsers', 'channelID', channelID)
+            const localVarPath = `/channels/{channelID}/users`
+                .replace(`{${"channelID"}}`, encodeURIComponent(String(channelID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1221,7 +1236,7 @@ export const ChannelApiAxiosParamCreator = function (configuration?: Configurati
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(channelUserPermission, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(updateChannelUser, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1345,15 +1360,14 @@ export const ChannelApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Update the status of user participating in the channel
+         * @summary Update the status of users participating in the channel
          * @param {number} channelID 
-         * @param {number} userID 
-         * @param {ChannelUserPermission} [channelUserPermission] 
+         * @param {UpdateChannelUser} [updateChannelUser] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async putChannelsChannelIDUsersUserID(channelID: number, userID: number, channelUserPermission?: ChannelUserPermission, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ChannelUser>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.putChannelsChannelIDUsersUserID(channelID, userID, channelUserPermission, options);
+        async putChannelsChannelIDUsers(channelID: number, updateChannelUser?: UpdateChannelUser, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ChannelUser>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.putChannelsChannelIDUsers(channelID, updateChannelUser, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1439,15 +1453,14 @@ export const ChannelApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
-         * @summary Update the status of user participating in the channel
+         * @summary Update the status of users participating in the channel
          * @param {number} channelID 
-         * @param {number} userID 
-         * @param {ChannelUserPermission} [channelUserPermission] 
+         * @param {UpdateChannelUser} [updateChannelUser] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        putChannelsChannelIDUsersUserID(channelID: number, userID: number, channelUserPermission?: ChannelUserPermission, options?: any): AxiosPromise<ChannelUser> {
-            return localVarFp.putChannelsChannelIDUsersUserID(channelID, userID, channelUserPermission, options).then((request) => request(axios, basePath));
+        putChannelsChannelIDUsers(channelID: number, updateChannelUser?: UpdateChannelUser, options?: any): AxiosPromise<Array<ChannelUser>> {
+            return localVarFp.putChannelsChannelIDUsers(channelID, updateChannelUser, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1530,15 +1543,14 @@ export interface ChannelApiInterface {
 
     /**
      * 
-     * @summary Update the status of user participating in the channel
+     * @summary Update the status of users participating in the channel
      * @param {number} channelID 
-     * @param {number} userID 
-     * @param {ChannelUserPermission} [channelUserPermission] 
+     * @param {UpdateChannelUser} [updateChannelUser] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ChannelApiInterface
      */
-    putChannelsChannelIDUsersUserID(channelID: number, userID: number, channelUserPermission?: ChannelUserPermission, options?: AxiosRequestConfig): AxiosPromise<ChannelUser>;
+    putChannelsChannelIDUsers(channelID: number, updateChannelUser?: UpdateChannelUser, options?: AxiosRequestConfig): AxiosPromise<Array<ChannelUser>>;
 
     /**
      * 
@@ -1633,16 +1645,15 @@ export class ChannelApi extends BaseAPI implements ChannelApiInterface {
 
     /**
      * 
-     * @summary Update the status of user participating in the channel
+     * @summary Update the status of users participating in the channel
      * @param {number} channelID 
-     * @param {number} userID 
-     * @param {ChannelUserPermission} [channelUserPermission] 
+     * @param {UpdateChannelUser} [updateChannelUser] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ChannelApi
      */
-    public putChannelsChannelIDUsersUserID(channelID: number, userID: number, channelUserPermission?: ChannelUserPermission, options?: AxiosRequestConfig) {
-        return ChannelApiFp(this.configuration).putChannelsChannelIDUsersUserID(channelID, userID, channelUserPermission, options).then((request) => request(this.axios, this.basePath));
+    public putChannelsChannelIDUsers(channelID: number, updateChannelUser?: UpdateChannelUser, options?: AxiosRequestConfig) {
+        return ChannelApiFp(this.configuration).putChannelsChannelIDUsers(channelID, updateChannelUser, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
