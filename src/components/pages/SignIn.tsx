@@ -9,7 +9,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { IconButton, Typography } from '@mui/material';
 import { AuthApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
-import { FT_COLOR, HOME_URL, ROOT_URL } from '../config/constants';
+import { FT_COLOR, HOME_URL, ROOT_URL, TWO_FA_URL } from '../config/constants';
 
 type State = {
   username: string;
@@ -59,8 +59,8 @@ const SignIn = () => {
     };
     try {
       await authApi.postAuthLogin(payload, { withCredentials: true });
-      await login();
-      navigate(HOME_URL);
+      const logined = await login();
+      navigate(logined ? HOME_URL : TWO_FA_URL);
     } catch (err) {
       dispatch({ type: 'ERROR' });
     }
