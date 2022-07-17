@@ -491,7 +491,7 @@ export interface UserList {
 export const AuthApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * 
+         * deactivate 2 factor from security setting
          * @summary Your GET endpoint
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -523,7 +523,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * 
+         * return 2 factor\'s qrcode
          * @summary Your GET endpoint
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -615,7 +615,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * 
+         * activate 2 factor from security setting
          * @param {InlineObject1} [inlineObject1] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -650,13 +650,13 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * 
+         * authenticate 2 factor, this is used just after user login with 2 factor activated.
          * @param {InlineObject} [inlineObject] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postAuth2faVerify: async (inlineObject?: InlineObject, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/auth/2fa/verify`;
+        postAuth2faAuthenticate: async (inlineObject?: InlineObject, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/auth/2fa/authenticate`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -831,7 +831,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AuthApiAxiosParamCreator(configuration)
     return {
         /**
-         * 
+         * deactivate 2 factor from security setting
          * @summary Your GET endpoint
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -841,7 +841,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * 
+         * return 2 factor\'s qrcode
          * @summary Your GET endpoint
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -871,7 +871,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * 
+         * activate 2 factor from security setting
          * @param {InlineObject1} [inlineObject1] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -881,13 +881,13 @@ export const AuthApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * 
+         * authenticate 2 factor, this is used just after user login with 2 factor activated.
          * @param {InlineObject} [inlineObject] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async postAuth2faVerify(inlineObject?: InlineObject, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.postAuth2faVerify(inlineObject, options);
+        async postAuth2faAuthenticate(inlineObject?: InlineObject, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postAuth2faAuthenticate(inlineObject, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -944,7 +944,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
     const localVarFp = AuthApiFp(configuration)
     return {
         /**
-         * 
+         * deactivate 2 factor from security setting
          * @summary Your GET endpoint
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -953,7 +953,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.getAuth2faDeactivate(options).then((request) => request(axios, basePath));
         },
         /**
-         * 
+         * return 2 factor\'s qrcode
          * @summary Your GET endpoint
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -980,7 +980,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.getAuthLogin(options).then((request) => request(axios, basePath));
         },
         /**
-         * 
+         * activate 2 factor from security setting
          * @param {InlineObject1} [inlineObject1] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -989,13 +989,13 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.postAuth2faActivate(inlineObject1, options).then((request) => request(axios, basePath));
         },
         /**
-         * 
+         * authenticate 2 factor, this is used just after user login with 2 factor activated.
          * @param {InlineObject} [inlineObject] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postAuth2faVerify(inlineObject?: InlineObject, options?: any): AxiosPromise<void> {
-            return localVarFp.postAuth2faVerify(inlineObject, options).then((request) => request(axios, basePath));
+        postAuth2faAuthenticate(inlineObject?: InlineObject, options?: any): AxiosPromise<void> {
+            return localVarFp.postAuth2faAuthenticate(inlineObject, options).then((request) => request(axios, basePath));
         },
         /**
          * username and password auth without using auth.
@@ -1046,7 +1046,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
  */
 export interface AuthApiInterface {
     /**
-     * 
+     * deactivate 2 factor from security setting
      * @summary Your GET endpoint
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1055,7 +1055,7 @@ export interface AuthApiInterface {
     getAuth2faDeactivate(options?: AxiosRequestConfig): AxiosPromise<void>;
 
     /**
-     * 
+     * return 2 factor\'s qrcode
      * @summary Your GET endpoint
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1082,7 +1082,7 @@ export interface AuthApiInterface {
     getAuthLogin(options?: AxiosRequestConfig): AxiosPromise<void>;
 
     /**
-     * 
+     * activate 2 factor from security setting
      * @param {InlineObject1} [inlineObject1] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1091,13 +1091,13 @@ export interface AuthApiInterface {
     postAuth2faActivate(inlineObject1?: InlineObject1, options?: AxiosRequestConfig): AxiosPromise<void>;
 
     /**
-     * 
+     * authenticate 2 factor, this is used just after user login with 2 factor activated.
      * @param {InlineObject} [inlineObject] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApiInterface
      */
-    postAuth2faVerify(inlineObject?: InlineObject, options?: AxiosRequestConfig): AxiosPromise<void>;
+    postAuth2faAuthenticate(inlineObject?: InlineObject, options?: AxiosRequestConfig): AxiosPromise<void>;
 
     /**
      * username and password auth without using auth.
@@ -1148,7 +1148,7 @@ export interface AuthApiInterface {
  */
 export class AuthApi extends BaseAPI implements AuthApiInterface {
     /**
-     * 
+     * deactivate 2 factor from security setting
      * @summary Your GET endpoint
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1159,7 +1159,7 @@ export class AuthApi extends BaseAPI implements AuthApiInterface {
     }
 
     /**
-     * 
+     * return 2 factor\'s qrcode
      * @summary Your GET endpoint
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1192,7 +1192,7 @@ export class AuthApi extends BaseAPI implements AuthApiInterface {
     }
 
     /**
-     * 
+     * activate 2 factor from security setting
      * @param {InlineObject1} [inlineObject1] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1203,14 +1203,14 @@ export class AuthApi extends BaseAPI implements AuthApiInterface {
     }
 
     /**
-     * 
+     * authenticate 2 factor, this is used just after user login with 2 factor activated.
      * @param {InlineObject} [inlineObject] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
      */
-    public postAuth2faVerify(inlineObject?: InlineObject, options?: AxiosRequestConfig) {
-        return AuthApiFp(this.configuration).postAuth2faVerify(inlineObject, options).then((request) => request(this.axios, this.basePath));
+    public postAuth2faAuthenticate(inlineObject?: InlineObject, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).postAuth2faAuthenticate(inlineObject, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
