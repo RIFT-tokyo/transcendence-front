@@ -125,11 +125,13 @@ const SecuritySetting = () => {
 
   const turnOffTwoFa = async () => {
     try {
-      await authApi.getAuth2faDeactivate({ withCredentials: true });
-      dispatch({
-        type: 'SET_IS_TWO_FA_ENABLED',
-        payload: false,
-      });
+      if (window.confirm('Really deactivate Two-factor?')) {
+        await authApi.getAuth2faDeactivate({ withCredentials: true });
+        dispatch({
+          type: 'SET_IS_TWO_FA_ENABLED',
+          payload: false,
+        });
+      }
     } catch (e: unknown) {
       if (Axios.isAxiosError(e) && e.response) {
         enqueueSnackbar(e.response.data.message, { variant: 'error' });
