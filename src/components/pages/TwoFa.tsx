@@ -44,7 +44,7 @@ const TwoFa = () => {
       authcode: state.code,
     };
     try {
-      await authApi.postAuth2faVerify(payload, { withCredentials: true });
+      await authApi.postAuth2faAuthenticate(payload, { withCredentials: true });
       await login();
       navigate(HOME_URL);
     } catch (err) {
