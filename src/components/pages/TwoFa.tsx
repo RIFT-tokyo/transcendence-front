@@ -79,7 +79,7 @@ const TwoFa = () => {
           TRANSCENDENCE
         </Typography>
         <img src="/auth/twofa.svg" alt="Two-factor authentication" height={320} />
-        <Box component="form" onSubmit={handleSubmit}>
+        <Box component="form" onSubmit={handleSubmit} mt={3}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
