@@ -5,6 +5,7 @@ export const CHANNELS_URL = `${CHAT_URL}/channels`;
 export const GAME_URL = '/pong';
 export const SETTING_URL = '/settings';
 export const SIGNIN_URL = '/signin';
+export const TWO_FA_URL = '/2fa';
 export const NOT_FOUND_URL = '/404';
 export const INTERNAL_SERVER_ERROR_URL = '/500';
 

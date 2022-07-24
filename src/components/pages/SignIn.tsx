@@ -9,7 +9,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { IconButton, Typography } from '@mui/material';
 import { AuthApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
-import { FT_COLOR, HOME_URL, ROOT_URL } from '../config/constants';
+import { FT_COLOR, HOME_URL, ROOT_URL, TWO_FA_URL } from '../config/constants';
 
 type State = {
   username: string;
@@ -59,8 +59,8 @@ const SignIn = () => {
     };
     try {
       await authApi.postAuthLogin(payload, { withCredentials: true });
-      await login();
-      navigate(HOME_URL);
+      const isSucceeded = await login();
+      navigate(isSucceeded ? HOME_URL : TWO_FA_URL);
     } catch (err) {
       dispatch({ type: 'ERROR' });
     }
@@ -96,7 +96,12 @@ const SignIn = () => {
         >
           TRANSCENDENCE
         </Typography>
-        <img src="/auth/signin.svg" alt="Sign Up" height={320} />
+        <Box
+          height={320}
+          component="img"
+          alt="Sign Up"
+          src="/auth/signin.svg"
+        />
         <Grid container my={3}>
           <Grid item xs={12}>
             <Button
@@ -106,11 +111,12 @@ const SignIn = () => {
               onClick={handleOauthLogin}
             >
               sign in with{' '}
-              <img
-                src="/auth/42.svg"
-                alt="42"
+              <Box
                 height={15}
                 style={{ marginLeft: 10 }}
+                component="img"
+                alt="42"
+                src="/auth/42.svg"
               />
             </Button>
           </Grid>

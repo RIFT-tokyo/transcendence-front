@@ -8,6 +8,7 @@ import NotFound from './components/pages/NotFound';
 import Pong from './components/pages/Pong';
 import SignIn from './components/pages/SignIn';
 import SignUp from './components/pages/SignUp';
+import TwoFa from './components/pages/TwoFa';
 import Settings from './components/pages/Settings';
 import UserProfile from './components/pages/UserProfile';
 import AppBarWithMenu from './components/ui/AppBarWithMenu';
@@ -47,6 +48,7 @@ const App = () => {
             </Route>
             <Route path="signup" element={<SignUp />} />
             <Route path="signin" element={<SignIn />} />
+            <Route path="2fa" element={<TwoFa />} />
           </Routes>
         )}
       </ThemeProvider>

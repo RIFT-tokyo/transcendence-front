@@ -1,10 +1,12 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { User, UserApi } from '../api/generated/api';
+import { TWO_FA_URL } from '../components/config/constants';
 
 interface IAuthContext {
   authUser: User | null;
   isLoading: boolean;
-  login: () => void;
+  login: () => Promise<boolean>;
   logout: () => void;
   setAuthUser: (user: User | null) => void;
 }
@@ -12,7 +14,7 @@ interface IAuthContext {
 const defaultState = {
   authUser: null,
   isLoading: true,
-  login: () => {},
+  login: () => new Promise<boolean>(() => {}),
   logout: () => {},
   setAuthUser: () => {},
 };
@@ -37,6 +39,7 @@ export const AuthProvider: FC = ({ children }) => {
     const owner = await fetchMe();
     setAuthUser(owner);
     setLoading(false);
+    return !!owner;
   };
 
   const logout = () => {
