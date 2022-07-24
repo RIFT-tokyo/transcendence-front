@@ -236,8 +236,8 @@ const SecuritySetting = () => {
         </Typography>
         {state.isRequesting ? null : (
           <Button
-            variant="contained"
-            color={state.isTwoFaEnabled ? 'error' : 'primary'}
+            variant={state.isTwoFaEnabled ? 'outlined' : 'contained'}
+            color="primary"
             onClick={
               state.isTwoFaEnabled
                 ? () => turnOffTwoFa()
