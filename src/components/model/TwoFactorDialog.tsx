@@ -30,7 +30,7 @@ const TwoFactorDialog = (props: Props) => {
   const [qrcode, setQrcode] = useState('');
   const [errorAuthcode, setErrorAuthcode] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
-  const [isQrcodeLoading, setIsQrcodeLoadingg] = useState(false);
+  const [isQrcodeLoading, setIsQrcodeLoading] = useState(false);
   const authApi = new AuthApi();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -77,7 +77,7 @@ const TwoFactorDialog = (props: Props) => {
   useEffect(() => {
     if (open) {
       (async () => {
-        setIsQrcodeLoadingg(true);
+        setIsQrcodeLoading(true);
         try {
           const res = await authApi.getAuth2faQrcode({ withCredentials: true });
           setQrcode(res.data!.qrcode!);
@@ -86,7 +86,7 @@ const TwoFactorDialog = (props: Props) => {
             enqueueSnackbar(err.response.data.message, { variant: 'error' });
           }
         }
-        setIsQrcodeLoadingg(false);
+        setIsQrcodeLoading(false);
       })();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
