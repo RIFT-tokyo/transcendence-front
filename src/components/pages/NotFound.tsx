@@ -1,9 +1,9 @@
-import { Grid, Stack, Typography } from '@mui/material';
+import { Box, Grid, Stack, Typography } from '@mui/material';
 
 const NotFound = () => (
   <Grid container justifyContent="center">
     <Stack spacing={1} margin={20}>
-      <img src="/error/404.svg" alt="404" />
+      <Box component="img" alt="404" src="/error/404.svg" />
       <Typography padding={5} align="center" variant="h3">
         Not Found
       </Typography>

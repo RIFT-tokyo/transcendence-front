@@ -96,7 +96,12 @@ const SignIn = () => {
         >
           TRANSCENDENCE
         </Typography>
-        <img src="/auth/signin.svg" alt="Sign Up" height={320} />
+        <Box
+          height={320}
+          component="img"
+          alt="Sign Up"
+          src="/auth/signin.svg"
+        />
         <Grid container my={3}>
           <Grid item xs={12}>
             <Button
@@ -106,11 +111,12 @@ const SignIn = () => {
               onClick={handleOauthLogin}
             >
               sign in with{' '}
-              <img
-                src="/auth/42.svg"
-                alt="42"
+              <Box
                 height={15}
                 style={{ marginLeft: 10 }}
+                component="img"
+                alt="42"
+                src="/auth/42.svg"
               />
             </Button>
           </Grid>

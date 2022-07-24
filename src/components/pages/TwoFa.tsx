@@ -78,7 +78,12 @@ const TwoFa = () => {
         >
           TRANSCENDENCE
         </Typography>
-        <img src="/auth/twofa.svg" alt="Two-factor authentication" height={320} />
+        <Box
+          height={320}
+          component="img"
+          alt="Two-factor authentication"
+          src="/auth/twofa.svg"
+        />
         <Box component="form" onSubmit={handleSubmit} mt={3}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -94,7 +99,9 @@ const TwoFa = () => {
                 type="text"
                 error={state.error}
                 size="small"
-                helperText={state.error ? 'Two-factor authentication failed...' : ''}
+                helperText={
+                  state.error ? 'Two-factor authentication failed...' : ''
+                }
               />
             </Grid>
             <Grid item xs={12}>
