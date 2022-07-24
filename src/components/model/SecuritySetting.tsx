@@ -17,7 +17,6 @@ type State = {
   currentPassword: string;
   newPassword: string;
   confirmPassword: string;
-  qrcode: string;
   isTwoFaEnabled: boolean;
   openDialog: boolean;
   showCurrentPassword: boolean;
@@ -31,7 +30,6 @@ type Actions =
   | { type: 'SET_CURRENT_PASSWORD'; payload: string }
   | { type: 'SET_NEW_PASSWORD'; payload: string }
   | { type: 'SET_CONFIRM_PASSWORD'; payload: string }
-  | { type: 'SET_QRCODE'; payload: string }
   | { type: 'SET_IS_TWO_FA_ENABLED'; payload: boolean }
   | { type: 'OPEN_DIALOG' }
   | { type: 'SHOW_CURRENT_PASSWORD' }
@@ -49,8 +47,6 @@ const reducer = (state: State, action: Actions) => {
       return { ...state, newPassword: action.payload };
     case 'SET_CONFIRM_PASSWORD':
       return { ...state, confirmPassword: action.payload };
-    case 'SET_QRCODE':
-      return { ...state, qrcode: action.payload };
     case 'SET_IS_TWO_FA_ENABLED':
       return { ...state, isTwoFaEnabled: action.payload };
     case 'OPEN_DIALOG':
@@ -77,7 +73,6 @@ const SecuritySetting = () => {
     currentPassword: '',
     newPassword: '',
     confirmPassword: '',
-    qrcode: '',
     isTwoFaEnabled: false,
     openDialog: false,
     showCurrentPassword: false,
