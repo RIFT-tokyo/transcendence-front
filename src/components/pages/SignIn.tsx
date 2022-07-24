@@ -59,8 +59,8 @@ const SignIn = () => {
     };
     try {
       await authApi.postAuthLogin(payload, { withCredentials: true });
-      const logined = await login();
-      navigate(logined ? HOME_URL : TWO_FA_URL);
+      const isSucceeded = await login();
+      navigate(isSucceeded ? HOME_URL : TWO_FA_URL);
     } catch (err) {
       dispatch({ type: 'ERROR' });
     }
