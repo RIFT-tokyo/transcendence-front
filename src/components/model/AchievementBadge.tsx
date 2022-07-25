@@ -7,7 +7,7 @@ interface AchievementBadgeProps {
 }
 
 const style = {
-  position: 'absolute' as 'absolute',
+  position: 'absolute' as const,
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
@@ -22,21 +22,23 @@ const AchievementBadge = ({ achievement }: AchievementBadgeProps) => {
   return (
     <Stack paddingRight={0.5}>
       <Stack onClick={() => toggleModal(true)}>
-        <img
+        <Box
           width={60}
           height={60}
-          src={achievement.image}
+          component="img"
           alt={achievement.name}
+          src={achievement.image}
         />
       </Stack>
       <Modal open={isOpenModal} onClose={() => toggleModal(false)}>
         <Box component="div" sx={style}>
           <Stack direction="row" alignItems="center">
-            <img
+            <Box
               width={100}
               height={100}
-              src={achievement.image}
+              component="img"
               alt={achievement.name}
+              src={achievement.image}
             />
             <Stack margin={1}>
               <Typography variant="h3">{achievement.name}</Typography>

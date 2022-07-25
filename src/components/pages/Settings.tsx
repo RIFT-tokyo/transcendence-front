@@ -42,7 +42,7 @@ const actions = ['Account', 'Security'];
 const userApi = new UserApi();
 
 const Settings: React.VFC<Props> = ({ active }: Props) => {
-  const { authUser } = useContext(AuthContext);
+  const { authUser, setAuthUser } = useContext(AuthContext);
   const { enqueueSnackbar } = useSnackbar();
 
   const [state, dispatch] = useReducer(reducer, {
@@ -75,9 +75,13 @@ const Settings: React.VFC<Props> = ({ active }: Props) => {
       status_message: state.user.status_message,
     };
     try {
-      const { data } = await userApi.putUsersUserId(state.user.id, requestBody, {
-        withCredentials: true,
-      });
+      const { data } = await userApi.putUsersUserId(
+        state.user.id,
+        requestBody,
+        {
+          withCredentials: true,
+        },
+      );
       enqueueSnackbar('Profile updated', { variant: 'success' });
       dispatch({ type: 'SET_USER', payload: data });
     } catch (err: unknown) {
@@ -88,18 +92,23 @@ const Settings: React.VFC<Props> = ({ active }: Props) => {
     dispatch({ type: 'LOADING' });
   };
 
+  const setUser = (user: User) => {
+    dispatch({ type: 'SET_USER', payload: user });
+    setAuthUser(user);
+  };
+
   let settingContent = <CircularProgress />;
   if (active === 'Account' && !state.isLoading && state.user) {
     settingContent = (
       <AccountSetting
         user={state.user}
-        setUser={(user: User) => dispatch({ type: 'SET_USER', payload: user })}
+        setUser={setUser}
         submit={submit}
         reset={reset}
       />
     );
-  } else if (active === 'Security' && !state.isLoading) {
-    settingContent = <SecuritySetting />;
+  } else if (active === 'Security' && !state.isLoading && state.user) {
+    settingContent = <SecuritySetting user={state.user} setUser={setUser} />;
   }
 
   return (
