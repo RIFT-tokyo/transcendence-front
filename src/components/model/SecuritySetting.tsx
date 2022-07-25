@@ -9,8 +9,8 @@ import {
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import Axios from 'axios';
-import { useEffect, useReducer } from 'react';
-import { AuthApi, Password, UserApi } from '../../api/generated/api';
+import { useEffect, useReducer, VFC } from 'react';
+import { AuthApi, Password, User, UserApi } from '../../api/generated/api';
 import TwoFactorDialog from './TwoFactorDialog';
 
 type State = {
@@ -65,15 +65,19 @@ const reducer = (state: State, action: Actions) => {
 };
 
 const authApi = new AuthApi();
-const userApi = new UserApi();
 
-const SecuritySetting = () => {
+type Props = {
+  user: User;
+  setUser: (user: User) => void;
+};
+
+const SecuritySetting: VFC<Props> = ({ user, setUser }: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const [state, dispatch] = useReducer(reducer, {
     currentPassword: '',
     newPassword: '',
     confirmPassword: '',
-    isTwoFaEnabled: false,
+    isTwoFaEnabled: user.is_two_fa_enabled!,
     openDialog: false,
     showCurrentPassword: false,
     showNewPassword: false,
@@ -126,6 +130,7 @@ const SecuritySetting = () => {
           type: 'SET_IS_TWO_FA_ENABLED',
           payload: false,
         });
+        setUser({ ...user, is_two_fa_enabled: false });
       }
     } catch (e: unknown) {
       if (Axios.isAxiosError(e) && e.response) {
@@ -133,25 +138,6 @@ const SecuritySetting = () => {
       }
     }
   };
-
-  useEffect(() => {
-    (async () => {
-      dispatch({ type: 'LOADING' });
-      try {
-        const { data } = await userApi.getMe({ withCredentials: true });
-        dispatch({
-          type: 'SET_IS_TWO_FA_ENABLED',
-          payload: data.is_two_fa_enabled!,
-        });
-      } catch (err: unknown) {
-        if (Axios.isAxiosError(err) && err.response) {
-          enqueueSnackbar(err.response.data.message, { variant: 'error' });
-        }
-      }
-      dispatch({ type: 'LOADING' });
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <Stack bgcolor="background.paper" width={500}>
@@ -250,9 +236,10 @@ const SecuritySetting = () => {
         <TwoFactorDialog
           open={state.openDialog}
           setOpen={() => dispatch({ type: 'OPEN_DIALOG' })}
-          turnOnIsTwoFaEnabled={() =>
-            dispatch({ type: 'SET_IS_TWO_FA_ENABLED', payload: true })
-          }
+          turnOnIsTwoFaEnabled={() => {
+            dispatch({ type: 'SET_IS_TWO_FA_ENABLED', payload: true });
+            setUser({ ...user, is_two_fa_enabled: true });
+          }}
         />
       </Stack>
     </Stack>
