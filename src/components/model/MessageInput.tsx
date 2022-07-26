@@ -1,6 +1,6 @@
 import { Send } from '@mui/icons-material';
 import { IconButton, TextField } from '@mui/material';
-import { ChangeEvent, useContext, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useMessage from '../../api/websocket/useMessage';
 import { AuthContext } from '../../contexts/AuthContext';
@@ -20,6 +20,15 @@ const MessageInput = () => {
     setText('');
   };
 
+  const handleKeyDown = async (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.nativeEvent.isComposing || e.key !== 'Enter') return;
+    if (e.shiftKey) return;
+
+    e.preventDefault();
+    sendMessage(text, authUser!.id!, Number(channelId));
+    setText('');
+  };
+
   return (
     <TextField
       sx={{ bgcolor: 'background.paper' }}
@@ -31,10 +40,11 @@ const MessageInput = () => {
       multiline
       fullWidth
       required
+      onKeyDown={handleKeyDown}
       InputProps={{
         endAdornment: (
           <IconButton
-            onClick={() => handleClick()}
+            onClick={handleClick}
             aria-label="send message"
             edge="end"
             disabled={text.length === 0}
