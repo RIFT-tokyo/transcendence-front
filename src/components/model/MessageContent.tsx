@@ -35,7 +35,7 @@ const MessageContent = (props: Props) => {
             {format(new Date(createdAt), 'yyyy/MM/dd HH:mm')}
           </Typography>
         </Stack>
-        <Typography whiteSpace="pre-line">{text}</Typography>
+        <Typography whiteSpace="pre-wrap">{text}</Typography>
       </Stack>
     </Stack>
   );
