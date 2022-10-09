@@ -12,7 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 import { Dispatch, MouseEvent, SetStateAction, useReducer } from 'react';
-import { Channel } from '../../api/generated';
+import { Channel, Role } from '../../api/generated';
 import ModerationSettings from './ModerationSettings';
 import OverviewSettings from './OverviewSettings';
 import RolesSettings from './RolesSettings';
@@ -44,12 +44,18 @@ const listItems = [
   {
     name: 'Overview',
     component: (channel: Channel) => <OverviewSettings channel={channel} />,
+    visible: () => true,
   },
   {
     name: 'Moderation',
     component: (channel: Channel) => <ModerationSettings channel={channel} />,
+    visible: () => true,
   },
-  { name: 'Roles', component: () => <RolesSettings /> },
+  {
+    name: 'Roles',
+    component: (channel: Channel) => <RolesSettings channel={channel} />,
+    visible: (channel: Channel) => channel.role === Role.Owner,
+  },
 ];
 
 const ChannelSettingsDialog = (props: Props) => {
@@ -82,15 +88,17 @@ const ChannelSettingsDialog = (props: Props) => {
               }),
             ]}
           >
-            {listItems.map((item, index) => (
-              <ListItemButton
-                key={`listItem-${item.name}`}
-                selected={state.selectedIndex === index}
-                onClick={(event) => handleListItemClick(event, index)}
-              >
-                <ListItemText primary={item.name} />
-              </ListItemButton>
-            ))}
+            {listItems
+              .filter((item) => item.visible(channel))
+              .map((item, index) => (
+                <ListItemButton
+                  key={`listItem-${item.name}`}
+                  selected={state.selectedIndex === index}
+                  onClick={(event) => handleListItemClick(event, index)}
+                >
+                  <ListItemText primary={item.name} />
+                </ListItemButton>
+              ))}
           </List>
           <Divider orientation="vertical" flexItem variant="middle" />
           <Box component="div" width={400}>

@@ -89,8 +89,8 @@ const OverviewSettings = (props: Props) => {
     dispatch({ type: 'SET_PASSWORD', payload: e.target.value });
   };
 
-  const handleIsPrivateChange = (e: ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: 'SET_IS_PRIVATE', payload: e.target.checked });
+  const handleIsPrivateChange = () => {
+    dispatch({ type: 'SET_IS_PRIVATE', payload: !state.isPrivate });
   };
 
   const handleVisibilityChange = () => {
@@ -116,9 +116,8 @@ const OverviewSettings = (props: Props) => {
       />
       <FormControlLabel
         sx={{ display: 'flex', justifyContent: 'space-between' }}
-        control={
-          <Switch checked={state.isPrivate} onChange={handleIsPrivateChange} />
-        }
+        onClick={handleIsPrivateChange}
+        control={<Switch checked={state.isPrivate} />}
         label="Private Channel"
         labelPlacement="start"
       />

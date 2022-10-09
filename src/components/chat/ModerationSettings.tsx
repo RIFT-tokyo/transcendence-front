@@ -1,5 +1,5 @@
-import { List, ListItemButton, ListItemText } from '@mui/material';
-import { useEffect, useReducer } from 'react';
+import { Divider, List, ListItemButton, ListItemText } from '@mui/material';
+import { Fragment, useEffect, useReducer } from 'react';
 import { Channel, ChannelApi, ChannelUser } from '../../api/generated';
 
 type State = {
@@ -45,14 +45,16 @@ const ModerationSettings = (props: Props) => {
 
   return (
     <List>
-      {state.channelUsers.map((channelUser) => (
-        <ListItemButton>
-          <ListItemText
-            key={`channelUser-${channelUser.user?.id}`}
-            primary={channelUser.user?.username ?? ''}
-          />
-        </ListItemButton>
-      ))}
+      {state.channelUsers
+        .filter((channelUser) => !channelUser.role)
+        .map((channelUser) => (
+          <Fragment key={`channelUser-${channelUser.user?.id}`}>
+            <ListItemButton>
+              <ListItemText primary={channelUser.user?.username ?? ''} />
+            </ListItemButton>
+            <Divider />
+          </Fragment>
+        ))}
     </List>
   );
 };
