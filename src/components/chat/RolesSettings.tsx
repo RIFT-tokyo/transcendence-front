@@ -8,166 +8,43 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
-import { Fragment, useEffect, useReducer } from 'react';
-import { Channel, ChannelApi, ChannelUser, Role } from '../../api/generated';
+import { Fragment, useState } from 'react';
+import { ChannelUser, Role } from '../../api/generated';
 import UserAvatar from './UserAvatar';
 
-type State = {
-  channelUsers: ChannelUser[];
-  selectedUsers: boolean[];
-  isLoading: boolean;
-};
-
-type Actions =
-  | { type: 'SET_CHANNEL_USERS'; payload: ChannelUser[] }
-  | { type: 'UPDATE_CHANNEL_USERS'; payload: ChannelUser[] }
-  | { type: 'TOGGLE_SELECTED_USERS'; payload: number }
-  | { type: 'SET_IS_LOADING'; payload: boolean };
-
-const reducer = (state: State, action: Actions): State => {
-  switch (action.type) {
-    case 'SET_CHANNEL_USERS': {
-      const channelUsers = action.payload.filter(
-        (channelUser) => channelUser.role !== Role.Owner,
-      );
-      return {
-        ...state,
-        channelUsers,
-        selectedUsers: channelUsers.map(
-          (channelUser) => channelUser.role === Role.Administrator,
-        ),
-      };
-    }
-    case 'UPDATE_CHANNEL_USERS': {
-      const { channelUsers } = state;
-      action.payload.forEach((updatedChannelUser) => {
-        const index = channelUsers.findIndex(
-          (v) => v.user?.id === updatedChannelUser.user?.id,
-        );
-        channelUsers[index] = updatedChannelUser;
-      });
-      return { ...state, channelUsers };
-    }
-    case 'TOGGLE_SELECTED_USERS': {
-      const { selectedUsers } = state;
-      selectedUsers[action.payload] = !selectedUsers[action.payload];
-      return { ...state, selectedUsers };
-    }
-    case 'SET_IS_LOADING':
-      return { ...state, isLoading: action.payload };
-    default: {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const exhaustivenessCheck: never = action;
-      return state;
-    }
-  }
-};
-
 type Props = {
-  channel: Channel;
+  channelUsers: ChannelUser[];
+  setPermission: (channelUsers: ChannelUser[]) => Promise<void>;
 };
 
-const channelApi = new ChannelApi();
+const RolesSettings = ({channelUsers, setPermission}: Props) => {
 
-const RolesSettings = (props: Props) => {
-  const { channel } = props;
-  const [state, dispatch] = useReducer(reducer, {
-    channelUsers: [],
-    selectedUsers: [],
-    isLoading: false,
-  });
+  const [channelUsersValue, setChannelUsersValue] = useState<ChannelUser[]>(channelUsers);
 
-  const handleChannelUserClick = (index: number) => {
-    dispatch({ type: 'TOGGLE_SELECTED_USERS', payload: index });
+  const handleChannelUserClick = (userId: number | undefined) => {
+    setChannelUsersValue((prev) => prev.map((channelUser) => {
+        if (channelUser.user?.id !== userId) {
+          return channelUser;
+        }
+        if (channelUser.role === Role.Administrator) {
+          return {...channelUser, role: null};
+        }
+        return {...channelUser, role: Role.Administrator};
+      }));
   };
 
-  const findUpdatedUserIds = (selected: boolean) =>
-    state.channelUsers
-      .filter(
-        (v, i) =>
-          state.selectedUsers[i] === selected &&
-          state.selectedUsers[i] !== (v.role === Role.Administrator),
-      )
-      .map((selectedUser) => selectedUser.user?.id)
-      .filter((userId): userId is number => userId !== undefined);
-
-  const handleUpdateAdministratorClick = async () => {
-    if (!channel.id) {
-      return;
-    }
-    const userIdsToRemoveRole = findUpdatedUserIds(false);
-    const userIdsToAddRole = findUpdatedUserIds(true);
-    console.log(
-      state.channelUsers,
-      state.selectedUsers,
-      userIdsToRemoveRole,
-      userIdsToAddRole,
-    );
-
-    const updateChannelUsersBody = [];
-    if (userIdsToRemoveRole.length > 0) {
-      updateChannelUsersBody.push({
-        userIds: userIdsToRemoveRole,
-        permission: { role: null },
-      });
-    }
-    if (userIdsToAddRole.length > 0) {
-      updateChannelUsersBody.push({
-        userIds: userIdsToAddRole,
-        permission: { role: Role.Administrator },
-      });
-    }
-    if (updateChannelUsersBody.length > 0) {
-      dispatch({ type: 'SET_IS_LOADING', payload: true });
-      const { data } = await channelApi.putChannelsChannelIDUsers(
-        channel.id,
-        updateChannelUsersBody,
-        { withCredentials: true },
-      );
-      dispatch({ type: 'UPDATE_CHANNEL_USERS', payload: data });
-      dispatch({ type: 'SET_IS_LOADING', payload: false });
-    }
-  };
-
-  const canClickButton = () => {
-    const initialSelectedUsers = state.channelUsers.map(
-      (v) => v.role === Role.Administrator,
-    );
-    return (
-      state.selectedUsers.some((v, i) => v !== initialSelectedUsers[i]) &&
-      !state.isLoading
-    );
-  };
-
-  useEffect(() => {
-    const fetchChannelUserPermissions = async () => {
-      if (!channel.id) {
-        return;
-      }
-      dispatch({ type: 'SET_IS_LOADING', payload: true });
-      const { data } = await channelApi.getChannelsUsersUserID(channel.id, {
-        withCredentials: true,
-      });
-      dispatch({ type: 'SET_CHANNEL_USERS', payload: data });
-      dispatch({ type: 'SET_IS_LOADING', payload: false });
-    };
-    fetchChannelUserPermissions();
-  }, [channel.id]);
-
-  if (state.channelUsers.length === 0) {
-    return <div />;
-  }
-
-  return (
+   return (
     <>
       <List>
-        {state.channelUsers.map((channelUser, index) => (
+        {channelUsersValue
+        .filter((channelUser) => channelUser.role !== Role.Owner)
+        .map((channelUser) => (
           <Fragment key={`channelUser-${channelUser.user?.id}`}>
-            <ListItemButton onClick={() => handleChannelUserClick(index)}>
+            <ListItemButton onClick={() => handleChannelUserClick(channelUser.user?.id)}>
               <ListItemIcon>
                 <Checkbox
                   edge="start"
-                  checked={state.selectedUsers[index]}
+                  checked={channelUser.role === Role.Administrator}
                   tabIndex={-1}
                 />
               </ListItemIcon>
@@ -193,13 +70,12 @@ const RolesSettings = (props: Props) => {
         variant="contained"
         color="primary"
         size="medium"
-        disabled={!canClickButton()}
-        onClick={handleUpdateAdministratorClick}
+        onClick={() => {setPermission(channelUsersValue)}}
       >
         Update Administrator
       </Button>
     </>
   );
-};
+}
 
 export default RolesSettings;

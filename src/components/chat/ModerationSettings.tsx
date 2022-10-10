@@ -1,62 +1,78 @@
-import { Divider, List, ListItemButton, ListItemText } from '@mui/material';
-import { Fragment, useEffect, useReducer } from 'react';
-import { Channel, ChannelApi, ChannelUser } from '../../api/generated';
-
-type State = {
-  channelUsers: ChannelUser[];
-};
-
-type Actions = { type: 'SET_CHANNEL_USERS'; payload: ChannelUser[] };
-
-const reducer = (state: State, actions: Actions): State => {
-  switch (actions.type) {
-    case 'SET_CHANNEL_USERS':
-      return { ...state, channelUsers: actions.payload };
-    default: {
-      return state;
-    }
-  }
-};
+import { Button, Checkbox, Divider, List, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { Fragment, useEffect, useState } from 'react';
+import { ChannelUser, Role } from '../../api/generated';
+import UserAvatar from './UserAvatar';
 
 type Props = {
-  channel: Channel;
+  role: Role | null | undefined;
+  channelUsers: ChannelUser[];
+  setPermission: (channelUsers: ChannelUser[]) => Promise<void>;
 };
 
-const channelApi = new ChannelApi();
+const ModerationSettings = ({role, channelUsers, setPermission}: Props) => {
 
-const ModerationSettings = (props: Props) => {
-  const { channel } = props;
-  const [state, dispatch] = useReducer(reducer, {
-    channelUsers: [],
-  });
+  const [channelUsersValue, setChannelUsersValue] = useState<ChannelUser[]>(channelUsers.filter((channelUser) => !channelUser.is_ban));
+
+  const handleChannelUserClick = (userId: number | undefined) => {
+    setChannelUsersValue((prev) => prev.map((channelUser) => {
+        if (channelUser.user?.id !== userId) {
+          return channelUser;
+        }
+        return {...channelUser, is_ban: !channelUser.is_ban}
+      }));
+  };
 
   useEffect(() => {
-    const fetchChannelUserPermissions = async () => {
-      if (!channel.id) {
-        return;
-      }
-      const { data } = await channelApi.getChannelsUsersUserID(channel.id, {
-        withCredentials: true,
-      });
-      dispatch({ type: 'SET_CHANNEL_USERS', payload: data });
-    };
-    fetchChannelUserPermissions();
-  }, [channel.id]);
+    setChannelUsersValue(channelUsers.filter((channelUser) => !channelUser.is_ban));
+  }, [channelUsers]);
 
-  return (
-    <List>
-      {state.channelUsers
-        .filter((channelUser) => !channelUser.role)
+   return (
+    <>
+      <List>
+        {channelUsersValue
+        .filter((channelUser) => {
+          if (role === Role.Owner) {
+            return channelUser.role !== Role.Owner
+          }
+          return !channelUser.role
+        })
         .map((channelUser) => (
           <Fragment key={`channelUser-${channelUser.user?.id}`}>
-            <ListItemButton>
-              <ListItemText primary={channelUser.user?.username ?? ''} />
+            <ListItemButton onClick={() => handleChannelUserClick(channelUser.user?.id)}>
+              <ListItemIcon>
+                <Checkbox
+                  edge="start"
+                  checked={channelUser.is_ban}
+                  tabIndex={-1}
+                />
+              </ListItemIcon>
+              {channelUser.user && (
+                <ListItemAvatar>
+                  <UserAvatar user={channelUser.user} size={28} />
+                </ListItemAvatar>
+              )}
+              <ListItemText
+                primary={
+                  channelUser.user?.display_name ??
+                  channelUser.user?.username ??
+                  ''
+                }
+              />
             </ListItemButton>
             <Divider />
           </Fragment>
         ))}
-    </List>
+      </List>
+      <Button
+        fullWidth
+        variant="contained"
+        color="warning"
+        size="medium"
+        onClick={() => {setPermission(channelUsersValue)}}
+      >
+        Ban Users
+      </Button>
+    </>
   );
-};
-
+}
 export default ModerationSettings;
