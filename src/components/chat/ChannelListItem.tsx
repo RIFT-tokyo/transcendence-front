@@ -1,15 +1,39 @@
-import { Link, Stack, Typography } from '@mui/material';
+import { IconButton, Link, Stack, Typography } from '@mui/material';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { NavLink } from 'react-router-dom';
+import { useReducer } from 'react';
 import { Channel } from '../../api/generated';
 import ChannelIcon from './ChannelIcon';
+import ChannelSettingsDialog from './ChannelSettingsDialog';
 
 type Props = {
   channel: Channel;
   selected: boolean;
 };
 
+type State = {
+  openDialog: boolean;
+};
+
+type Actions = {
+  type: 'TOGGLE_OPEN_DIALOG';
+};
+
+const reducer = (state: State, action: Actions) => {
+  switch (action.type) {
+    case 'TOGGLE_OPEN_DIALOG':
+      return { ...state, openDialog: !state.openDialog };
+    default: {
+      return state;
+    }
+  }
+};
+
 const ChannelListItem = (props: Props) => {
   const { channel, selected } = props;
+  const [state, dispatch] = useReducer(reducer, {
+    openDialog: false,
+  });
 
   return (
     <Link
@@ -23,6 +47,16 @@ const ChannelListItem = (props: Props) => {
         <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
           {channel.name}
         </Typography>
+        {channel.role && (
+          <IconButton onClick={() => dispatch({ type: 'TOGGLE_OPEN_DIALOG' })}>
+            <SettingsIcon />
+          </IconButton>
+        )}
+        <ChannelSettingsDialog
+          open={state.openDialog}
+          setOpen={() => dispatch({ type: 'TOGGLE_OPEN_DIALOG' })}
+          channel={channel}
+        />
       </Stack>
     </Link>
   );
