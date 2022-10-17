@@ -11,6 +11,7 @@ export const INTERNAL_SERVER_ERROR_URL = '/500';
 
 export const SOCKET_USERS = '/users';
 export const SOCKET_CHANNELS = '/channels';
+export const SOCKET_PMS = '/pms';
 
 export const FT_COLOR = '#00BABC';
 
