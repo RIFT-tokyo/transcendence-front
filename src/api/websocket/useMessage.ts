@@ -30,6 +30,19 @@ const useMessage = () => {
     [client],
   );
 
+  const sendPrivateMessage = useCallback(
+    (text: string, fromUserID: number, toUserID: number) => {
+      if (client) {
+        client.pms.emit(EVENT.PRIVATE_MESSAGE_SEND, {
+          text,
+          fromUserID,
+          toUserID,
+        });
+      }
+    },
+    [client],
+  );
+
   const receiveMessage = useCallback(
     (callback: (message: Message) => void) => {
       if (client) {
@@ -42,6 +55,21 @@ const useMessage = () => {
   const unsubscribeReceiveMessage = useCallback(() => {
     if (client) {
       client.channels.off(EVENT.MESSAGE_RECEIVE);
+    }
+  }, [client]);
+
+  const receivePrivateMessage = useCallback(
+    (callback: (message: Message) => void) => {
+      if (client) {
+        client.pms.on(EVENT.PRIVATE_MESSAGE_RECEIVE, callback);
+      }
+    },
+    [client],
+  );
+
+  const unsubscribeReceivePrivateMessage = useCallback(() => {
+    if (client) {
+      client.pms.off(EVENT.PRIVATE_MESSAGE_RECEIVE);
     }
   }, [client]);
 
@@ -60,12 +88,32 @@ const useMessage = () => {
     }
   }, [client]);
 
+  const receiveAllPrivateMessage = useCallback(
+    (callback: (messages: Message[]) => void) => {
+      if (client) {
+        client.pms.on(EVENT.PRIVATE_MESSAGE_RECEIVE_ALL, callback);
+      }
+    },
+    [client],
+  );
+
+  const unsubscribeReceiveAllPrivateMessage = useCallback(() => {
+    if (client) {
+      client.pms.off(EVENT.PRIVATE_MESSAGE_RECEIVE_ALL);
+    }
+  }, [client]);
+
   return {
     sendMessage,
+    sendPrivateMessage,
     receiveMessage,
     unsubscribeReceiveMessage,
+    receivePrivateMessage,
+    unsubscribeReceivePrivateMessage,
     receiveAllMessage,
     unsubscribeReceiveAllMessage,
+    receiveAllPrivateMessage,
+    unsubscribeReceiveAllPrivateMessage,
   };
 };
 
