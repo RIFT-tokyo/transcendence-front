@@ -2,16 +2,18 @@ import { Stack, Typography } from '@mui/material';
 import TagIcon from '@mui/icons-material/Tag';
 import LockIcon from '@mui/icons-material/Lock';
 import { useOutletContext } from 'react-router-dom';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Channel } from '../../api/generated';
+import { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Channel, User } from '../../api/generated';
 import MessageContent from './MessageContent';
 import MessageInput from './MessageInput';
 import { CHAT_MESSAGE_CONTENT_HEIGHT } from '../config/constants';
 import useChannel from '../../api/websocket/useChannel';
 import useMessage, { Message } from '../../api/websocket/useMessage';
+import { AuthContext } from '../../contexts/AuthContext';
 
 type Context = {
   channel: Channel | null;
+  toUser: User | null;
 };
 
 const channelIcon = (isProtected: boolean) => {
@@ -22,37 +24,64 @@ const channelIcon = (isProtected: boolean) => {
 };
 
 const MessageList = () => {
-  const { channel } = useOutletContext<Context>();
+  const { channel, toUser } = useOutletContext<Context>();
+  const { authUser } = useContext(AuthContext);
   const [messages, setMessages] = useState<Message[]>([]);
   const scrollBottomRef = useRef<HTMLDivElement>(null);
-  const { joinChannel, leaveChannel } = useChannel();
+  const { joinChannel, leaveChannel, joinPm, leavePm } = useChannel();
   const {
     receiveMessage,
     receiveAllMessage,
     unsubscribeReceiveMessage,
     unsubscribeReceiveAllMessage,
+    receivePrivateMessage,
+    receiveAllPrivateMessage,
+    unsubscribeReceivePrivateMessage,
+    unsubscribeReceiveAllPrivateMessage
   } = useMessage();
 
   useEffect(() => {
-    receiveAllMessage((receivedMessages: Message[]) => {
-      setMessages(receivedMessages);
-    });
-    receiveMessage((message: Message) => {
-      setMessages((prev) =>
-        [...prev, message].sort(
-          (a, b) => Number(a.createdAt) - Number(b.createdAt),
-        ),
-      );
-    });
-    joinChannel(channel!.id!);
+    if (channel) {
+      receiveAllMessage((receivedMessages: Message[]) => {
+        setMessages(receivedMessages);
+      });
+      receiveMessage((message: Message) => {
+        setMessages((prev) =>
+          [...prev, message].sort(
+            (a, b) => Number(a.createdAt) - Number(b.createdAt),
+          ),
+        );
+      });
+      joinChannel(channel.id!);
+    }
+    if (toUser) {
+      receiveAllPrivateMessage((receivedMessages: Message[]) => {
+        setMessages(receivedMessages);
+      });
+      receivePrivateMessage((message: Message) => {
+        setMessages((prev) =>
+          [...prev, message].sort(
+            (a, b) => Number(a.createdAt) - Number(b.createdAt),
+          ),
+        );
+      });
+      joinPm(authUser!.id!, toUser.id!);
+    }
 
     return () => {
-      unsubscribeReceiveAllMessage();
-      unsubscribeReceiveMessage();
-      leaveChannel(channel!.id!);
+      if (channel) {
+        unsubscribeReceiveAllMessage();
+        unsubscribeReceiveMessage();
+        leaveChannel(channel.id!);
+      }
+      if (toUser) {
+        unsubscribeReceiveAllPrivateMessage();
+        unsubscribeReceivePrivateMessage();
+        leavePm(authUser!.id!, toUser.id!);
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [channel]);
+  }, [channel, toUser]);
 
   useLayoutEffect(() => {
     scrollBottomRef?.current?.scrollIntoView();
@@ -77,6 +106,15 @@ const MessageList = () => {
         sx={{ overflowY: 'auto' }}
       >
         {channel &&
+          messages.map((message) => (
+            <MessageContent
+              key={message.id}
+              user={message.user}
+              text={message.text}
+              createdAt={message.createdAt}
+            />
+          ))}
+        {toUser &&
           messages.map((message) => (
             <MessageContent
               key={message.id}

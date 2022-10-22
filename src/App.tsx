@@ -31,6 +31,7 @@ const App = () => {
               </Route>
               <Route path="chat" element={<Chat />}>
                 <Route path="channels/:channelId" element={<MessageList />} />
+                <Route path="pms/:toUserId" element={<MessageList />} />
               </Route>
               <Route path="pong" element={<Pong />} />
               <Route path="settings">

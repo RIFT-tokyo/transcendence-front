@@ -2,6 +2,7 @@ export const ROOT_URL = '/';
 export const HOME_URL = '/home';
 export const CHAT_URL = '/chat';
 export const CHANNELS_URL = `${CHAT_URL}/channels`;
+export const PMS_URL = `${CHAT_URL}/pms`;
 export const GAME_URL = '/pong';
 export const SETTING_URL = '/settings';
 export const SIGNIN_URL = '/signin';
