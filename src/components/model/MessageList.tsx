@@ -10,13 +10,17 @@ import { CHAT_MESSAGE_CONTENT_HEIGHT } from '../config/constants';
 import useChannel from '../../api/websocket/useChannel';
 import useMessage, { Message } from '../../api/websocket/useMessage';
 import { AuthContext } from '../../contexts/AuthContext';
+import UserAvatar from './UserAvatar';
 
 type Context = {
   channel: Channel | null;
   toUser: User | null;
 };
 
-const channelIcon = (isProtected: boolean) => {
+const chatIcon = (toUser: User | null, isProtected: boolean) => {
+  if (toUser) {
+    return <UserAvatar user={toUser} size={20} />
+  }
   if (isProtected) {
     return <LockIcon />;
   }
@@ -41,6 +45,7 @@ const MessageList = () => {
   } = useMessage();
 
   useEffect(() => {
+    setMessages([]);
     if (channel) {
       receiveAllMessage((receivedMessages: Message[]) => {
         setMessages(receivedMessages);
@@ -95,9 +100,9 @@ const MessageList = () => {
         spacing={0.5}
         paddingBottom={1.5}
       >
-        {channelIcon(channel?.is_protected ?? false)}
+        {chatIcon(toUser, channel?.is_protected ?? false)}
         <Typography sx={{ fontWeight: 'bold' }} variant="h5">
-          {channel?.name}
+          {toUser ? toUser.username : channel?.name}
         </Typography>
       </Stack>
       <Stack

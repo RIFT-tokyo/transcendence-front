@@ -2,7 +2,7 @@ import { Link, Stack, Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { User } from '../../api/generated';
 import { PMS_URL } from '../config/constants';
-import UserAvatar from './UserAvatar';
+import UserAvatar from '../model/UserAvatar';
 
 type Props = {
   pmUser: User;

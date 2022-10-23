@@ -44,7 +44,7 @@ const channelApi = new ChannelApi();
 const pmApi = new PmApi();
 
 const Chat = () => {
-  const { channelId } = useParams();
+  const { channelId, toUserId } = useParams();
   const navigate = useNavigate();
   const [state, dispatch] = useReducer(reducer, {
     channels: [],
@@ -54,33 +54,34 @@ const Chat = () => {
     statusCode: 0,
   });
 
-  const selectChannelFromURL = useCallback(
-    (allChannel: Channel[]) => {
-      if (allChannel.length <= 0 && !channelId) {
+  const openChatFromURL =
+    (channelIdValue: string | undefined, toUserIdValue: string | undefined, allChannel: Channel[], allPmUsers: User[]) => {
+      if (!channelIdValue && !toUserIdValue) {
+        console.log(allChannel);
+        if (allChannel.length > 0) {
+          navigate(`${CHANNELS_URL}/${allChannel[0].id}`, {
+            replace: true,
+          });
+          return;
+        }
         dispatch({ type: 'SELECT_CHANNEL', payload: null });
         return;
       }
-      if (!channelId && allChannel[0].id) {
-        navigate(`${CHANNELS_URL}/${allChannel[0].id}`, {
-          replace: true,
-        });
-        return;
-      }
-      const channel = allChannel.find((c) => c.id?.toString() === channelId);
-      if (channel) {
-        dispatch({ type: 'SELECT_CHANNEL', payload: channel });
+      if (channelIdValue) {
+        const channel = allChannel.find((c) => c.id?.toString() === channelIdValue);
+        dispatch({ type: 'SELECT_CHANNEL', payload: channel ?? null });
+      } else if (toUserIdValue) {
+        const pmUser = allPmUsers.find((u) => u.id?.toString() === toUserIdValue);
+        dispatch({ type: 'SELECT_PM_USER', payload: pmUser ?? null });
       } else {
         dispatch({ type: 'SET_STATUS_CODE', payload: 404 });
       }
-    },
-    [channelId, navigate],
-  );
+    };
 
   const fetchChannels = async () => {
     try {
       const res = await channelApi.getChannelsMe({ withCredentials: true });
       dispatch({ type: 'SET_CHANNELS', payload: res.data });
-      selectChannelFromURL(res.data);
     } catch (err: unknown) {
       if (Axios.isAxiosError(err) && err.response) {
         dispatch({ type: 'SET_STATUS_CODE', payload: err.response.status });
@@ -100,17 +101,20 @@ const Chat = () => {
   };
 
   useEffect(() => {
-    fetchChannels();
-    fetchPMs();
+    (async () => {
+      await fetchChannels();
+      await fetchPMs();
+      openChatFromURL(channelId, toUserId, state.channels, state.pmUsers);
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (state.channels.length > 0) {
-      selectChannelFromURL(state.channels);
+      openChatFromURL(channelId, toUserId, state.channels, state.pmUsers);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectChannelFromURL]);
+  }, [channelId, toUserId, state.channels, state.pmUsers]);
 
   return (
     <ErrorRouter statusCode={state.statusCode}>
@@ -126,8 +130,6 @@ const Chat = () => {
                   payload: [...state.channels, channel],
                 });
                 navigate(`${CHANNELS_URL}/${channel.id}`);
-                // localhost/chat/channel/{id}
-                // localhost/chat/pm/
               }}
             />
             <PMList

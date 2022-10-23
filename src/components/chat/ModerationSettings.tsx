@@ -1,7 +1,7 @@
 import { Button, Checkbox, Divider, List, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { Fragment, useEffect, useState } from 'react';
 import { ChannelUser, Role } from '../../api/generated';
-import UserAvatar from './UserAvatar';
+import UserAvatar from '../model/UserAvatar';
 
 type Props = {
   role: Role | null | undefined;
