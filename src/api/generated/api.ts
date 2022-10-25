@@ -1327,6 +1327,394 @@ export class AuthApi extends BaseAPI implements AuthApiInterface {
 
 
 /**
+ * BlockApi - axios parameter creator
+ * @export
+ */
+export const BlockApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Unblock a user
+         * @param {number} userID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteUsersBlockUserID: async (userID: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userID' is not null or undefined
+            assertParamExists('deleteUsersBlockUserID', 'userID', userID)
+            const localVarPath = `/users/block/{userID}`
+                .replace(`{${"userID"}}`, encodeURIComponent(String(userID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication sessionAuth required
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Lists the people who the specified user blocks.
+         * @summary List the people a user blocks
+         * @param {number} userID 
+         * @param {number} [limit] 
+         * @param {number} [offset] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUsersUserIDBlock: async (userID: number, limit?: number, offset?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userID' is not null or undefined
+            assertParamExists('getUsersUserIDBlock', 'userID', userID)
+            const localVarPath = `/users/{userID}/block`
+                .replace(`{${"userID"}}`, encodeURIComponent(String(userID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication sessionAuth required
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+
+            if (offset !== undefined) {
+                localVarQueryParameter['offset'] = offset;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Check if a user blocks another user
+         * @param {number} userID 
+         * @param {number} targetUserID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUsersUserIDBlockTargetUserID: async (userID: number, targetUserID: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userID' is not null or undefined
+            assertParamExists('getUsersUserIDBlockTargetUserID', 'userID', userID)
+            // verify required parameter 'targetUserID' is not null or undefined
+            assertParamExists('getUsersUserIDBlockTargetUserID', 'targetUserID', targetUserID)
+            const localVarPath = `/users/{userID}/block/{targetUserID}`
+                .replace(`{${"userID"}}`, encodeURIComponent(String(userID)))
+                .replace(`{${"targetUserID"}}`, encodeURIComponent(String(targetUserID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication sessionAuth required
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Block a user
+         * @param {number} userID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        putUsersBlockUserID: async (userID: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userID' is not null or undefined
+            assertParamExists('putUsersBlockUserID', 'userID', userID)
+            const localVarPath = `/users/block/{userID}`
+                .replace(`{${"userID"}}`, encodeURIComponent(String(userID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication sessionAuth required
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * BlockApi - functional programming interface
+ * @export
+ */
+export const BlockApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = BlockApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Unblock a user
+         * @param {number} userID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteUsersBlockUserID(userID: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUsersBlockUserID(userID, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Lists the people who the specified user blocks.
+         * @summary List the people a user blocks
+         * @param {number} userID 
+         * @param {number} [limit] 
+         * @param {number} [offset] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getUsersUserIDBlock(userID: number, limit?: number, offset?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUsersUserIDBlock(userID, limit, offset, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Check if a user blocks another user
+         * @param {number} userID 
+         * @param {number} targetUserID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getUsersUserIDBlockTargetUserID(userID: number, targetUserID: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUsersUserIDBlockTargetUserID(userID, targetUserID, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Block a user
+         * @param {number} userID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async putUsersBlockUserID(userID: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.putUsersBlockUserID(userID, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * BlockApi - factory interface
+ * @export
+ */
+export const BlockApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = BlockApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Unblock a user
+         * @param {number} userID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteUsersBlockUserID(userID: number, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteUsersBlockUserID(userID, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Lists the people who the specified user blocks.
+         * @summary List the people a user blocks
+         * @param {number} userID 
+         * @param {number} [limit] 
+         * @param {number} [offset] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUsersUserIDBlock(userID: number, limit?: number, offset?: number, options?: any): AxiosPromise<UserList> {
+            return localVarFp.getUsersUserIDBlock(userID, limit, offset, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Check if a user blocks another user
+         * @param {number} userID 
+         * @param {number} targetUserID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUsersUserIDBlockTargetUserID(userID: number, targetUserID: number, options?: any): AxiosPromise<void> {
+            return localVarFp.getUsersUserIDBlockTargetUserID(userID, targetUserID, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Block a user
+         * @param {number} userID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        putUsersBlockUserID(userID: number, options?: any): AxiosPromise<void> {
+            return localVarFp.putUsersBlockUserID(userID, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * BlockApi - interface
+ * @export
+ * @interface BlockApi
+ */
+export interface BlockApiInterface {
+    /**
+     * 
+     * @summary Unblock a user
+     * @param {number} userID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BlockApiInterface
+     */
+    deleteUsersBlockUserID(userID: number, options?: AxiosRequestConfig): AxiosPromise<void>;
+
+    /**
+     * Lists the people who the specified user blocks.
+     * @summary List the people a user blocks
+     * @param {number} userID 
+     * @param {number} [limit] 
+     * @param {number} [offset] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BlockApiInterface
+     */
+    getUsersUserIDBlock(userID: number, limit?: number, offset?: number, options?: AxiosRequestConfig): AxiosPromise<UserList>;
+
+    /**
+     * 
+     * @summary Check if a user blocks another user
+     * @param {number} userID 
+     * @param {number} targetUserID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BlockApiInterface
+     */
+    getUsersUserIDBlockTargetUserID(userID: number, targetUserID: number, options?: AxiosRequestConfig): AxiosPromise<void>;
+
+    /**
+     * 
+     * @summary Block a user
+     * @param {number} userID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BlockApiInterface
+     */
+    putUsersBlockUserID(userID: number, options?: AxiosRequestConfig): AxiosPromise<void>;
+
+}
+
+/**
+ * BlockApi - object-oriented interface
+ * @export
+ * @class BlockApi
+ * @extends {BaseAPI}
+ */
+export class BlockApi extends BaseAPI implements BlockApiInterface {
+    /**
+     * 
+     * @summary Unblock a user
+     * @param {number} userID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BlockApi
+     */
+    public deleteUsersBlockUserID(userID: number, options?: AxiosRequestConfig) {
+        return BlockApiFp(this.configuration).deleteUsersBlockUserID(userID, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Lists the people who the specified user blocks.
+     * @summary List the people a user blocks
+     * @param {number} userID 
+     * @param {number} [limit] 
+     * @param {number} [offset] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BlockApi
+     */
+    public getUsersUserIDBlock(userID: number, limit?: number, offset?: number, options?: AxiosRequestConfig) {
+        return BlockApiFp(this.configuration).getUsersUserIDBlock(userID, limit, offset, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Check if a user blocks another user
+     * @param {number} userID 
+     * @param {number} targetUserID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BlockApi
+     */
+    public getUsersUserIDBlockTargetUserID(userID: number, targetUserID: number, options?: AxiosRequestConfig) {
+        return BlockApiFp(this.configuration).getUsersUserIDBlockTargetUserID(userID, targetUserID, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Block a user
+     * @param {number} userID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BlockApi
+     */
+    public putUsersBlockUserID(userID: number, options?: AxiosRequestConfig) {
+        return BlockApiFp(this.configuration).putUsersBlockUserID(userID, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
  * ChannelApi - axios parameter creator
  * @export
  */

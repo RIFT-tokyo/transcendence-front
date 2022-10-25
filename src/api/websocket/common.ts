@@ -8,7 +8,7 @@ export const EVENT = {
   MESSAGE_RECEIVE_ALL: 'message:receive-all',
   CHANNEL_JOIN: 'channel:join',
   CHANNEL_LEAVE: 'channel:leave',
-  // pms
+  // /pms
   PRIVATE_MESSAGE_SEND: 'private-message:send',
   PRIVATE_MESSAGE_RECEIVE: 'private-message:receive',
   PRIVATE_MESSAGE_RECEIVE_ALL: 'private-message:receive-all',

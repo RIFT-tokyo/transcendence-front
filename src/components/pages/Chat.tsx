@@ -57,14 +57,20 @@ const Chat = () => {
   const openChatFromURL =
     (channelIdValue: string | undefined, toUserIdValue: string | undefined, allChannel: Channel[], allPmUsers: User[]) => {
       if (!channelIdValue && !toUserIdValue) {
-        console.log(allChannel);
         if (allChannel.length > 0) {
           navigate(`${CHANNELS_URL}/${allChannel[0].id}`, {
             replace: true,
           });
+          dispatch({ type: 'SELECT_CHANNEL', payload: allChannel[0] });
           return;
         }
-        dispatch({ type: 'SELECT_CHANNEL', payload: null });
+        if (allPmUsers.length > 0) {
+          navigate(`${PMS_URL}/${allPmUsers[0].id}`, {
+            replace: true,
+          });
+          dispatch({ type: 'SELECT_PM_USER', payload: allPmUsers[0] });
+          return;
+        }
         return;
       }
       if (channelIdValue) {
@@ -110,7 +116,7 @@ const Chat = () => {
   }, []);
 
   useEffect(() => {
-    if (state.channels.length > 0) {
+    if (state.channels.length > 0 || state.pmUsers.length > 0) {
       openChatFromURL(channelId, toUserId, state.channels, state.pmUsers);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -10,18 +10,24 @@ type Props = {
   user: User | null;
   isOwner: boolean;
   isFollower: boolean;
+  isBlocking: boolean;
   disabled: boolean;
   followUser: (userId: number) => void;
   unfollowUser: (userId: number) => void;
+  blockUser: (userId: number) => void;
+  unblockUser: (userId: number) => void;
 };
 
 const UserCard: React.VFC<Props> = ({
   user,
   isOwner,
   isFollower,
+  isBlocking,
   disabled,
   followUser,
   unfollowUser,
+  blockUser,
+  unblockUser,
 }: Props) => {
   const navigate = useNavigate();
   const buttonText = () => {
@@ -43,6 +49,13 @@ const UserCard: React.VFC<Props> = ({
     } else {
       followUser(user.id);
     }
+  };
+
+  const handleBlockButtonClick = () => {
+    if (!user?.id) {
+      return;
+    }
+    blockUser(user.id);
   };
   const displayName = () => {
     if (!user?.display_name) {
@@ -83,6 +96,18 @@ const UserCard: React.VFC<Props> = ({
       >
         {buttonText()}
       </Button>
+      {!isOwner && (
+        <Button
+          size="small"
+          fullWidth
+          color="error"
+          variant="contained"
+          disabled={disabled}
+          onClick={handleBlockButtonClick}
+        >
+          {isBlocking ? "unblock" : "block"}
+        </Button>
+      )}
     </Box>
   );
 };

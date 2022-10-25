@@ -47,7 +47,6 @@ const MessageList = () => {
   useEffect(() => {
     setMessages([]);
     if (channel) {
-      console.log('channel???');
       receiveAllMessage((receivedMessages: Message[]) => {
         setMessages(receivedMessages);
       });
@@ -61,7 +60,6 @@ const MessageList = () => {
       joinChannel(channel.id!);
     }
     if (toUser) {
-      console.log('PM???');
       receiveAllPrivateMessage((receivedMessages: Message[]) => {
         setMessages(receivedMessages);
       });

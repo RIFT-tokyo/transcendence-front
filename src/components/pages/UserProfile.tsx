@@ -15,6 +15,7 @@ type State = {
   user: User | null;
   isOwner: boolean;
   isFollowing: boolean;
+  isBlocking: boolean;
   statusCode: number;
   isLoading: boolean;
 };
@@ -23,6 +24,7 @@ type Actions =
   | { type: 'SET_USER'; payload: User }
   | { type: 'SET_IS_OWNER'; payload: boolean }
   | { type: 'SET_IS_FOLLOWING'; payload: boolean }
+  | { type: 'SET_IS_BLOCKING'; payload: boolean }
   | { type: 'SET_STATUS_CODE'; payload: number }
   | { type: 'LOADING' };
 
@@ -34,6 +36,8 @@ const reducer = (state: State, action: Actions) => {
       return { ...state, isOwner: action.payload };
     case 'SET_IS_FOLLOWING':
       return { ...state, isFollowing: action.payload };
+    case 'SET_IS_BLOCKING':
+      return { ...state, isBlocking: action.payload };
     case 'SET_STATUS_CODE':
       return { ...state, statusCode: action.payload };
     case 'LOADING':
@@ -45,6 +49,7 @@ const reducer = (state: State, action: Actions) => {
 
 const userApi = new UserApi();
 const followApi = new FollowApi();
+const blockApi = new BlockApi();
 
 const UserProfile = () => {
   const { username } = useParams();
@@ -55,6 +60,7 @@ const UserProfile = () => {
     user: null,
     isOwner: false,
     isFollowing: false,
+    isBlocking: false,
     statusCode: 0,
     isLoading: false,
   });
@@ -95,6 +101,42 @@ const UserProfile = () => {
     dispatch({ type: 'LOADING' });
   };
 
+  const blockUser = async (userId: number) => {
+    if (state.isLoading) {
+      return;
+    }
+    dispatch({ type: 'LOADING' });
+    try {
+      await blockApi.putUsersBlockUserID(userId, {
+        withCredentials: true,
+      });
+      dispatch({ type: 'SET_IS_BLOCKING', payload: true });
+    } catch (err: unknown) {
+      if (Axios.isAxiosError(err) && err.response) {
+        enqueueSnackbar(err.message, { variant: 'error' });
+      }
+    }
+    dispatch({ type: 'LOADING' });
+  };
+
+  const unblockUser = async (userId: number) => {
+    if (state.isLoading) {
+      return;
+    }
+    dispatch({ type: 'LOADING' });
+    try {
+      await blockApi.deleteUsersBlockUserID(userId, {
+        withCredentials: true,
+      });
+      dispatch({ type: 'SET_IS_BLOCKING', payload: false });
+    } catch (err: unknown) {
+      if (Axios.isAxiosError(err) && err.response) {
+        enqueueSnackbar(err.message, { variant: 'error' });
+      }
+    }
+    dispatch({ type: 'LOADING' });
+  };
+
   const fetchIsFollower = async (ownerId: number, targetId: number) => {
     try {
       const res = await followApi.getUsersUserIDFollowingTargetUserID(
@@ -102,7 +144,7 @@ const UserProfile = () => {
         targetId,
         { withCredentials: true },
       );
-      dispatch({ type: 'SET_IS_FOLLOWING', payload: res.status === 204});
+      dispatch({ type: 'SET_IS_FOLLOWING', payload: res.status === 204 });
     } catch (err: unknown) {
       if (Axios.isAxiosError(err) && err.response) {
         if (err.response?.status === 404) {
@@ -176,11 +218,16 @@ const UserProfile = () => {
               user={state.user}
               isOwner={state.isOwner}
               isFollower={state.isFollowing}
+              isBlocking={state.isBlocking}
               disabled={state.isLoading}
               followUser={followUser}
               unfollowUser={unfollowUser}
+              blockUser={blockUser}
+              unblockUser={unblockUser}
             />
-            {state.isOwner && authUser?.id && <FollowingList ownerId={authUser.id} />}
+            {state.isOwner && authUser?.id && (
+              <FollowingList ownerId={authUser.id} />
+            )}
             {state.user?.achievements && state.user.achievements.length > 0 && (
               <AchievementList achievements={state.user.achievements} />
             )}

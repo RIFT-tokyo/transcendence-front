@@ -1,4 +1,5 @@
-import { Avatar } from '@mui/material';
+import { Avatar, Link } from '@mui/material';
+import { NavLink } from 'react-router-dom';
 import { User } from '../../api/generated';
 import stringToColor from '../../functions/stringToColor';
 
@@ -11,18 +12,20 @@ const UserAvatar = (props: Props) => {
   const { user, size } = props;
 
   return (
-    <Avatar
-      sx={{
-        width: size,
-        height: size,
-        bgcolor: user?.profile_image
-          ? undefined
-          : stringToColor(user?.username ?? ''),
-      }}
-      src={user?.profile_image}
-    >
-      {user?.username?.slice(0, 2) ?? ''}
-    </Avatar>
+    <Link component={NavLink} underline="none" to={`/users/${user.username}`}>
+      <Avatar
+        sx={{
+          width: size,
+          height: size,
+          bgcolor: user?.profile_image
+            ? undefined
+            : stringToColor(user?.username ?? ''),
+        }}
+        src={user?.profile_image}
+      >
+        {user?.username?.slice(0, 2) ?? ''}
+      </Avatar>
+    </Link>
   );
 };
 
