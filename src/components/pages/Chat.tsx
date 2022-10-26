@@ -1,16 +1,18 @@
 import { Container, Divider, Stack } from '@mui/material';
-import { useCallback, useEffect, useReducer } from 'react';
+import { useCallback, useContext, useEffect, useReducer } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import Axios from 'axios';
 import ChannelList from '../chat/ChannelList';
-import { Channel, ChannelApi, PmApi, User } from '../../api/generated';
+import { BlockApi, Channel, ChannelApi, PmApi, User } from '../../api/generated';
 import ErrorRouter from '../ui/ErrorRouter';
 import { CHANNELS_URL, PMS_URL } from '../config/constants';
 import PMList from '../chat/PMList';
+import { AuthContext } from '../../contexts/AuthContext';
 
 type State = {
   channels: Channel[];
   pmUsers: User[];
+  blockUserIds: number[];
   selectedChannel: Channel | null;
   selectedPmUser: User | null;
   statusCode: number;
@@ -21,6 +23,7 @@ type Actions =
   | { type: 'SELECT_CHANNEL'; payload: Channel | null }
   | { type: 'SELECT_PM_USER'; payload: User | null }
   | { type: 'SET_PM_USERS'; payload: User[] }
+  | { type: 'SET_BLOCK_USER_IDS'; payload: number[] }
   | { type: 'SET_STATUS_CODE'; payload: number };
 
 const reducer = (state: State, action: Actions): State => {
@@ -29,6 +32,8 @@ const reducer = (state: State, action: Actions): State => {
       return { ...state, channels: action.payload };
     case 'SET_PM_USERS':
       return { ...state, pmUsers: action.payload };
+    case 'SET_BLOCK_USER_IDS':
+      return { ...state, blockUserIds: action.payload };
     case 'SELECT_CHANNEL':
       return { ...state, selectedChannel: action.payload, selectedPmUser: null };
     case 'SELECT_PM_USER':
@@ -42,13 +47,16 @@ const reducer = (state: State, action: Actions): State => {
 
 const channelApi = new ChannelApi();
 const pmApi = new PmApi();
+const blockApi = new BlockApi();
 
 const Chat = () => {
   const { channelId, toUserId } = useParams();
   const navigate = useNavigate();
+  const { authUser } = useContext(AuthContext);
   const [state, dispatch] = useReducer(reducer, {
     channels: [],
     pmUsers: [],
+    blockUserIds: [],
     selectedChannel: null,
     selectedPmUser: null,
     statusCode: 0,
@@ -106,8 +114,20 @@ const Chat = () => {
     }
   };
 
+  const fetchBlockUserIds = async () => {
+    try {
+      const res = await blockApi.getUsersUserIDBlock(authUser!.id!, {withCredentials: true});
+      dispatch({ type: 'SET_BLOCK_USER_IDS', payload: res.data.map((u) => u.id!) });
+    } catch (err: unknown) {
+      // if (Axios.isAxiosError(err) && err.response) {
+      //   dispatch({ type: 'SET_STATUS_CODE', payload: err.response.status });
+      // }
+    }
+  }
+
   useEffect(() => {
     (async () => {
+      await fetchBlockUserIds();
       await fetchChannels();
       await fetchPMs();
       openChatFromURL(channelId, toUserId, state.channels, state.pmUsers);
@@ -152,7 +172,7 @@ const Chat = () => {
           </div>
           <Divider orientation="vertical" flexItem variant="middle" />
           {(state.selectedChannel || state.selectedPmUser) && (
-            <Outlet context={{ channel: state.selectedChannel, toUser: state.selectedPmUser }} />
+            <Outlet context={{ channel: state.selectedChannel, toUser: state.selectedPmUser, blockUserIds: state.blockUserIds }} />
           )}
         </Stack>
       </Container>

@@ -55,7 +55,14 @@ const UserCard: React.VFC<Props> = ({
     if (!user?.id) {
       return;
     }
-    blockUser(user.id);
+    if (isOwner) {
+      return;
+    }
+    if (isBlocking) {
+      unblockUser(user.id);
+    } else {
+      blockUser(user.id);
+    }
   };
   const displayName = () => {
     if (!user?.display_name) {

@@ -15,6 +15,7 @@ import UserAvatar from './UserAvatar';
 type Context = {
   channel: Channel | null;
   toUser: User | null;
+  blockUserIds: number[];
 };
 
 const chatIcon = (toUser: User | null, isProtected: boolean) => {
@@ -28,7 +29,7 @@ const chatIcon = (toUser: User | null, isProtected: boolean) => {
 };
 
 const MessageList = () => {
-  const { channel, toUser } = useOutletContext<Context>();
+  const { channel, toUser, blockUserIds } = useOutletContext<Context>();
   const { authUser } = useContext(AuthContext);
   const [messages, setMessages] = useState<Message[]>([]);
   const scrollBottomRef = useRef<HTMLDivElement>(null);
@@ -110,17 +111,10 @@ const MessageList = () => {
         height={CHAT_MESSAGE_CONTENT_HEIGHT}
         sx={{ overflowY: 'auto' }}
       >
-        {channel &&
-          messages.map((message) => (
-            <MessageContent
-              key={message.id}
-              user={message.user}
-              text={message.text}
-              createdAt={message.createdAt}
-            />
-          ))}
-        {toUser &&
-          messages.map((message) => (
+        {(channel || toUser) &&
+          messages.filter((message) =>
+             !blockUserIds.includes(message.user.id)
+          ).map((message) => (
             <MessageContent
               key={message.id}
               user={message.user}

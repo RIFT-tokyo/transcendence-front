@@ -3,7 +3,7 @@ import { useSnackbar } from 'notistack';
 import { useContext, useEffect, useReducer } from 'react';
 import { useParams } from 'react-router-dom';
 import Axios from 'axios';
-import { User, UserApi, FollowApi } from '../../api/generated/api';
+import { User, UserApi, FollowApi, BlockApi } from '../../api/generated/api';
 import { AuthContext } from '../../contexts/AuthContext';
 import AchievementList from '../model/AchievementList';
 import FollowingList from '../model/FollowingList';
@@ -137,6 +137,7 @@ const UserProfile = () => {
     dispatch({ type: 'LOADING' });
   };
 
+  // TODO: block版作る
   const fetchIsFollower = async (ownerId: number, targetId: number) => {
     try {
       const res = await followApi.getUsersUserIDFollowingTargetUserID(

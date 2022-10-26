@@ -1372,12 +1372,10 @@ export const BlockApiAxiosParamCreator = function (configuration?: Configuration
          * Lists the people who the specified user blocks.
          * @summary List the people a user blocks
          * @param {number} userID 
-         * @param {number} [limit] 
-         * @param {number} [offset] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUsersUserIDBlock: async (userID: number, limit?: number, offset?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getUsersUserIDBlock: async (userID: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'userID' is not null or undefined
             assertParamExists('getUsersUserIDBlock', 'userID', userID)
             const localVarPath = `/users/{userID}/block`
@@ -1394,14 +1392,6 @@ export const BlockApiAxiosParamCreator = function (configuration?: Configuration
             const localVarQueryParameter = {} as any;
 
             // authentication sessionAuth required
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (offset !== undefined) {
-                localVarQueryParameter['offset'] = offset;
-            }
 
 
     
@@ -1515,13 +1505,11 @@ export const BlockApiFp = function(configuration?: Configuration) {
          * Lists the people who the specified user blocks.
          * @summary List the people a user blocks
          * @param {number} userID 
-         * @param {number} [limit] 
-         * @param {number} [offset] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getUsersUserIDBlock(userID: number, limit?: number, offset?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserList>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUsersUserIDBlock(userID, limit, offset, options);
+        async getUsersUserIDBlock(userID: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUsersUserIDBlock(userID, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1571,13 +1559,11 @@ export const BlockApiFactory = function (configuration?: Configuration, basePath
          * Lists the people who the specified user blocks.
          * @summary List the people a user blocks
          * @param {number} userID 
-         * @param {number} [limit] 
-         * @param {number} [offset] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUsersUserIDBlock(userID: number, limit?: number, offset?: number, options?: any): AxiosPromise<UserList> {
-            return localVarFp.getUsersUserIDBlock(userID, limit, offset, options).then((request) => request(axios, basePath));
+        getUsersUserIDBlock(userID: number, options?: any): AxiosPromise<Array<User>> {
+            return localVarFp.getUsersUserIDBlock(userID, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1623,13 +1609,11 @@ export interface BlockApiInterface {
      * Lists the people who the specified user blocks.
      * @summary List the people a user blocks
      * @param {number} userID 
-     * @param {number} [limit] 
-     * @param {number} [offset] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof BlockApiInterface
      */
-    getUsersUserIDBlock(userID: number, limit?: number, offset?: number, options?: AxiosRequestConfig): AxiosPromise<UserList>;
+    getUsersUserIDBlock(userID: number, options?: AxiosRequestConfig): AxiosPromise<Array<User>>;
 
     /**
      * 
@@ -1677,14 +1661,12 @@ export class BlockApi extends BaseAPI implements BlockApiInterface {
      * Lists the people who the specified user blocks.
      * @summary List the people a user blocks
      * @param {number} userID 
-     * @param {number} [limit] 
-     * @param {number} [offset] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof BlockApi
      */
-    public getUsersUserIDBlock(userID: number, limit?: number, offset?: number, options?: AxiosRequestConfig) {
-        return BlockApiFp(this.configuration).getUsersUserIDBlock(userID, limit, offset, options).then((request) => request(this.axios, this.basePath));
+    public getUsersUserIDBlock(userID: number, options?: AxiosRequestConfig) {
+        return BlockApiFp(this.configuration).getUsersUserIDBlock(userID, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
