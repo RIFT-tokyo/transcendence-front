@@ -1,5 +1,5 @@
 import { Container, Divider, Stack } from '@mui/material';
-import { useCallback, useContext, useEffect, useReducer } from 'react';
+import { useContext, useEffect, useReducer } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import Axios from 'axios';
 import ChannelList from '../chat/ChannelList';
@@ -62,35 +62,24 @@ const Chat = () => {
     statusCode: 0,
   });
 
-  const openChatFromURL =
-    (channelIdValue: string | undefined, toUserIdValue: string | undefined, allChannel: Channel[], allPmUsers: User[]) => {
-      if (!channelIdValue && !toUserIdValue) {
-        if (allChannel.length > 0) {
-          navigate(`${CHANNELS_URL}/${allChannel[0].id}`, {
-            replace: true,
-          });
-          dispatch({ type: 'SELECT_CHANNEL', payload: allChannel[0] });
-          return;
-        }
-        if (allPmUsers.length > 0) {
-          navigate(`${PMS_URL}/${allPmUsers[0].id}`, {
-            replace: true,
-          });
-          dispatch({ type: 'SELECT_PM_USER', payload: allPmUsers[0] });
-          return;
-        }
-        return;
-      }
-      if (channelIdValue) {
-        const channel = allChannel.find((c) => c.id?.toString() === channelIdValue);
-        dispatch({ type: 'SELECT_CHANNEL', payload: channel ?? null });
-      } else if (toUserIdValue) {
-        const pmUser = allPmUsers.find((u) => u.id?.toString() === toUserIdValue);
+  const openChatFromURL = async (channelIdValue: string | undefined, toUserIdValue: string | undefined, allChannel: Channel[], allPmUsers: User[]) => {
+    if (channelIdValue) {
+      const channel = allChannel.find((c) => c.id?.toString() === channelIdValue);
+      dispatch({ type: 'SELECT_CHANNEL', payload: channel ?? null });
+    } else if (toUserIdValue) {
+      const pmUser = allPmUsers.find((u) => u.id?.toString() === toUserIdValue);
+      if (pmUser) {
         dispatch({ type: 'SELECT_PM_USER', payload: pmUser ?? null });
       } else {
-        dispatch({ type: 'SET_STATUS_CODE', payload: 404 });
+        const res = await pmApi.putMePmsUserid(
+          Number(toUserIdValue),
+          { withCredentials: true },
+        );
+        dispatch({ type: 'SET_PM_USERS', payload: [...allPmUsers, res.data]})
+        dispatch({ type: 'SELECT_PM_USER', payload: res.data})
       }
-    };
+    }
+  };
 
   const fetchChannels = async () => {
     try {
@@ -108,9 +97,9 @@ const Chat = () => {
       const res = await pmApi.getMePms({ withCredentials: true });
       dispatch({ type: 'SET_PM_USERS', payload: res.data });
     } catch (err: unknown) {
-      // if (Axios.isAxiosError(err) && err.response) {
-      //   dispatch({ type: 'SET_STATUS_CODE', payload: err.response.status });
-      // }
+      if (Axios.isAxiosError(err) && err.response) {
+        dispatch({ type: 'SET_STATUS_CODE', payload: err.response.status });
+      }
     }
   };
 
@@ -119,9 +108,9 @@ const Chat = () => {
       const res = await blockApi.getUsersUserIDBlock(authUser!.id!, {withCredentials: true});
       dispatch({ type: 'SET_BLOCK_USER_IDS', payload: res.data.map((u) => u.id!) });
     } catch (err: unknown) {
-      // if (Axios.isAxiosError(err) && err.response) {
-      //   dispatch({ type: 'SET_STATUS_CODE', payload: err.response.status });
-      // }
+      if (Axios.isAxiosError(err) && err.response) {
+        dispatch({ type: 'SET_STATUS_CODE', payload: err.response.status });
+      }
     }
   }
 
@@ -130,17 +119,26 @@ const Chat = () => {
       await fetchBlockUserIds();
       await fetchChannels();
       await fetchPMs();
-      openChatFromURL(channelId, toUserId, state.channels, state.pmUsers);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (state.channels.length > 0 || state.pmUsers.length > 0) {
+    if (!channelId && !toUserId) {
+      if (state.channels.length > 0) {
+        navigate(`${CHANNELS_URL}/${state.channels[0].id}`, {
+          replace: true,
+        });
+      } else if (state.pmUsers.length > 0) {
+        navigate(`${PMS_URL}/${state.pmUsers[0].id}`, {
+          replace: true,
+        });
+      }
+    }
+    if ((state.channels.length > 0 && channelId) || (state.pmUsers.length > 0 && toUserId)) {
       openChatFromURL(channelId, toUserId, state.channels, state.pmUsers);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [channelId, toUserId, state.channels, state.pmUsers]);
+  }, [channelId, toUserId, state.channels, state.pmUsers, navigate])
 
   return (
     <ErrorRouter statusCode={state.statusCode}>

@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import * as React from 'react';
 import { User, UserStatusEnum } from '../../api/generated/api';
 import stringToColor from '../../functions/stringToColor';
+import { PMS_URL } from '../config/constants';
 
 type Props = {
   user: User | null;
@@ -75,7 +76,12 @@ const FollowerStatus: React.VFC<Props> = ({ user }: Props) => {
         </Link>
         <Typography variant="body2">{user?.status_message}</Typography>
       </Stack>
-      <ChatBubble sx={{ fontSize: 24 }} color="neutral" />
+      <Link
+        component={NavLink}
+        to={`${PMS_URL}/${user?.id}`}
+      >
+        <ChatBubble sx={{ fontSize: 24 }} color="neutral" />
+      </Link>
     </Stack>
   );
 };

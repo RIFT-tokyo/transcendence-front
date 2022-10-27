@@ -87,13 +87,12 @@ const CreatePMDialog = (props: Props) => {
     setOpen(false);
   };
 
-  const joinChannel = async () => {
+  const handleClickCreate = async () => {
     if (!state.selectedUser?.id) {
       return;
     }
     dispatch({ type: 'SET_IS_REQUESTING', payload: true });
     try {
-      // TODO: userに書き換え
       const res = await pmApi.putMePmsUserid(
         state.selectedUser.id,
         { withCredentials: true },
@@ -143,7 +142,7 @@ const CreatePMDialog = (props: Props) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={closeDialog}>Cancel</Button>
-        <Button onClick={joinChannel} disabled={!state.selectedUser}>
+        <Button onClick={handleClickCreate} disabled={!state.selectedUser}>
           Create
         </Button>
       </DialogActions>
