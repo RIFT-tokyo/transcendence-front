@@ -65,18 +65,28 @@ const Chat = () => {
   const openChatFromURL = async (channelIdValue: string | undefined, toUserIdValue: string | undefined, allChannel: Channel[], allPmUsers: User[]) => {
     if (channelIdValue) {
       const channel = allChannel.find((c) => c.id?.toString() === channelIdValue);
-      dispatch({ type: 'SELECT_CHANNEL', payload: channel ?? null });
+      if (channel) {
+        dispatch({ type: 'SELECT_CHANNEL', payload: channel });
+      } else {
+        dispatch({ type: 'SET_STATUS_CODE', payload: 404 });
+      }
     } else if (toUserIdValue) {
       const pmUser = allPmUsers.find((u) => u.id?.toString() === toUserIdValue);
       if (pmUser) {
-        dispatch({ type: 'SELECT_PM_USER', payload: pmUser ?? null });
+        dispatch({ type: 'SELECT_PM_USER', payload: pmUser });
       } else {
-        const res = await pmApi.putMePmsUserid(
-          Number(toUserIdValue),
-          { withCredentials: true },
-        );
-        dispatch({ type: 'SET_PM_USERS', payload: [...allPmUsers, res.data]})
-        dispatch({ type: 'SELECT_PM_USER', payload: res.data})
+        try {
+          const res = await pmApi.putMePmsUserid(
+            Number(toUserIdValue),
+            { withCredentials: true },
+          );
+          dispatch({ type: 'SET_PM_USERS', payload: [...allPmUsers, res.data]})
+          dispatch({ type: 'SELECT_PM_USER', payload: res.data})
+        } catch (err: unknown) {
+          if (Axios.isAxiosError(err) && err.response) {
+            dispatch({ type: 'SET_STATUS_CODE', payload: err.response.status });
+          }
+        }
       }
     }
   };

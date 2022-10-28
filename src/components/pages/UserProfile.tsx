@@ -137,7 +137,6 @@ const UserProfile = () => {
     dispatch({ type: 'LOADING' });
   };
 
-  // TODO: block版作る
   const fetchIsFollower = async (ownerId: number, targetId: number) => {
     try {
       const res = await followApi.getUsersUserIDFollowingTargetUserID(
@@ -157,6 +156,25 @@ const UserProfile = () => {
     }
   };
 
+  const fetchIsBlocking = async (ownerId: number, targetId: number) => {
+    try {
+      const res = await blockApi.getUsersUserIDBlockTargetUserID(
+        ownerId,
+        targetId,
+        { withCredentials: true },
+      );
+      dispatch({ type: 'SET_IS_BLOCKING', payload: res.status === 204 });
+    } catch (err: unknown) {
+      if (Axios.isAxiosError(err) && err.response) {
+        if (err.response?.status === 404) {
+          dispatch({ type: 'SET_IS_BLOCKING', payload: false });
+        } else {
+          dispatch({ type: 'SET_STATUS_CODE', payload: err.response?.status });
+        }
+      }
+    }
+  };
+
   const fetchUserFromUsername = async (ownerId: number, name: string) => {
     try {
       const res = await userApi.getUsersUsername(name, {
@@ -167,6 +185,7 @@ const UserProfile = () => {
       }
       dispatch({ type: 'SET_USER', payload: res.data });
       fetchIsFollower(ownerId, res.data.id);
+      fetchIsBlocking(ownerId, res.data.id);
     } catch (err: unknown) {
       if (Axios.isAxiosError(err) && err.response) {
         dispatch({ type: 'SET_STATUS_CODE', payload: err.response?.status });

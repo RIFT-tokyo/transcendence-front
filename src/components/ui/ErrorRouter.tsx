@@ -12,9 +12,9 @@ const ErrorRouter: React.VFC<Props> = ({ statusCode, children }: Props) => {
     case 0:
       return <div>{children}</div>;
     case 404:
-      return <Navigate to={NOT_FOUND_URL} />;
+      return <Navigate to={NOT_FOUND_URL} replace />;
     case 500:
-      return <Navigate to={INTERNAL_SERVER_ERROR_URL} />;
+      return <Navigate to={INTERNAL_SERVER_ERROR_URL} replace />;
     default:
       return <div>Unknown Status Code: {statusCode}</div>;
   }
