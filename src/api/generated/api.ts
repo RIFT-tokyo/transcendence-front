@@ -180,6 +180,45 @@ export interface FilePath {
 /**
  * 
  * @export
+ * @interface InlineObject
+ */
+export interface InlineObject {
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineObject
+     */
+    'authcode'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface InlineObject1
+ */
+export interface InlineObject1 {
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineObject1
+     */
+    'authcode'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface InlineResponse200
+ */
+export interface InlineResponse200 {
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse200
+     */
+    'qrcode'?: string;
+}
+/**
+ * 
+ * @export
  * @interface Login
  */
 export interface Login {
@@ -471,6 +510,12 @@ export interface User {
      * @memberof User
      */
     'achievements'?: Array<Achievement>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof User
+     */
+    'is_two_fa_enabled'?: boolean;
 }
 
 /**
@@ -509,6 +554,70 @@ export interface UserList {
  */
 export const AuthApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * deactivate 2 factor from security setting
+         * @summary Your GET endpoint
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAuth2faDeactivate: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/auth/2fa/deactivate`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication sessionAuth required
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * return 2 factor\'s qrcode
+         * @summary Your GET endpoint
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAuth2faQrcode: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/auth/2fa/qrcode`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication sessionAuth required
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * After allowing transcendence on screen 42, you will be redirected here. This is where the server-side will register or retrieve the user\'s information.
          * @summary Oauth callback
@@ -563,6 +672,76 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * activate 2 factor from security setting
+         * @param {InlineObject1} [inlineObject1] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postAuth2faActivate: async (inlineObject1?: InlineObject1, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/auth/2fa/activate`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication sessionAuth required
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(inlineObject1, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * authenticate 2 factor, this is used just after user login with 2 factor activated.
+         * @param {InlineObject} [inlineObject] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postAuth2faAuthenticate: async (inlineObject?: InlineObject, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/auth/2fa/authenticate`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication sessionAuth required
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(inlineObject, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -716,6 +895,26 @@ export const AuthApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AuthApiAxiosParamCreator(configuration)
     return {
         /**
+         * deactivate 2 factor from security setting
+         * @summary Your GET endpoint
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAuth2faDeactivate(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAuth2faDeactivate(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * return 2 factor\'s qrcode
+         * @summary Your GET endpoint
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAuth2faQrcode(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse200>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAuth2faQrcode(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * After allowing transcendence on screen 42, you will be redirected here. This is where the server-side will register or retrieve the user\'s information.
          * @summary Oauth callback
          * @param {*} [options] Override http request option.
@@ -733,6 +932,26 @@ export const AuthApiFp = function(configuration?: Configuration) {
          */
         async getAuthLogin(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getAuthLogin(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * activate 2 factor from security setting
+         * @param {InlineObject1} [inlineObject1] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postAuth2faActivate(inlineObject1?: InlineObject1, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postAuth2faActivate(inlineObject1, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * authenticate 2 factor, this is used just after user login with 2 factor activated.
+         * @param {InlineObject} [inlineObject] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postAuth2faAuthenticate(inlineObject?: InlineObject, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postAuth2faAuthenticate(inlineObject, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -789,6 +1008,24 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
     const localVarFp = AuthApiFp(configuration)
     return {
         /**
+         * deactivate 2 factor from security setting
+         * @summary Your GET endpoint
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAuth2faDeactivate(options?: any): AxiosPromise<void> {
+            return localVarFp.getAuth2faDeactivate(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * return 2 factor\'s qrcode
+         * @summary Your GET endpoint
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAuth2faQrcode(options?: any): AxiosPromise<InlineResponse200> {
+            return localVarFp.getAuth2faQrcode(options).then((request) => request(axios, basePath));
+        },
+        /**
          * After allowing transcendence on screen 42, you will be redirected here. This is where the server-side will register or retrieve the user\'s information.
          * @summary Oauth callback
          * @param {*} [options] Override http request option.
@@ -805,6 +1042,24 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
          */
         getAuthLogin(options?: any): AxiosPromise<void> {
             return localVarFp.getAuthLogin(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * activate 2 factor from security setting
+         * @param {InlineObject1} [inlineObject1] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postAuth2faActivate(inlineObject1?: InlineObject1, options?: any): AxiosPromise<void> {
+            return localVarFp.postAuth2faActivate(inlineObject1, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * authenticate 2 factor, this is used just after user login with 2 factor activated.
+         * @param {InlineObject} [inlineObject] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postAuth2faAuthenticate(inlineObject?: InlineObject, options?: any): AxiosPromise<void> {
+            return localVarFp.postAuth2faAuthenticate(inlineObject, options).then((request) => request(axios, basePath));
         },
         /**
          * username and password auth without using auth.
@@ -855,6 +1110,24 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
  */
 export interface AuthApiInterface {
     /**
+     * deactivate 2 factor from security setting
+     * @summary Your GET endpoint
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApiInterface
+     */
+    getAuth2faDeactivate(options?: AxiosRequestConfig): AxiosPromise<void>;
+
+    /**
+     * return 2 factor\'s qrcode
+     * @summary Your GET endpoint
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApiInterface
+     */
+    getAuth2faQrcode(options?: AxiosRequestConfig): AxiosPromise<InlineResponse200>;
+
+    /**
      * After allowing transcendence on screen 42, you will be redirected here. This is where the server-side will register or retrieve the user\'s information.
      * @summary Oauth callback
      * @param {*} [options] Override http request option.
@@ -871,6 +1144,24 @@ export interface AuthApiInterface {
      * @memberof AuthApiInterface
      */
     getAuthLogin(options?: AxiosRequestConfig): AxiosPromise<void>;
+
+    /**
+     * activate 2 factor from security setting
+     * @param {InlineObject1} [inlineObject1] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApiInterface
+     */
+    postAuth2faActivate(inlineObject1?: InlineObject1, options?: AxiosRequestConfig): AxiosPromise<void>;
+
+    /**
+     * authenticate 2 factor, this is used just after user login with 2 factor activated.
+     * @param {InlineObject} [inlineObject] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApiInterface
+     */
+    postAuth2faAuthenticate(inlineObject?: InlineObject, options?: AxiosRequestConfig): AxiosPromise<void>;
 
     /**
      * username and password auth without using auth.
@@ -921,6 +1212,28 @@ export interface AuthApiInterface {
  */
 export class AuthApi extends BaseAPI implements AuthApiInterface {
     /**
+     * deactivate 2 factor from security setting
+     * @summary Your GET endpoint
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public getAuth2faDeactivate(options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).getAuth2faDeactivate(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * return 2 factor\'s qrcode
+     * @summary Your GET endpoint
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public getAuth2faQrcode(options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).getAuth2faQrcode(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * After allowing transcendence on screen 42, you will be redirected here. This is where the server-side will register or retrieve the user\'s information.
      * @summary Oauth callback
      * @param {*} [options] Override http request option.
@@ -940,6 +1253,28 @@ export class AuthApi extends BaseAPI implements AuthApiInterface {
      */
     public getAuthLogin(options?: AxiosRequestConfig) {
         return AuthApiFp(this.configuration).getAuthLogin(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * activate 2 factor from security setting
+     * @param {InlineObject1} [inlineObject1] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public postAuth2faActivate(inlineObject1?: InlineObject1, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).postAuth2faActivate(inlineObject1, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * authenticate 2 factor, this is used just after user login with 2 factor activated.
+     * @param {InlineObject} [inlineObject] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public postAuth2faAuthenticate(inlineObject?: InlineObject, options?: AxiosRequestConfig) {
+        return AuthApiFp(this.configuration).postAuth2faAuthenticate(inlineObject, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -987,6 +1322,376 @@ export class AuthApi extends BaseAPI implements AuthApiInterface {
      */
     public putAuthPassword(password?: Password, options?: AxiosRequestConfig) {
         return AuthApiFp(this.configuration).putAuthPassword(password, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * BlockApi - axios parameter creator
+ * @export
+ */
+export const BlockApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Unblock a user
+         * @param {number} userID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteUsersBlockUserID: async (userID: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userID' is not null or undefined
+            assertParamExists('deleteUsersBlockUserID', 'userID', userID)
+            const localVarPath = `/users/block/{userID}`
+                .replace(`{${"userID"}}`, encodeURIComponent(String(userID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication sessionAuth required
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Lists the people who the specified user blocks.
+         * @summary List the people a user blocks
+         * @param {number} userID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUsersUserIDBlock: async (userID: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userID' is not null or undefined
+            assertParamExists('getUsersUserIDBlock', 'userID', userID)
+            const localVarPath = `/users/{userID}/block`
+                .replace(`{${"userID"}}`, encodeURIComponent(String(userID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication sessionAuth required
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Check if a user blocks another user
+         * @param {number} userID 
+         * @param {number} targetUserID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUsersUserIDBlockTargetUserID: async (userID: number, targetUserID: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userID' is not null or undefined
+            assertParamExists('getUsersUserIDBlockTargetUserID', 'userID', userID)
+            // verify required parameter 'targetUserID' is not null or undefined
+            assertParamExists('getUsersUserIDBlockTargetUserID', 'targetUserID', targetUserID)
+            const localVarPath = `/users/{userID}/block/{targetUserID}`
+                .replace(`{${"userID"}}`, encodeURIComponent(String(userID)))
+                .replace(`{${"targetUserID"}}`, encodeURIComponent(String(targetUserID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication sessionAuth required
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Block a user
+         * @param {number} userID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        putUsersBlockUserID: async (userID: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userID' is not null or undefined
+            assertParamExists('putUsersBlockUserID', 'userID', userID)
+            const localVarPath = `/users/block/{userID}`
+                .replace(`{${"userID"}}`, encodeURIComponent(String(userID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication sessionAuth required
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * BlockApi - functional programming interface
+ * @export
+ */
+export const BlockApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = BlockApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Unblock a user
+         * @param {number} userID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteUsersBlockUserID(userID: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUsersBlockUserID(userID, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Lists the people who the specified user blocks.
+         * @summary List the people a user blocks
+         * @param {number} userID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getUsersUserIDBlock(userID: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUsersUserIDBlock(userID, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Check if a user blocks another user
+         * @param {number} userID 
+         * @param {number} targetUserID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getUsersUserIDBlockTargetUserID(userID: number, targetUserID: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUsersUserIDBlockTargetUserID(userID, targetUserID, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Block a user
+         * @param {number} userID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async putUsersBlockUserID(userID: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.putUsersBlockUserID(userID, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * BlockApi - factory interface
+ * @export
+ */
+export const BlockApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = BlockApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Unblock a user
+         * @param {number} userID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteUsersBlockUserID(userID: number, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteUsersBlockUserID(userID, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Lists the people who the specified user blocks.
+         * @summary List the people a user blocks
+         * @param {number} userID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUsersUserIDBlock(userID: number, options?: any): AxiosPromise<Array<User>> {
+            return localVarFp.getUsersUserIDBlock(userID, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Check if a user blocks another user
+         * @param {number} userID 
+         * @param {number} targetUserID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUsersUserIDBlockTargetUserID(userID: number, targetUserID: number, options?: any): AxiosPromise<void> {
+            return localVarFp.getUsersUserIDBlockTargetUserID(userID, targetUserID, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Block a user
+         * @param {number} userID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        putUsersBlockUserID(userID: number, options?: any): AxiosPromise<void> {
+            return localVarFp.putUsersBlockUserID(userID, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * BlockApi - interface
+ * @export
+ * @interface BlockApi
+ */
+export interface BlockApiInterface {
+    /**
+     * 
+     * @summary Unblock a user
+     * @param {number} userID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BlockApiInterface
+     */
+    deleteUsersBlockUserID(userID: number, options?: AxiosRequestConfig): AxiosPromise<void>;
+
+    /**
+     * Lists the people who the specified user blocks.
+     * @summary List the people a user blocks
+     * @param {number} userID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BlockApiInterface
+     */
+    getUsersUserIDBlock(userID: number, options?: AxiosRequestConfig): AxiosPromise<Array<User>>;
+
+    /**
+     * 
+     * @summary Check if a user blocks another user
+     * @param {number} userID 
+     * @param {number} targetUserID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BlockApiInterface
+     */
+    getUsersUserIDBlockTargetUserID(userID: number, targetUserID: number, options?: AxiosRequestConfig): AxiosPromise<void>;
+
+    /**
+     * 
+     * @summary Block a user
+     * @param {number} userID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BlockApiInterface
+     */
+    putUsersBlockUserID(userID: number, options?: AxiosRequestConfig): AxiosPromise<void>;
+
+}
+
+/**
+ * BlockApi - object-oriented interface
+ * @export
+ * @class BlockApi
+ * @extends {BaseAPI}
+ */
+export class BlockApi extends BaseAPI implements BlockApiInterface {
+    /**
+     * 
+     * @summary Unblock a user
+     * @param {number} userID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BlockApi
+     */
+    public deleteUsersBlockUserID(userID: number, options?: AxiosRequestConfig) {
+        return BlockApiFp(this.configuration).deleteUsersBlockUserID(userID, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Lists the people who the specified user blocks.
+     * @summary List the people a user blocks
+     * @param {number} userID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BlockApi
+     */
+    public getUsersUserIDBlock(userID: number, options?: AxiosRequestConfig) {
+        return BlockApiFp(this.configuration).getUsersUserIDBlock(userID, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Check if a user blocks another user
+     * @param {number} userID 
+     * @param {number} targetUserID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BlockApi
+     */
+    public getUsersUserIDBlockTargetUserID(userID: number, targetUserID: number, options?: AxiosRequestConfig) {
+        return BlockApiFp(this.configuration).getUsersUserIDBlockTargetUserID(userID, targetUserID, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Block a user
+     * @param {number} userID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BlockApi
+     */
+    public putUsersBlockUserID(userID: number, options?: AxiosRequestConfig) {
+        return BlockApiFp(this.configuration).putUsersBlockUserID(userID, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -2293,6 +2998,281 @@ export class MatchApi extends BaseAPI implements MatchApiInterface {
      */
     public getMatches(limit?: number, offset?: number, options?: AxiosRequestConfig) {
         return MatchApiFp(this.configuration).getMatches(limit, offset, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * PmApi - axios parameter creator
+ * @export
+ */
+export const PmApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Leave channel
+         * @param {number} userID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteMePmsUserId: async (userID: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userID' is not null or undefined
+            assertParamExists('deleteMePmsUserId', 'userID', userID)
+            const localVarPath = `/me/pms/{userID}`
+                .replace(`{${"userID"}}`, encodeURIComponent(String(userID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication sessionAuth required
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary List channels in which the authenticated user participates
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMePms: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/me/pms`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication sessionAuth required
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Create PM
+         * @param {number} userID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        putMePmsUserid: async (userID: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userID' is not null or undefined
+            assertParamExists('putMePmsUserid', 'userID', userID)
+            const localVarPath = `/me/pms/{userID}`
+                .replace(`{${"userID"}}`, encodeURIComponent(String(userID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication sessionAuth required
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * PmApi - functional programming interface
+ * @export
+ */
+export const PmApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = PmApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Leave channel
+         * @param {number} userID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteMePmsUserId(userID: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteMePmsUserId(userID, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary List channels in which the authenticated user participates
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getMePms(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getMePms(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Create PM
+         * @param {number} userID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async putMePmsUserid(userID: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.putMePmsUserid(userID, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * PmApi - factory interface
+ * @export
+ */
+export const PmApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = PmApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Leave channel
+         * @param {number} userID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteMePmsUserId(userID: number, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteMePmsUserId(userID, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary List channels in which the authenticated user participates
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMePms(options?: any): AxiosPromise<Array<User>> {
+            return localVarFp.getMePms(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Create PM
+         * @param {number} userID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        putMePmsUserid(userID: number, options?: any): AxiosPromise<User> {
+            return localVarFp.putMePmsUserid(userID, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * PmApi - interface
+ * @export
+ * @interface PmApi
+ */
+export interface PmApiInterface {
+    /**
+     * 
+     * @summary Leave channel
+     * @param {number} userID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PmApiInterface
+     */
+    deleteMePmsUserId(userID: number, options?: AxiosRequestConfig): AxiosPromise<void>;
+
+    /**
+     * 
+     * @summary List channels in which the authenticated user participates
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PmApiInterface
+     */
+    getMePms(options?: AxiosRequestConfig): AxiosPromise<Array<User>>;
+
+    /**
+     * 
+     * @summary Create PM
+     * @param {number} userID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PmApiInterface
+     */
+    putMePmsUserid(userID: number, options?: AxiosRequestConfig): AxiosPromise<User>;
+
+}
+
+/**
+ * PmApi - object-oriented interface
+ * @export
+ * @class PmApi
+ * @extends {BaseAPI}
+ */
+export class PmApi extends BaseAPI implements PmApiInterface {
+    /**
+     * 
+     * @summary Leave channel
+     * @param {number} userID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PmApi
+     */
+    public deleteMePmsUserId(userID: number, options?: AxiosRequestConfig) {
+        return PmApiFp(this.configuration).deleteMePmsUserId(userID, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary List channels in which the authenticated user participates
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PmApi
+     */
+    public getMePms(options?: AxiosRequestConfig) {
+        return PmApiFp(this.configuration).getMePms(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Create PM
+     * @param {number} userID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PmApi
+     */
+    public putMePmsUserid(userID: number, options?: AxiosRequestConfig) {
+        return PmApiFp(this.configuration).putMePmsUserid(userID, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

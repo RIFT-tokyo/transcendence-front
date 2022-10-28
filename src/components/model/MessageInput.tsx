@@ -6,9 +6,9 @@ import useMessage from '../../api/websocket/useMessage';
 import { AuthContext } from '../../contexts/AuthContext';
 
 const MessageInput = () => {
-  const { channelId } = useParams();
+  const { channelId, toUserId } = useParams();
   const { authUser } = useContext(AuthContext);
-  const { sendMessage } = useMessage();
+  const { sendMessage, sendPrivateMessage } = useMessage();
   const [text, setText] = useState('');
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -16,7 +16,11 @@ const MessageInput = () => {
   };
 
   const handleClick = async () => {
-    sendMessage(text, authUser!.id!, Number(channelId));
+    if (channelId) {
+      sendMessage(text, authUser!.id!, Number(channelId));
+    } else {
+      sendPrivateMessage(text, authUser!.id!, Number(toUserId));
+    }
     setText('');
   };
 
@@ -25,7 +29,12 @@ const MessageInput = () => {
     if (e.shiftKey) return;
 
     e.preventDefault();
-    sendMessage(text, authUser!.id!, Number(channelId));
+
+    if (channelId) {
+      sendMessage(text, authUser!.id!, Number(channelId));
+    } else {
+      sendPrivateMessage(text, authUser!.id!, Number(toUserId));
+    }
     setText('');
   };
 

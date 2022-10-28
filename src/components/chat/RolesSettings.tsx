@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { Fragment, useState } from 'react';
 import { ChannelUser, Role } from '../../api/generated';
-import UserAvatar from './UserAvatar';
+import UserAvatar from '../model/UserAvatar';
 
 type Props = {
   channelUsers: ChannelUser[];

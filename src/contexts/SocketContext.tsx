@@ -1,6 +1,10 @@
 import React, { FC, useMemo } from 'react';
 import socketIOclient from 'socket.io-client';
-import { SOCKET_CHANNELS, SOCKET_USERS } from '../components/config/constants';
+import {
+  SOCKET_CHANNELS,
+  SOCKET_PMS,
+  SOCKET_USERS,
+} from '../components/config/constants';
 
 export const SocketContext = React.createContext<any>(null);
 
@@ -29,11 +33,19 @@ export const SocketProvider: FC = ({ children }) => {
         auth: { userID: id },
       },
     );
+    // namespace: /pms
+    const pmsSocketClient = socketIOclient(
+      process.env.REACT_APP_SOCKET_URL! + SOCKET_PMS,
+      {
+        auth: { userID: id },
+      },
+    );
 
     setClient({
       index: indexSocketClient,
       users: usersSocketClient,
       channels: channelsSocketClient,
+      pms: pmsSocketClient,
     });
   };
 
@@ -41,6 +53,7 @@ export const SocketProvider: FC = ({ children }) => {
     client.index.disconnect();
     client.users.disconnect();
     client.channels.disconnect();
+    client.pms.disconnect();
     setClient(null);
   };
 

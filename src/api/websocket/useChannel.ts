@@ -23,7 +23,25 @@ const useChannel = () => {
     [client],
   );
 
-  return { joinChannel, leaveChannel };
+  const joinPm = useCallback(
+    (fromUserID: number, toUserID: number) => {
+      if (client) {
+        client.pms.emit(EVENT.PM_JOIN, { fromUserID, toUserID });
+      }
+    },
+    [client],
+  );
+
+  const leavePm = useCallback(
+    (fromUserID: number, toUserID: number) => {
+      if (client) {
+        client.pms.emit(EVENT.PM_LEAVE, { fromUserID, toUserID });
+      }
+    },
+    [client],
+  );
+
+  return { joinChannel, leaveChannel, joinPm, leavePm };
 };
 
 export default useChannel;

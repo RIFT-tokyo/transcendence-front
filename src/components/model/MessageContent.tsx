@@ -1,7 +1,8 @@
-import { Avatar, Stack, Typography } from '@mui/material';
+import { Link, Stack, Typography } from '@mui/material';
+import { NavLink } from 'react-router-dom';
 import { format } from 'date-fns';
 import { User } from '../../api/generated';
-import stringToColor from '../../functions/stringToColor';
+import UserAvatar from './UserAvatar';
 
 type Props = {
   user: User | null;
@@ -14,22 +15,17 @@ const MessageContent = (props: Props) => {
 
   return (
     <Stack direction="row" spacing={1}>
-      <Avatar
-        sx={{
-          width: 40,
-          height: 40,
-          bgcolor: user?.profile_image
-            ? undefined
-            : stringToColor(user?.username ?? ''),
-        }}
-        src={user?.profile_image}
-      >
-        {user?.username?.slice(0, 2) ?? ''}
-      </Avatar>
+      { user &&
+        <Link component={NavLink} underline="none" to={`/users/${user.username}`}>
+          <UserAvatar size={40} user={user} />
+        </Link>
+      }
       <Stack>
         <Stack direction="row" alignItems="center" spacing={1}>
           <Typography sx={{ fontWeight: 'bold' }} variant="h6">
-            {user?.display_name ?? user?.username}
+            <Link component={NavLink} color="inherit" underline="none" to={`/users/${user?.username}`}>
+              {user?.display_name ?? user?.username}
+            </Link>
           </Typography>
           <Typography variant="body2">
             {format(new Date(createdAt), 'yyyy/MM/dd HH:mm')}
