@@ -14,4 +14,10 @@ export const EVENT = {
   PRIVATE_MESSAGE_RECEIVE_ALL: 'private-message:receive-all',
   PM_JOIN: 'pm:join',
   PM_LEAVE: 'pm:leave',
+  // /pong
+  MATCH_CREATE: 'match:create',
+  MATCH_JOIN: 'match:join',
+  MATCH_READY: 'match:ready',
+  MATCH_GET_POINT: 'match:get-point',
+  MATCH_FINISH: 'match:finish',
 };

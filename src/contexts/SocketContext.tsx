@@ -1,8 +1,9 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import socketIOclient from 'socket.io-client';
 import {
   SOCKET_CHANNELS,
   SOCKET_PMS,
+  SOCKET_PONG,
   SOCKET_USERS,
 } from '../components/config/constants';
 
@@ -40,24 +41,33 @@ export const SocketProvider: FC = ({ children }) => {
         auth: { userID: id },
       },
     );
+    // namespace: /pong
+    const pongSocketClient = socketIOclient(
+      process.env.REACT_APP_SOCKET_URL! + SOCKET_PONG,
+      {
+        auth: { userID: id },
+      }
+    )
 
     setClient({
       index: indexSocketClient,
       users: usersSocketClient,
       channels: channelsSocketClient,
       pms: pmsSocketClient,
+      pong: pongSocketClient,
     });
   };
 
-  const disconnect = () => {
+  const disconnect = useCallback(() => {
     client.index.disconnect();
     client.users.disconnect();
     client.channels.disconnect();
     client.pms.disconnect();
+    client.pong.disconnect();
     setClient(null);
-  };
+  }, [client]);
 
-  const memo = useMemo(() => ({ client, connect, disconnect }), [client]);
+  const memo = useMemo(() => ({ client, connect, disconnect }), [client, disconnect]);
 
   return (
     <SocketContext.Provider value={memo}>{children}</SocketContext.Provider>
