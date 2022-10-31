@@ -1,6 +1,8 @@
 import { Grid, TextField, Button, Typography } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
+import { useSnackbar } from 'notistack';
 import { Dispatch, useEffect } from 'react';
+import usePong from '../../../api/websocket/usePong';
 import { Actions, GameState } from '../types/reducer';
 
 interface Props {
@@ -9,6 +11,23 @@ interface Props {
 }
 
 const HostGame = ({ context, dispatch }: Props) => {
+  const {createMatch} = usePong();
+  const {enqueueSnackbar} = useSnackbar();
+
+  const handleCreateRoom = () => {
+    console.log("handleCreateRoom called");
+
+    const callback = (response: {isSucceeded: boolean}) => {
+      if (response.isSucceeded) {
+        dispatch({ type: 'SET_GAME_STATUS', payload: 'waiting' });
+      } else {
+        // TODO: 呼び出されるごとにsnackbarが増えるのを対処
+        enqueueSnackbar("Failed to create room", {variant: "error"});
+      }
+    };
+    createMatch(context.roomId, callback);
+  };
+
   useEffect(() => {
     dispatch({ type: 'SET_ROOM_ID', payload: Math.random().toString(32).substring(2, 15)})
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -38,7 +57,7 @@ const HostGame = ({ context, dispatch }: Props) => {
             sx={{
               color: blueGrey[100],
             }}
-            onClick={() => dispatch({ type: 'SET_GAME_STATUS', payload: 'waiting' })}
+            onClick={handleCreateRoom}
           >
             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
               create

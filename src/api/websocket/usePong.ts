@@ -6,9 +6,10 @@ const usePong = () => {
   const { client } = useContext(SocketContext);
 
   const createMatch = useCallback(
-    () => {
+    (roomId: string, callback: (response: {isSucceeded: boolean}) => void) => {
       if (client) {
-        client.pong.emit(EVENT.MATCH_CREATE);
+        client.pong.on(EVENT.MATCH_CREATE, callback);
+        client.pong.emit(EVENT.MATCH_CREATE, { roomId });
       }
     },
     [client],
