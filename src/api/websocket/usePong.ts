@@ -6,14 +6,17 @@ const usePong = () => {
   const { client } = useContext(SocketContext);
 
   const createMatch = useCallback(
-    (roomId: string, callback: (response: {isSucceeded: boolean}) => void) => {
+    (
+      roomId: string,
+      callback: (response: { isSucceeded: boolean }) => void,
+    ) => {
       if (client) {
-        client.pong.on(EVENT.MATCH_CREATE, callback);
+        client.pong.once(EVENT.MATCH_CREATE, callback);
         client.pong.emit(EVENT.MATCH_CREATE, { roomId });
       }
     },
     [client],
-  )
+  );
 
   const joinMatch = useCallback(
     (roomId: string) => {
@@ -22,7 +25,7 @@ const usePong = () => {
       }
     },
     [client],
-  )
+  );
 
   const readyMatch = useCallback(
     (roomId: string) => {
@@ -30,10 +33,10 @@ const usePong = () => {
         client.pong.emit(EVENT.MATCH_READY, { roomId });
       }
     },
-    [client]
-  )
+    [client],
+  );
 
-  return { createMatch, joinMatch, readyMatch, }
-}
+  return { createMatch, joinMatch, readyMatch };
+};
 
 export default usePong;
