@@ -15,8 +15,6 @@ const HostGame = ({ context, dispatch }: Props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const handleCreateRoom = () => {
-    console.log('handleCreateRoom called');
-
     const callback = (response: { isSucceeded: boolean }) => {
       if (response.isSucceeded) {
         dispatch({ type: 'SET_GAME_STATUS', payload: 'waiting' });

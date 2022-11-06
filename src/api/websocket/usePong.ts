@@ -19,8 +19,9 @@ const usePong = () => {
   );
 
   const joinMatch = useCallback(
-    (roomId: string) => {
+    (roomId: string, callback: (response: { isSucceeded: boolean}) => void) => {
       if (client) {
+        client.pong.once(EVENT.MATCH_JOIN, callback);
         client.pong.emit(EVENT.MATCH_JOIN, { roomId });
       }
     },
@@ -28,8 +29,9 @@ const usePong = () => {
   );
 
   const readyMatch = useCallback(
-    (roomId: string) => {
+    (roomId: string, callback: (response: { isSucceeded: boolean }) => void) => {
       if (client) {
+        client.pong.once(EVENT.MATCH_START, callback);
         client.pong.emit(EVENT.MATCH_READY, { roomId });
       }
     },

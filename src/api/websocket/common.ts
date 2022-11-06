@@ -18,6 +18,7 @@ export const EVENT = {
   MATCH_CREATE: 'match:create',
   MATCH_JOIN: 'match:join',
   MATCH_READY: 'match:ready',
+  MATCH_START: 'match:start',
   MATCH_GET_POINT: 'match:get-point',
   MATCH_FINISH: 'match:finish',
 };
