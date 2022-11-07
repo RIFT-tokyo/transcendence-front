@@ -1,5 +1,6 @@
 import { useContext, useCallback } from 'react';
 import { SocketContext } from '../../contexts/SocketContext';
+import { Match } from '../generated/api';
 import { EVENT } from './common';
 
 const usePong = () => {
@@ -29,7 +30,7 @@ const usePong = () => {
   );
 
   const readyMatch = useCallback(
-    (roomId: string, callback: (response: { isSucceeded: boolean }) => void) => {
+    (roomId: string, callback: (match: Match) => void) => {
       if (client) {
         client.pong.once(EVENT.MATCH_START, callback);
         client.pong.emit(EVENT.MATCH_READY, { roomId });
@@ -38,7 +39,38 @@ const usePong = () => {
     [client],
   );
 
-  return { createMatch, joinMatch, readyMatch };
+  const gainPoint = useCallback(
+    (roomId: string, userId: number) => {
+      if (client) {
+        client.pong.emit(EVENT.MATCH_GAIN_POINT, { roomId, userId });
+      }
+    },
+    [client],
+  );
+
+  const subscribeMatchStatus = useCallback(
+    (callback: (status: Match) => void) => {
+      if (client) {
+        client.pong.on(EVENT.MATCH_STATUS, callback);
+      }
+    },
+    [client],
+  );
+
+  const subscribeMatchFinish = useCallback(
+    (callback: (status: Match) => void) => {
+      if (client) {
+        const callbackWrapper = (status: Match): void => {
+          callback(status);
+          client.pong.off(EVENT.MATCH_STATUS);
+        }
+        client.pong.once(EVENT.MATCH_FINISH, callbackWrapper);
+      }
+    },
+    [client],
+  );
+
+  return { createMatch, joinMatch, readyMatch, gainPoint, subscribeMatchStatus, subscribeMatchFinish };
 };
 
 export default usePong;

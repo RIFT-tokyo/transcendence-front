@@ -4,6 +4,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import { Dispatch, useEffect } from 'react';
 import { Actions, GameState } from '../types/reducer';
 import usePong from '../../../api/websocket/usePong';
+import { Match } from '../../../api/generated/api';
 
 interface Props {
   context: GameState;
@@ -12,15 +13,13 @@ interface Props {
 const Waiting = ({ context, dispatch }: Props) => {
   const { readyMatch } = usePong();
 
-  const callback = (response: { isSucceeded: boolean }) => {
-    console.log("callback called");
-    if (response.isSucceeded) {
-      dispatch({ type: 'SET_GAME_STATUS', payload: 'play' });
-    }
+  const callback = (match: Match) => {
+    dispatch({ type: 'SET_HOST_PLAYER', payload: match.host_player ?? null });
+    dispatch({ type: 'SET_GUEST_PLAYER', payload: match.guest_player ?? null });
+    dispatch({ type: 'SET_GAME_STATUS', payload: 'play' });
   };
 
   useEffect(() => {
-    console.log("useEffect");
     readyMatch(context.roomId, callback);
   }, []);
 
