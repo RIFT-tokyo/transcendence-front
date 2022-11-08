@@ -58,10 +58,10 @@ const usePong = () => {
   );
 
   const subscribeMatchFinish = useCallback(
-    (callback: (status: Match) => void) => {
+    (callback: () => void) => {
       if (client) {
-        const callbackWrapper = (status: Match): void => {
-          callback(status);
+        const callbackWrapper = (): void => {
+          callback();
           client.pong.off(EVENT.MATCH_STATUS);
         }
         client.pong.once(EVENT.MATCH_FINISH, callbackWrapper);

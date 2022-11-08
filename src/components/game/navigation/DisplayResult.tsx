@@ -14,23 +14,16 @@ const DisplayPoints = ({ context, dispatch }: Props) => {
   const [result, setResult] = useState<string>('');
 
   useEffect(() => {
-    if (
-      context.hostPoints > context.guestPoints &&
-      context.hostPlayer?.id === authUser?.id
-    ) {
+    const isHost = context.hostPlayer?.id === authUser?.id;
+    const hostWin = context.hostPoints > context.guestPoints;
+    if ((isHost && hostWin) || (!isHost && !hostWin)) {
       setResult('WIN');
-    } else if (
-      context.hostPoints < context.guestPoints &&
-      context.guestPlayer?.id === authUser?.id
-    ) {
-      setResult('LOSE');
     } else {
-      const winner =
-        context.hostPoints > context.guestPoints
-          ? context.hostPlayer
-          : context.guestPlayer;
-      setResult(`${winner?.display_name ?? winner?.username} WINS`);
+      setResult('LOSE');
     }
+    return () => {
+      dispatch({ type: 'CLEAR_STATE' });
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -74,7 +67,7 @@ const DisplayPoints = ({ context, dispatch }: Props) => {
             fontFamily: 'Zen Tokyo Zoo',
           }}
         >
-          {result === 'WIN' || result === 'LOSE' ? `YOU ${result}` : result}
+          {(result === 'WIN' || result === 'LOSE') ? `YOU ${result}` : result}
         </Typography>
       </Grid>
       <Grid item xs={4} />
@@ -85,7 +78,9 @@ const DisplayPoints = ({ context, dispatch }: Props) => {
           sx={{
             color: blueGrey[100],
           }}
-          onClick={() => dispatch({ type: 'SET_GAME_STATUS', payload: 'entrance' })}
+          onClick={() =>
+            dispatch({ type: 'SET_GAME_STATUS', payload: 'entrance' })
+          }
         >
           play again
         </Button>

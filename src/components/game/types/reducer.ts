@@ -25,9 +25,10 @@ export type Actions =
   | { type: 'SET_ROOM_ID'; payload: string }
   | { type: 'SET_HOST_PLAYER'; payload: User | null }
   | { type: 'SET_GUEST_PLAYER'; payload: User | null }
-  | { type: 'ADD_POINTS'; payload: 'host' | 'guest' }
+  | { type: 'SET_POINTS'; payload: { hostPoints: number; guestPoints: number } }
   | { type: 'AUTO_MATCHING' }
-  | { type: 'CREATE_ROOM'; payload: string };
+  | { type: 'CREATE_ROOM'; payload: string }
+  | { type: 'CLEAR_STATE' };
 
 export const reducer = (state: GameState, action: Actions) => {
   switch (action.type) {
@@ -51,17 +52,12 @@ export const reducer = (state: GameState, action: Actions) => {
         ...state,
         guestPlayer: action.payload,
       };
-    case 'ADD_POINTS':
-      if (action.payload === 'host') {
-        return {
-          ...state,
-          hostPoints: state.hostPoints + 1,
-        }
-      }
-      return {
+    case 'SET_POINTS':
+     return {
         ...state,
-        guestPoints: state.guestPoints + 1,
-      }
+        hostPoints: action.payload.hostPoints,
+        guestPoints: action.payload.guestPoints,
+      };
     case 'AUTO_MATCHING':
       return {
         ...state,
@@ -74,6 +70,15 @@ export const reducer = (state: GameState, action: Actions) => {
         gameStatus: 'waiting' as GameStatus,
         roomId: action.payload,
       };
+    case 'CLEAR_STATE':
+      return {
+        gameStatus: 'entrance' as GameStatus,
+        roomId: '',
+        hostPlayer: null,
+        guestPlayer: null,
+        hostPoints: 0,
+        guestPoints: 0,
+      }
     default:
       return state;
   }

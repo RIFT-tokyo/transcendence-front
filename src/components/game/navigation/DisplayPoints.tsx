@@ -14,11 +14,11 @@ const DisplayPoints = ({ context, dispatch }: Props) => {
   const { gainPoint, subscribeMatchStatus, subscribeMatchFinish } = usePong();
 
   const handleMatchStatus = (status: Match) => {
-    console.log(status);
+    dispatch({ type: 'SET_POINTS', payload: { hostPoints: status.host_player_points!, guestPoints: status.guest_player_points! }})
   }
 
-  const handleMatchFinish = (status: Match) => {
-    console.log(status);
+  const handleMatchFinish = () => {
+    dispatch({ type: 'SET_GAME_STATUS', payload: 'end' });
   }
 
   useEffect(() => {
