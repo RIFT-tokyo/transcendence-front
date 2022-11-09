@@ -16,6 +16,7 @@ export const EVENT = {
   PM_LEAVE: 'pm:leave',
   // /pong
   MATCH_CREATE: 'match:create',
+  MATCH_AUTO: 'match:auto',
   MATCH_JOIN: 'match:join',
   MATCH_READY: 'match:ready',
   MATCH_START: 'match:start',

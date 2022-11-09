@@ -29,6 +29,16 @@ const usePong = () => {
     [client],
   );
 
+  const autoMatch = useCallback(
+    (callback: (response: { isSucceeded: boolean, roomId: string }) => void) => {
+      if (client) {
+        client.pong.once(EVENT.MATCH_AUTO, callback);
+        client.pong.emit(EVENT.MATCH_AUTO, {});
+      }
+    },
+    [client],
+  );
+
   const readyMatch = useCallback(
     (roomId: string, callback: (match: Match) => void) => {
       if (client) {
@@ -70,7 +80,7 @@ const usePong = () => {
     [client],
   );
 
-  return { createMatch, joinMatch, readyMatch, gainPoint, subscribeMatchStatus, subscribeMatchFinish };
+  return { createMatch, joinMatch, autoMatch, readyMatch, gainPoint, subscribeMatchStatus, subscribeMatchFinish };
 };
 
 export default usePong;
