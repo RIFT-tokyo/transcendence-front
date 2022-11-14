@@ -23,9 +23,11 @@ interface State {
 
 const GameCanvas = ({ context, dispatch }: Props) => {
   const { authUser } = useContext(AuthContext);
+
   const [state, setState] = useState<State>({
     cameraPosition: [7, 9, 0],
   });
+
   useEffect(() => {
     if (context.gameStatus === 'play') {
       if (context.hostPlayer?.id === authUser?.id) {
@@ -39,6 +41,7 @@ const GameCanvas = ({ context, dispatch }: Props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context.gameStatus]);
+
   return (
     <Canvas
       shadows
