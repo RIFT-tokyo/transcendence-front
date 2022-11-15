@@ -1,10 +1,11 @@
 import { Grid, Typography, CircularProgress, Button } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
 import ChatIcon from '@mui/icons-material/Chat';
-import { Dispatch, useEffect } from 'react';
+import { Dispatch, useContext, useEffect } from 'react';
 import { Actions, GameState } from '../types/reducer';
 import usePong from '../../../api/websocket/usePong';
 import { Match } from '../../../api/generated/api';
+import { AuthContext } from '../../../contexts/AuthContext';
 
 interface Props {
   context: GameState;
@@ -12,6 +13,7 @@ interface Props {
 }
 const Waiting = ({ context, dispatch }: Props) => {
   const { readyMatch } = usePong();
+  const { authUser } = useContext(AuthContext);
 
   const callback = (match: Match) => {
     dispatch({ type: 'SET_HOST_PLAYER', payload: match.host_player ?? null });
@@ -21,6 +23,7 @@ const Waiting = ({ context, dispatch }: Props) => {
 
   useEffect(() => {
     readyMatch(context.roomId, callback);
+    dispatch({ type: 'SET_IS_HOST', payload: context.hostPlayer?.id === authUser?.id });
   }, []);
 
   return (
