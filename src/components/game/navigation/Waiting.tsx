@@ -16,6 +16,7 @@ const Waiting = ({ context, dispatch }: Props) => {
   const { authUser } = useContext(AuthContext);
 
   const callback = (match: Match) => {
+    dispatch({ type: 'SET_IS_HOST', payload: match.host_player?.id === authUser?.id });
     dispatch({ type: 'SET_HOST_PLAYER', payload: match.host_player ?? null });
     dispatch({ type: 'SET_GUEST_PLAYER', payload: match.guest_player ?? null });
     dispatch({ type: 'SET_GAME_STATUS', payload: 'play' });
@@ -23,7 +24,7 @@ const Waiting = ({ context, dispatch }: Props) => {
 
   useEffect(() => {
     readyMatch(context.roomId, callback);
-    dispatch({ type: 'SET_IS_HOST', payload: context.hostPlayer?.id === authUser?.id });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

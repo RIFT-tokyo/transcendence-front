@@ -5,13 +5,13 @@ import {
   PerspectiveCamera,
   RoundedBox,
 } from '@react-three/drei';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Suspense, useEffect, useState, useContext, Dispatch } from 'react';
+import { useFrame } from '@react-three/fiber';
+import { Suspense, useEffect, useState, Dispatch } from 'react';
 import Stage from './geometry/Stage';
-import { Actions, GameState } from './types/reducer';
-import { AuthContext } from '../../contexts/AuthContext';
-import { GAME_HEIGHT } from '../config/constants';
+import { Actions, GameState, Vector } from './types/reducer';
+import { PADDLE_SPEED, PADDLE_X, STAGE_X, X, Y, Z } from '../config/constants';
 import useControls from '../../functions/useControls';
+import usePong from '../../api/websocket/usePong';
 
 interface Props {
   context: GameState;
@@ -23,22 +23,38 @@ interface State {
 }
 
 const GameCanvas = ({ context, dispatch }: Props) => {
-  const { authUser } = useContext(AuthContext);
   const controls = useControls();
+  const { sendMyPosition, subscribePositions, unsubscribePositions } = usePong();
 
   const [state, setState] = useState<State>({
     cameraPosition: [7, 9, 0],
   });
 
+  const handlePositions = (positions: {
+    host: Vector;
+    guest: Vector;
+    ball: Vector;
+  }) => {
+    if (context.isHost) {
+      dispatch({ type: 'SET_GUEST_POSITION', payload: positions.guest });
+    } else {
+      dispatch({ type: 'SET_HOST_POSITION', payload: positions.host });
+    }
+    dispatch({ type: 'SET_BALL_POSITION', payload: positions.ball });
+  };
+
   useEffect(() => {
     if (context.gameStatus === 'play') {
-      if (context.hostPlayer?.id === authUser?.id) {
+      if (context.isHost) {
         setState({ ...state, cameraPosition: [0, 3, 15] });
-      } else if (context.guestPlayer?.id === authUser?.id) {
+      } else {
         setState({ ...state, cameraPosition: [0, 3, -15] });
       }
+      subscribePositions(handlePositions);
     } else if (context.gameStatus === 'watch') {
       setState({ ...state, cameraPosition: [7, 9, 0] });
+    } else if (context.gameStatus === 'end') {
+      unsubscribePositions();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context.gameStatus]);
@@ -47,48 +63,52 @@ const GameCanvas = ({ context, dispatch }: Props) => {
     const { left, right } = controls.current;
 
     if (context.isHost) {
-      if (left && context.hostPosition[0] > -((20 - 3) / 2 - 0.25)) {
+      if (left && context.hostPosition[X] > -(STAGE_X - PADDLE_X) / 2) {
         dispatch({
           type: 'SET_HOST_POSITION',
           payload: [
-            context.hostPosition[0] - 0.3,
-            context.hostPosition[1],
-            context.hostPosition[2],
+            context.hostPosition[X] - PADDLE_SPEED,
+            context.hostPosition[Y],
+            context.hostPosition[Z],
           ],
         });
       }
-      if (right && context.hostPosition[0] < (20 - 3) / 2 - 0.25) {
+      if (right && context.hostPosition[X] < (STAGE_X - PADDLE_X) / 2) {
         dispatch({
           type: 'SET_HOST_POSITION',
           payload: [
-            context.hostPosition[0] + 0.3,
-            context.hostPosition[1],
-            context.hostPosition[2],
+            context.hostPosition[X] + PADDLE_SPEED,
+            context.hostPosition[Y],
+            context.hostPosition[Z],
           ],
         });
       }
     } else {
-      if (left && context.guestPosition[0] > -((20 - 3) / 2 - 0.25)) {
+      if (left && context.guestPosition[X] < (STAGE_X - PADDLE_X) / 2) {
         dispatch({
           type: 'SET_GUEST_POSITION',
           payload: [
-            context.guestPosition[0] + 0.3,
-            context.guestPosition[1],
-            context.guestPosition[2],
+            context.guestPosition[X] + PADDLE_SPEED,
+            context.guestPosition[Y],
+            context.guestPosition[Z],
           ],
         });
       }
-      if (right && context.guestPosition[0] < (20 - 3) / 2 - 0.25) {
+      if (right && context.guestPosition[X] > -(STAGE_X - PADDLE_X) / 2) {
         dispatch({
           type: 'SET_GUEST_POSITION',
           payload: [
-            context.guestPosition[0] - 0.3,
-            context.guestPosition[1],
-            context.guestPosition[2],
+            context.guestPosition[X] - PADDLE_SPEED,
+            context.guestPosition[Y],
+            context.guestPosition[Z],
           ],
         });
       }
     }
+    sendMyPosition(
+      context.roomId,
+      context.isHost ? context.hostPosition : context.guestPosition,
+    );
   });
 
   return (

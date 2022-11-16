@@ -35,3 +35,12 @@ const CHAT_CONTENT_PADDING = 8 * 2;
 export const CHAT_MESSAGE_CONTENT_HEIGHT = `calc(${CONTENT_HEIGHT} - ${
   CHAT_CHANNEL_TITLE_HEIGHT + CHAT_MESSAGE_INPUT_HEIGHT + CHAT_CONTENT_PADDING
 }px)`;
+
+export const X = 0;
+export const Y = 1;
+export const Z = 2;
+export const STAGE_X = 7.6;
+export const STAGE_Z = 20;
+export const PADDLE_X = 2;
+export const PADDLE_Z = 0.4;
+export const PADDLE_SPEED = 0.2;

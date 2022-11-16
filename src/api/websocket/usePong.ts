@@ -1,4 +1,5 @@
 import { useContext, useCallback } from 'react';
+import { Vector } from '../../components/game/types/reducer';
 import { SocketContext } from '../../contexts/SocketContext';
 import { Match } from '../generated/api';
 import { EVENT } from './common';
@@ -20,7 +21,10 @@ const usePong = () => {
   );
 
   const joinMatch = useCallback(
-    (roomId: string, callback: (response: { isSucceeded: boolean}) => void) => {
+    (
+      roomId: string,
+      callback: (response: { isSucceeded: boolean }) => void,
+    ) => {
       if (client) {
         client.pong.once(EVENT.MATCH_JOIN, callback);
         client.pong.emit(EVENT.MATCH_JOIN, { roomId });
@@ -30,7 +34,9 @@ const usePong = () => {
   );
 
   const autoMatch = useCallback(
-    (callback: (response: { isSucceeded: boolean, roomId: string }) => void) => {
+    (
+      callback: (response: { isSucceeded: boolean; roomId: string }) => void,
+    ) => {
       if (client) {
         client.pong.once(EVENT.MATCH_AUTO, callback);
         client.pong.emit(EVENT.MATCH_AUTO, {});
@@ -73,14 +79,55 @@ const usePong = () => {
         const callbackWrapper = (): void => {
           callback();
           client.pong.off(EVENT.MATCH_STATUS);
-        }
+        };
         client.pong.once(EVENT.MATCH_FINISH, callbackWrapper);
       }
     },
     [client],
   );
 
-  return { createMatch, joinMatch, autoMatch, readyMatch, gainPoint, subscribeMatchStatus, subscribeMatchFinish };
+  const sendMyPosition = useCallback(
+    (roomId: string, position: Vector) => {
+      if (client) {
+        client.pong.emit(EVENT.PONG_POSITION, { roomId, position });
+      }
+    },
+    [client],
+  );
+
+  const subscribePositions = useCallback(
+    (
+      callback: (positions: {
+        host: Vector;
+        guest: Vector;
+        ball: Vector;
+      }) => void,
+    ) => {
+      if (client) {
+        client.pong.on(EVENT.PONG_POSITION, callback);
+      }
+    },
+    [client],
+  );
+
+  const unsubscribePositions = useCallback(() => {
+    if (client) {
+      client.pong.off(EVENT.PONG_POSITION);
+    }
+  }, [client]);
+
+  return {
+    createMatch,
+    joinMatch,
+    autoMatch,
+    readyMatch,
+    gainPoint,
+    subscribeMatchStatus,
+    subscribeMatchFinish,
+    sendMyPosition,
+    subscribePositions,
+    unsubscribePositions,
+  };
 };
 
 export default usePong;
