@@ -16,32 +16,22 @@ import usePong from '../../api/websocket/usePong';
 interface Props {
   context: GameState;
   dispatch: Dispatch<Actions>;
+  tick: boolean;
+  setTick: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 interface State {
   cameraPosition: [x: number, y: number, z: number];
 }
 
-const GameCanvas = ({ context, dispatch }: Props) => {
+const GameCanvas = ({ context, dispatch, tick, setTick }: Props) => {
+  // const { sendMyPosition, /* subscribePositions, unsubscribePositions */ } = usePong();
+
   const controls = useControls();
-  const { sendMyPosition, subscribePositions, unsubscribePositions } = usePong();
 
   const [state, setState] = useState<State>({
     cameraPosition: [7, 9, 0],
   });
-
-  const handlePositions = (positions: {
-    host: Vector;
-    guest: Vector;
-    ball: Vector;
-  }) => {
-    if (context.isHost) {
-      dispatch({ type: 'SET_GUEST_POSITION', payload: positions.guest });
-    } else {
-      dispatch({ type: 'SET_HOST_POSITION', payload: positions.host });
-    }
-    dispatch({ type: 'SET_BALL_POSITION', payload: positions.ball });
-  };
 
   useEffect(() => {
     if (context.gameStatus === 'play') {
@@ -50,11 +40,11 @@ const GameCanvas = ({ context, dispatch }: Props) => {
       } else {
         setState({ ...state, cameraPosition: [0, 3, -15] });
       }
-      subscribePositions(handlePositions);
+      // subscribePositions(handlePositions);
     } else if (context.gameStatus === 'watch') {
       setState({ ...state, cameraPosition: [7, 9, 0] });
     } else if (context.gameStatus === 'end') {
-      unsubscribePositions();
+      // unsubscribePositions();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context.gameStatus]);
@@ -105,10 +95,11 @@ const GameCanvas = ({ context, dispatch }: Props) => {
         });
       }
     }
-    sendMyPosition(
-      context.roomId,
-      context.isHost ? context.hostPosition : context.guestPosition,
-    );
+    // sendMyPosition(
+    //   context.roomId,
+    //   context.isHost ? context.hostPosition : context.guestPosition,
+    // );
+    setTick(!tick);
   });
 
   return (
