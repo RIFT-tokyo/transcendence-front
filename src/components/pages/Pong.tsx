@@ -15,7 +15,7 @@ const Pong = () => {
   const { authUser } = useContext(AuthContext);
   const { setUserStatus } = useUserStatus();
   const [tick, setTick] = useState(false);
-  const { sendMyPosition, subscribePositions, unsubscribePositions } =
+  const { sendMyPosition, subscribeEnemyPosition, unsubscribeEnemyPosition } =
     usePong();
 
   const [state, dispatch] = useReducer(reducer, {
@@ -31,17 +31,12 @@ const Pong = () => {
     ballPosition: [0, -0.1, 0],
   });
 
-  const handlePositions = (positions: {
-    host: Vector;
-    guest: Vector;
-    ball: Vector;
-  }) => {
+  const handleEnemyPosition = (position: Vector) => {
     if (state.isHost) {
-      dispatch({ type: 'SET_GUEST_POSITION', payload: positions.guest });
+      dispatch({ type: 'SET_GUEST_POSITION', payload: position });
     } else {
-      dispatch({ type: 'SET_HOST_POSITION', payload: positions.host });
+      dispatch({ type: 'SET_HOST_POSITION', payload: position });
     }
-    dispatch({ type: 'SET_BALL_POSITION', payload: positions.ball });
   };
 
   useEffect(() => {
@@ -63,11 +58,11 @@ const Pong = () => {
 
   useEffect(() => {
     if (state.gameStatus === 'play') {
-      subscribePositions(handlePositions);
+      subscribeEnemyPosition(handleEnemyPosition);
     } else if (state.gameStatus === 'end') {
-      unsubscribePositions();
+      unsubscribeEnemyPosition();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.gameStatus]);
 
   return (

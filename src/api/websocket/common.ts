@@ -23,5 +23,6 @@ export const EVENT = {
   MATCH_GAIN_POINT: 'match:gain-point',
   MATCH_STATUS: 'match:status',
   MATCH_FINISH: 'match:finish',
-  PONG_POSITION: 'pong:position',
+  PONG_MY_POSITION: 'pong:my-position',
+  PONG_ENEMY_POSITION: 'pong:enemy-position',
 };

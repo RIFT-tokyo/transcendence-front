@@ -89,30 +89,24 @@ const usePong = () => {
   const sendMyPosition = useCallback(
     (roomId: string, position: Vector) => {
       if (client) {
-        client.pong.emit(EVENT.PONG_POSITION, { roomId, position });
+        client.pong.emit(EVENT.PONG_MY_POSITION, { roomId, position });
       }
     },
     [client],
   );
 
-  const subscribePositions = useCallback(
-    (
-      callback: (positions: {
-        host: Vector;
-        guest: Vector;
-        ball: Vector;
-      }) => void,
-    ) => {
+  const subscribeEnemyPosition = useCallback(
+    (callback: (position: Vector) => void) => {
       if (client) {
-        client.pong.on(EVENT.PONG_POSITION, callback);
+        client.pong.on(EVENT.PONG_ENEMY_POSITION, callback);
       }
     },
     [client],
   );
 
-  const unsubscribePositions = useCallback(() => {
+  const unsubscribeEnemyPosition = useCallback(() => {
     if (client) {
-      client.pong.off(EVENT.PONG_POSITION);
+      client.pong.off(EVENT.PONG_ENEMY_POSITION);
     }
   }, [client]);
 
@@ -125,8 +119,8 @@ const usePong = () => {
     subscribeMatchStatus,
     subscribeMatchFinish,
     sendMyPosition,
-    subscribePositions,
-    unsubscribePositions,
+    subscribeEnemyPosition,
+    unsubscribeEnemyPosition,
   };
 };
 
