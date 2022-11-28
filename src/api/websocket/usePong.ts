@@ -110,6 +110,22 @@ const usePong = () => {
     }
   }, [client]);
 
+  const subscribeBallPosition = useCallback(
+    (callback: (position: Vector) => void) => {
+      if (client) {
+        client.pong.on(EVENT.PONG_BALL_POSITION, callback);
+      }
+    },
+    [client],
+  );
+
+  const unsubscribeBallPosition = useCallback(() => {
+    if (client) {
+      client.pong.off(EVENT.PONG_BALL_POSITION);
+    }
+  }, [client]);
+
+
   return {
     createMatch,
     joinMatch,
@@ -121,6 +137,8 @@ const usePong = () => {
     sendMyPosition,
     subscribeEnemyPosition,
     unsubscribeEnemyPosition,
+    subscribeBallPosition,
+    unsubscribeBallPosition,
   };
 };
 

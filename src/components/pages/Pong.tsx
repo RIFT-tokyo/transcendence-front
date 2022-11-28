@@ -15,8 +15,13 @@ const Pong = () => {
   const { authUser } = useContext(AuthContext);
   const { setUserStatus } = useUserStatus();
   const [tick, setTick] = useState(false);
-  const { sendMyPosition, subscribeEnemyPosition, unsubscribeEnemyPosition } =
-    usePong();
+  const {
+    sendMyPosition,
+    subscribeEnemyPosition,
+    unsubscribeEnemyPosition,
+    subscribeBallPosition,
+    unsubscribeBallPosition,
+  } = usePong();
 
   const [state, dispatch] = useReducer(reducer, {
     gameStatus: 'entrance',
@@ -39,6 +44,10 @@ const Pong = () => {
     }
   };
 
+  const handleBallPosition = (position: Vector) => {
+    dispatch({ type: 'SET_BALL_POSITION', payload: position });
+  };
+
   useEffect(() => {
     if (authUser) setUserStatus(UserStatusEnum.Game, authUser.id!);
     return () => {
@@ -59,8 +68,10 @@ const Pong = () => {
   useEffect(() => {
     if (state.gameStatus === 'play') {
       subscribeEnemyPosition(handleEnemyPosition);
+      subscribeBallPosition(handleBallPosition);
     } else if (state.gameStatus === 'end') {
       unsubscribeEnemyPosition();
+      unsubscribeBallPosition();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.gameStatus]);
