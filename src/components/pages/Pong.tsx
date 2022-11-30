@@ -9,7 +9,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { GAME_HEIGHT } from '../config/constants';
 import GameCanvas from '../game/GameCanvas';
 import Navigation from '../game/Navigation';
-import { GameState, reducer, Vector } from '../game/types/reducer';
+import { reducer, Vector } from '../game/types/reducer';
 
 const Pong = () => {
   const { authUser } = useContext(AuthContext);
@@ -21,6 +21,7 @@ const Pong = () => {
     unsubscribeEnemyPosition,
     subscribeBallPosition,
     unsubscribeBallPosition,
+    playerDisconnect,
   } = usePong();
 
   const [state, dispatch] = useReducer(reducer, {
@@ -72,6 +73,12 @@ const Pong = () => {
     } else if (state.gameStatus === 'end') {
       unsubscribeEnemyPosition();
       unsubscribeBallPosition();
+    }
+
+    return () => {
+      if (state.roomId) {
+        playerDisconnect(state.roomId, state.gameStatus);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.gameStatus]);

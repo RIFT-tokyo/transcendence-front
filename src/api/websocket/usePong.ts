@@ -1,5 +1,5 @@
 import { useContext, useCallback } from 'react';
-import { Vector } from '../../components/game/types/reducer';
+import { GameStatus, Vector } from '../../components/game/types/reducer';
 import { SocketContext } from '../../contexts/SocketContext';
 import { Match } from '../generated/api';
 import { EVENT } from './common';
@@ -125,6 +125,14 @@ const usePong = () => {
     }
   }, [client]);
 
+  const playerDisconnect = useCallback(
+    (roomId: string, status: GameStatus) => {
+      if (client) {
+        client.pong.emit(EVENT.PONG_MY_POSITION, { roomId, status });
+      }
+    },
+    [client],
+  );
 
   return {
     createMatch,
@@ -139,6 +147,7 @@ const usePong = () => {
     unsubscribeEnemyPosition,
     subscribeBallPosition,
     unsubscribeBallPosition,
+    playerDisconnect,
   };
 };
 
