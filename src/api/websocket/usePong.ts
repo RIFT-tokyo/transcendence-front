@@ -4,6 +4,11 @@ import { SocketContext } from '../../contexts/SocketContext';
 import { Match } from '../generated/api';
 import { EVENT } from './common';
 
+export type LeaveStatus =
+  | 'waiting'
+  | 'play'
+  | 'back_to_top';
+
 const usePong = () => {
   const { client } = useContext(SocketContext);
 
@@ -125,10 +130,10 @@ const usePong = () => {
     }
   }, [client]);
 
-  const playerDisconnect = useCallback(
-    (roomId: string, status: GameStatus) => {
+  const leaveRoom = useCallback(
+    (roomId: string, status: LeaveStatus) => {
       if (client) {
-        client.pong.emit(EVENT.PONG_MY_POSITION, { roomId, status });
+        client.pong.emit(EVENT.PONG_LEAVE, { roomId, status });
       }
     },
     [client],
@@ -147,7 +152,7 @@ const usePong = () => {
     unsubscribeEnemyPosition,
     subscribeBallPosition,
     unsubscribeBallPosition,
-    playerDisconnect,
+    leaveRoom,
   };
 };
 

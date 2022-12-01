@@ -26,5 +26,5 @@ export const EVENT = {
   PONG_MY_POSITION: 'pong:my-position',
   PONG_ENEMY_POSITION: 'pong:enemy-position',
   PONG_BALL_POSITION: 'pong:ball-position',
-  PONG_PLAYER_DISCONNECT: 'pong:player-disconnect',
+  PONG_LEAVE: 'pong:leave',
 };

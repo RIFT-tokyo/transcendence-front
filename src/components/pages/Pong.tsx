@@ -21,7 +21,7 @@ const Pong = () => {
     unsubscribeEnemyPosition,
     subscribeBallPosition,
     unsubscribeBallPosition,
-    playerDisconnect,
+    leaveRoom,
   } = usePong();
 
   const [state, dispatch] = useReducer(reducer, {
@@ -39,13 +39,16 @@ const Pong = () => {
 
   const handleEnemyPosition = (position: Vector) => {
     if (state.isHost) {
+      console.log('host');
       dispatch({ type: 'SET_GUEST_POSITION', payload: position });
     } else {
+      console.log('guest');
       dispatch({ type: 'SET_HOST_POSITION', payload: position });
     }
   };
 
   const handleBallPosition = (position: Vector) => {
+    console.log('ball');
     dispatch({ type: 'SET_BALL_POSITION', payload: position });
   };
 
@@ -75,13 +78,21 @@ const Pong = () => {
       unsubscribeBallPosition();
     }
 
-    return () => {
-      if (state.roomId) {
-        playerDisconnect(state.roomId, state.gameStatus);
-      }
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.gameStatus]);
+
+  useEffect(
+    () => () => {
+      unsubscribeEnemyPosition();
+      unsubscribeBallPosition();
+      if (state.roomId) {
+        console.log(state.roomId);
+        leaveRoom(state.roomId, 'play');
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
 
   return (
     <Container component="main" maxWidth="xl">
