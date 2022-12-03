@@ -21,7 +21,7 @@ const defaultState = {
 
 export const AuthContext = React.createContext<IAuthContext>(defaultState);
 
-export const AuthProvider: FC = ({ children }) => {
+export const AuthProvider: FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const [authUser, setAuthUser] = useState<User | null>(null);
   const [isLoading, setLoading] = useState(true);
   const userApi = new UserApi();

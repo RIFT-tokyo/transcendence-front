@@ -9,7 +9,7 @@ import {
 
 export const SocketContext = React.createContext<any>(null);
 
-export const SocketProvider: FC = ({ children }) => {
+export const SocketProvider: FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const [client, setClient] = React.useState<any>(null);
 
   const connect = (id: number) => {

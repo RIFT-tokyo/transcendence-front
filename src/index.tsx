@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import './index.css';
 import { BrowserRouter } from 'react-router-dom';
 import { SnackbarProvider } from 'notistack';
@@ -8,7 +8,9 @@ import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from './contexts/AuthContext';
 import { SocketProvider } from './contexts/SocketContext';
 
-ReactDOM.render(
+const container = document.getElementById('root');
+const root = createRoot(container!);
+root.render(
   <React.StrictMode>
     <BrowserRouter>
       <SnackbarProvider
@@ -25,8 +27,7 @@ ReactDOM.render(
         </AuthProvider>
       </SnackbarProvider>
     </BrowserRouter>
-  </React.StrictMode>,
-  document.getElementById('root'),
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
