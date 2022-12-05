@@ -16,6 +16,7 @@ const Entrance = ({ dispatch }: Props) => {
   const { autoMatch } = usePong();
 
   const callback = (response: { isSucceeded: boolean; roomId: string }) => {
+    console.log(response.roomId);
     dispatch({ type: 'SET_ROOM_ID', payload: response.roomId });
     dispatch({ type: 'SET_GAME_STATUS', payload: 'waiting' });
   };

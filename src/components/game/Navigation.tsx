@@ -60,7 +60,7 @@ const Navigation = ({ context, dispatch }: Props) => (
               <Entrance dispatch={dispatch} />
             )}
             {context.gameStatus === 'friend_match' && (
-              <FriendMatch dispatch={dispatch} />
+              <FriendMatch context={context} dispatch={dispatch} />
             )}
             {context.gameStatus === 'watch_match' && (
               <WatchGame dispatch={dispatch} />

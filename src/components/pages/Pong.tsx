@@ -1,15 +1,15 @@
 import { Box, Container } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
 import { Canvas } from '@react-three/fiber';
-import { useContext, useEffect, useReducer, useState } from 'react';
+import { useContext, useEffect, useReducer, useRef, useState } from 'react';
 import { UserStatusEnum } from '../../api/generated';
-import usePong from '../../api/websocket/usePong';
+import usePong, { LeaveStatus } from '../../api/websocket/usePong';
 import useUserStatus from '../../api/websocket/useUserStatus';
 import { AuthContext } from '../../contexts/AuthContext';
 import { GAME_HEIGHT } from '../config/constants';
 import GameCanvas from '../game/GameCanvas';
 import Navigation from '../game/Navigation';
-import { reducer, Vector } from '../game/types/reducer';
+import { GameState, reducer, Vector } from '../game/types/reducer';
 
 const Pong = () => {
   const { authUser } = useContext(AuthContext);
@@ -37,20 +37,23 @@ const Pong = () => {
     ballPosition: [0, -0.1, 0],
   });
 
+  const stateRef = useRef<GameState>();
+
   const handleEnemyPosition = (position: Vector) => {
     if (state.isHost) {
-      console.log('host');
       dispatch({ type: 'SET_GUEST_POSITION', payload: position });
     } else {
-      console.log('guest');
       dispatch({ type: 'SET_HOST_POSITION', payload: position });
     }
   };
 
   const handleBallPosition = (position: Vector) => {
-    console.log('ball');
     dispatch({ type: 'SET_BALL_POSITION', payload: position });
   };
+
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
 
   useEffect(() => {
     if (authUser) setUserStatus(UserStatusEnum.Game, authUser.id!);
@@ -66,6 +69,7 @@ const Pong = () => {
         state.isHost ? state.hostPosition : state.guestPosition,
       );
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, tick]);
 
@@ -83,13 +87,16 @@ const Pong = () => {
 
   useEffect(
     () => () => {
-      unsubscribeEnemyPosition();
-      unsubscribeBallPosition();
-      if (state.roomId) {
-        console.log(state.roomId);
-        leaveRoom(state.roomId, 'play');
-      }
-    },
+        unsubscribeEnemyPosition();
+        unsubscribeBallPosition();
+        if (stateRef.current?.roomId) {
+          // いったんLeaveStatusへの変換処理を省いている
+          leaveRoom(
+            stateRef.current?.roomId,
+            stateRef.current?.gameStatus as LeaveStatus,
+          );
+        }
+      },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );

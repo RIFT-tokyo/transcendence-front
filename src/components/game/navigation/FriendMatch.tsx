@@ -1,13 +1,15 @@
 import { Grid, Button, Typography } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
 import { Dispatch } from 'react';
-import { Actions } from '../types/reducer';
+import { Actions, GameState } from '../types/reducer';
+import BackToTop from './BackToTop';
 
 interface Props {
+  context: GameState
   dispatch: Dispatch<Actions>;
 }
 
-const FriendMatch = ({ dispatch }: Props) => (
+const FriendMatch = ({ context, dispatch }: Props) => (
   <Grid container item xs={12} marginY={5}>
     <Grid item xs={3} />
     <Grid container item xs={6} spacing={2}>
@@ -44,16 +46,7 @@ const FriendMatch = ({ dispatch }: Props) => (
         </Button>
       </Grid>
       <Grid item xs={12}>
-        <Button
-          fullWidth
-          size="small"
-          sx={{
-            color: blueGrey[100],
-          }}
-          onClick={() => dispatch({ type: 'SET_GAME_STATUS', payload: 'entrance' })}
-        >
-          Back to Top
-        </Button>
+        <BackToTop context={context} dispatch={dispatch} />
       </Grid>
     </Grid>
   </Grid>
