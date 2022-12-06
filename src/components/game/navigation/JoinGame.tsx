@@ -4,6 +4,7 @@ import { useSnackbar } from 'notistack';
 import { Dispatch } from 'react';
 import usePong from '../../../api/websocket/usePong';
 import { Actions, GameState } from '../types/reducer';
+import BackToTop from './BackToTop';
 
 interface Props {
   context: GameState;
@@ -62,18 +63,7 @@ const JoinGame = ({ context, dispatch }: Props) => {
       </Grid>
       <Grid item xs={4} />
       <Grid item xs={4}>
-        <Button
-          fullWidth
-          size="small"
-          sx={{
-            color: blueGrey[100],
-          }}
-          onClick={() =>
-            dispatch({ type: 'SET_GAME_STATUS', payload: 'entrance' })
-          }
-        >
-          Back to Top
-        </Button>
+          <BackToTop context={context} dispatch={dispatch} />
       </Grid>
       <Grid item xs={4} />
     </Grid>

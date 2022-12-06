@@ -51,7 +51,9 @@ const Navigation = ({ context, dispatch }: Props) => (
                 sx={{
                   fontFamily: 'Zen Tokyo Zoo',
                 }}
-                onClick={() => dispatch({ type: 'SET_GAME_STATUS', payload: 'play' })}
+                onClick={() =>
+                  dispatch({ type: 'SET_GAME_STATUS', payload: 'play' })
+                }
               >
                 PONG
               </Typography>
@@ -63,7 +65,7 @@ const Navigation = ({ context, dispatch }: Props) => (
               <FriendMatch context={context} dispatch={dispatch} />
             )}
             {context.gameStatus === 'watch_match' && (
-              <WatchGame dispatch={dispatch} />
+              <WatchGame context={context} dispatch={dispatch} />
             )}
             {context.gameStatus === 'host' && (
               <HostGame context={context} dispatch={dispatch} />

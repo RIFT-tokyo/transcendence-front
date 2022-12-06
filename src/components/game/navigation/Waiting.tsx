@@ -6,6 +6,7 @@ import { Actions, GameState } from '../types/reducer';
 import usePong from '../../../api/websocket/usePong';
 import { Match } from '../../../api/generated/api';
 import { AuthContext } from '../../../contexts/AuthContext';
+import BackToTop from './BackToTop';
 
 interface Props {
   context: GameState;
@@ -16,15 +17,20 @@ const Waiting = ({ context, dispatch }: Props) => {
   const { authUser } = useContext(AuthContext);
 
   const callback = (match: Match) => {
-    dispatch({ type: 'SET_IS_HOST', payload: match.host_player?.id === authUser?.id });
+    dispatch({
+      type: 'SET_IS_HOST',
+      payload: match.host_player?.id === authUser?.id,
+    });
     dispatch({ type: 'SET_HOST_PLAYER', payload: match.host_player ?? null });
     dispatch({ type: 'SET_GUEST_PLAYER', payload: match.guest_player ?? null });
     dispatch({ type: 'SET_GAME_STATUS', payload: 'play' });
   };
 
   useEffect(() => {
-    readyMatch(context.roomId, callback);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (context.roomId) {
+      readyMatch(context.roomId, callback);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -81,18 +87,7 @@ const Waiting = ({ context, dispatch }: Props) => {
       )}
       <Grid item xs={4} />
       <Grid item xs={4}>
-        <Button
-          fullWidth
-          size="small"
-          sx={{
-            color: blueGrey[100],
-          }}
-          onClick={() =>
-            dispatch({ type: 'SET_GAME_STATUS', payload: 'entrance' })
-          }
-        >
-          Back to Top
-        </Button>
+        <BackToTop context={context} dispatch={dispatch} />
       </Grid>
       <Grid item xs={4} />
     </Grid>

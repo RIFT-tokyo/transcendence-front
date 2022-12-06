@@ -18,6 +18,7 @@ const DisplayPoints = ({ context, dispatch }: Props) => {
   }
 
   const handleMatchFinish = () => {
+    console.log('handleMatchFinish called');
     dispatch({ type: 'SET_GAME_STATUS', payload: 'end' });
   }
 

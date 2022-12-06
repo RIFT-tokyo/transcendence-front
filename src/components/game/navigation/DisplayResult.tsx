@@ -21,9 +21,10 @@ const DisplayPoints = ({ context, dispatch }: Props) => {
     } else {
       setResult('LOSE');
     }
-    return () => {
-      dispatch({ type: 'CLEAR_STATE' });
-    };
+    // TODO: クリアするのはentranceになった時にする
+    // return () => {
+    //   dispatch({ type: 'CLEAR_STATE' });
+    // };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -44,7 +45,6 @@ const DisplayPoints = ({ context, dispatch }: Props) => {
           sx={{
             fontFamily: 'Zen Tokyo Zoo',
           }}
-          onClick={() => dispatch({ type: 'SET_GAME_STATUS', payload: 'end' })}
         >
           RESULT
         </Typography>

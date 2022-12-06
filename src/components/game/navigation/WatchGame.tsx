@@ -1,13 +1,15 @@
 import { Button, Grid, TextField, Typography } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
 import { Dispatch } from 'react';
-import { Actions } from '../types/reducer';
+import { Actions, GameState } from '../types/reducer';
+import BackToTop from './BackToTop';
 
 interface Props {
+  context: GameState
   dispatch: Dispatch<Actions>;
 }
 
-const WatchGame = ({ dispatch }: Props) => (
+const WatchGame = ({ context, dispatch }: Props) => (
   <Grid container item xs={12} spacing={4} marginY={5}>
     <Grid container item xs={12} spacing={1} alignItems="center">
       <Grid item xs={1} />
@@ -29,7 +31,9 @@ const WatchGame = ({ dispatch }: Props) => (
           sx={{
             color: blueGrey[100],
           }}
-          onClick={() => dispatch({ type: 'SET_GAME_STATUS', payload: 'watch' })}
+          onClick={() =>
+            dispatch({ type: 'SET_GAME_STATUS', payload: 'watch' })
+          }
         >
           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
             watch
@@ -40,16 +44,7 @@ const WatchGame = ({ dispatch }: Props) => (
     </Grid>
     <Grid item xs={4} />
     <Grid item xs={4}>
-      <Button
-        fullWidth
-        size="small"
-        sx={{
-          color: blueGrey[100],
-        }}
-        onClick={() => dispatch({ type: 'SET_GAME_STATUS', payload: 'entrance' })}
-      >
-        Back to Top
-      </Button>
+      <BackToTop context={context} dispatch={dispatch} />
     </Grid>
     <Grid item xs={4} />
   </Grid>

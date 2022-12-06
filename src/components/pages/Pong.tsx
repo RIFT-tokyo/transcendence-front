@@ -81,22 +81,26 @@ const Pong = () => {
       unsubscribeEnemyPosition();
       unsubscribeBallPosition();
     }
-
+    console.log(`gameStatus: ${state.gameStatus}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.gameStatus]);
 
   useEffect(
     () => () => {
-        unsubscribeEnemyPosition();
-        unsubscribeBallPosition();
-        if (stateRef.current?.roomId) {
-          // いったんLeaveStatusへの変換処理を省いている
+      unsubscribeEnemyPosition();
+      unsubscribeBallPosition();
+      if (stateRef.current?.roomId) {
+        if (
+          stateRef.current?.gameStatus === 'waiting' ||
+          stateRef.current?.gameStatus === 'play'
+        ) {
           leaveRoom(
             stateRef.current?.roomId,
             stateRef.current?.gameStatus as LeaveStatus,
           );
         }
-      },
+      }
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
