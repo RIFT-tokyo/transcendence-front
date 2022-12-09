@@ -4,7 +4,7 @@ import ShuffleIcon from '@mui/icons-material/Shuffle';
 import GroupIcon from '@mui/icons-material/Group';
 import LiveTvIcon from '@mui/icons-material/LiveTv';
 import { blueGrey } from '@mui/material/colors';
-import { Dispatch } from 'react';
+import { Dispatch, useEffect } from 'react';
 import { Actions } from '../types/reducer';
 import usePong from '../../../api/websocket/usePong';
 
@@ -19,6 +19,11 @@ const Entrance = ({ dispatch }: Props) => {
     dispatch({ type: 'SET_ROOM_ID', payload: response.roomId });
     dispatch({ type: 'SET_GAME_STATUS', payload: 'waiting' });
   };
+
+  useEffect(() => {
+    dispatch({ type: 'CLEAR_STATE' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Grid container item xs={12} marginY={5}>

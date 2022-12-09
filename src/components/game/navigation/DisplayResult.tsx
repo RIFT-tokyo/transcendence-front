@@ -21,11 +21,6 @@ const DisplayPoints = ({ context, dispatch }: Props) => {
     } else {
       setResult('LOSE');
     }
-    // TODO: クリアするのはentranceになった時にする
-    // return () => {
-    //   dispatch({ type: 'CLEAR_STATE' });
-    // };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

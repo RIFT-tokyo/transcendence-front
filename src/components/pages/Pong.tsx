@@ -1,7 +1,9 @@
 import { Box, Container } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
 import { Canvas } from '@react-three/fiber';
+import { useSnackbar } from 'notistack';
 import { useContext, useEffect, useReducer, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { UserStatusEnum } from '../../api/generated';
 import usePong, { LeaveStatus } from '../../api/websocket/usePong';
 import useUserStatus from '../../api/websocket/useUserStatus';
@@ -10,6 +12,12 @@ import { GAME_HEIGHT } from '../config/constants';
 import GameCanvas from '../game/GameCanvas';
 import Navigation from '../game/Navigation';
 import { GameState, reducer, Vector } from '../game/types/reducer';
+
+// ゲーム参加link
+// /pong?roomId=sadf31
+// ゲーム観戦link
+// /pong?watch&roomId=sadf31
+// /pong?watch&userId=3
 
 const Pong = () => {
   const { authUser } = useContext(AuthContext);
@@ -22,8 +30,9 @@ const Pong = () => {
     subscribeBallPosition,
     unsubscribeBallPosition,
     leaveRoom,
+    joinMatch,
   } = usePong();
-
+  const [searchParams, setSearchParams] = useSearchParams();
   const [state, dispatch] = useReducer(reducer, {
     gameStatus: 'entrance',
     isHost: true,
@@ -36,6 +45,7 @@ const Pong = () => {
     guestPosition: [0, 0, -9.5],
     ballPosition: [0, -0.1, 0],
   });
+  const { enqueueSnackbar } = useSnackbar();
 
   const stateRef = useRef<GameState>();
 
@@ -81,26 +91,48 @@ const Pong = () => {
       unsubscribeEnemyPosition();
       unsubscribeBallPosition();
     }
-    console.log(`gameStatus: ${state.gameStatus}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.gameStatus]);
 
+  useEffect(() => {
+    if (searchParams.has('roomId')) {
+      const roomId = searchParams.get('roomId');
+      console.log(roomId);
+      if (searchParams.has('watch')) {
+        // watch
+      } else {
+        // join
+        dispatch({ type: 'SET_ROOM_ID', payload: roomId! });
+        const callback = (response: { isSucceeded: boolean }) => {
+          console.log('callback野中： ', response);
+          if (response.isSucceeded) {
+            dispatch({ type: 'SET_GAME_STATUS', payload: 'waiting' });
+          } else {
+            enqueueSnackbar('Failed to join room', { variant: 'error' });
+          }
+        };
+        joinMatch(roomId!, callback);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [joinMatch]);
+
   useEffect(
     () => () => {
-      unsubscribeEnemyPosition();
-      unsubscribeBallPosition();
-      if (stateRef.current?.roomId) {
-        if (
-          stateRef.current?.gameStatus === 'waiting' ||
-          stateRef.current?.gameStatus === 'play'
-        ) {
-          leaveRoom(
-            stateRef.current?.roomId,
-            stateRef.current?.gameStatus as LeaveStatus,
-          );
+        unsubscribeEnemyPosition();
+        unsubscribeBallPosition();
+        if (stateRef.current?.roomId) {
+          if (
+            stateRef.current?.gameStatus === 'waiting' ||
+            stateRef.current?.gameStatus === 'play'
+          ) {
+            leaveRoom(
+              stateRef.current?.roomId,
+              stateRef.current?.gameStatus as LeaveStatus,
+            );
+          }
         }
-      }
-    },
+      },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
