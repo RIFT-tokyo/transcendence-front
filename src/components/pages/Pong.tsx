@@ -97,19 +97,19 @@ const Pong = () => {
   useEffect(() => {
     if (searchParams.has('roomId')) {
       const roomId = searchParams.get('roomId');
-      console.log(roomId);
       if (searchParams.has('watch')) {
         // watch
       } else {
         // join
         dispatch({ type: 'SET_ROOM_ID', payload: roomId! });
         const callback = (response: { isSucceeded: boolean }) => {
-          console.log('callback野中： ', response);
           if (response.isSucceeded) {
             dispatch({ type: 'SET_GAME_STATUS', payload: 'waiting' });
           } else {
             enqueueSnackbar('Failed to join room', { variant: 'error' });
           }
+          searchParams.delete('roomId');
+          setSearchParams(searchParams);
         };
         joinMatch(roomId!, callback);
       }

@@ -31,7 +31,6 @@ const usePong = () => {
       callback: (response: { isSucceeded: boolean }) => void,
     ) => {
       if (client) {
-        console.log("clientはいるおy")
         client.pong.once(EVENT.MATCH_JOIN, callback);
         client.pong.emit(EVENT.MATCH_JOIN, { roomId });
       }
