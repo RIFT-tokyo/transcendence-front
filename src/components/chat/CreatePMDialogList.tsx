@@ -22,7 +22,7 @@ const CreatePMDialogList = (props: Props) => {
   if (users.length === 0) {
     return (
       <>
-        <Typography>There are no users to join.</Typography>
+        <Typography>There are no users to pm.</Typography>
         <Typography sx={{ display: 'inline' }}>
           Create a user from the{' '}
         </Typography>

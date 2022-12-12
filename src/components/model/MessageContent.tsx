@@ -1,6 +1,7 @@
 import { Link, Stack, Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { format } from 'date-fns';
+import Linkify from 'react-linkify';
 import { User } from '../../api/generated';
 import UserAvatar from './UserAvatar';
 
@@ -31,7 +32,9 @@ const MessageContent = (props: Props) => {
             {format(new Date(createdAt), 'yyyy/MM/dd HH:mm')}
           </Typography>
         </Stack>
-        <Typography whiteSpace="pre-wrap">{text}</Typography>
+        <Linkify>
+          <Typography whiteSpace="pre-wrap">{text}</Typography>
+        </Linkify>
       </Stack>
     </Stack>
   );

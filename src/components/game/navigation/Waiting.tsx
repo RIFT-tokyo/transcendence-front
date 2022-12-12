@@ -1,41 +1,23 @@
-import {
-  Grid,
-  Typography,
-  CircularProgress,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from '@mui/material';
+import { Grid, Typography, CircularProgress, Button } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
 import ChatIcon from '@mui/icons-material/Chat';
 import { Dispatch, useContext, useEffect, useState } from 'react';
-import Axios from 'axios';
-import { useSnackbar } from 'notistack';
 import { Actions, GameState } from '../types/reducer';
 import usePong from '../../../api/websocket/usePong';
-import { Match, PmApi, User } from '../../../api/generated/api';
+import { Match } from '../../../api/generated/api';
 import { AuthContext } from '../../../contexts/AuthContext';
 import BackToTop from './BackToTop';
-import InviteUserList from './InviteUserList';
-import useMessage from '../../../api/websocket/useMessage';
+import InviteDialog from './InviteDialog';
 
 interface Props {
   context: GameState;
   dispatch: Dispatch<Actions>;
 }
 
-const pmApi = new PmApi();
-
 const Waiting = ({ context, dispatch }: Props) => {
-  const { enqueueSnackbar } = useSnackbar();
   const { readyMatch } = usePong();
-  const { sendPrivateMessage } = useMessage();
   const { authUser } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
-  const [friends, setFriends] = useState<User[]>([]);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const callback = (match: Match) => {
     dispatch({
@@ -47,41 +29,10 @@ const Waiting = ({ context, dispatch }: Props) => {
     dispatch({ type: 'SET_GAME_STATUS', payload: 'play' });
   };
 
-  const fetchFriends = async () => {
-    try {
-      // TODO: follow usersにする必要あり
-      const res = await pmApi.getMePms({ withCredentials: true });
-      setFriends(res.data);
-    } catch (err: unknown) {
-      if (Axios.isAxiosError(err) && err.response) {
-        enqueueSnackbar(err.message, { variant: 'error' });
-      }
-    }
-  };
-
-  const handleInvite = async () => {
-    if (!selectedUser?.id) {
-      return;
-    }
-    // TODO: chat画面でURLをハイパーリンクに表示する
-    sendPrivateMessage(
-      `▼ pong with me ▼
-        http://localhost:4212/pong?roomId=${context.roomId}
-      `,
-      authUser!.id!,
-      selectedUser.id,
-    );
-    enqueueSnackbar('Invited successfully!', { variant: 'success' });
-    setOpen(false);
-  };
-
   useEffect(() => {
-    (async () => {
-      if (context.roomId) {
-        readyMatch(context.roomId, callback);
-      }
-      await fetchFriends();
-    })();
+    if (context.roomId) {
+      readyMatch(context.roomId, callback);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -140,33 +91,11 @@ const Waiting = ({ context, dispatch }: Props) => {
               </Button>
             </Grid>
             <Grid item xs={3} />
-            <Dialog
+            <InviteDialog
+              roomId={context.roomId}
               open={open}
-              onClose={() => setOpen(false)}
-              fullWidth
-              maxWidth="xs"
-            >
-              <DialogTitle>Invite by chat</DialogTitle>
-              <DialogContent sx={{ maxHeight: 420 }}>
-                <InviteUserList
-                  users={friends}
-                  selectedUser={selectedUser}
-                  handleClick={setSelectedUser}
-                />
-              </DialogContent>
-              <DialogActions>
-                <Button
-                  onClick={() => {
-                    setOpen(false);
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button onClick={handleInvite} disabled={!selectedUser}>
-                  Invite
-                </Button>
-              </DialogActions>
-            </Dialog>
+              setOpen={setOpen}
+            />
           </>
         )
       }
