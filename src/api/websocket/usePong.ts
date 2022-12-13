@@ -4,10 +4,7 @@ import { SocketContext } from '../../contexts/SocketContext';
 import { Match } from '../generated/api';
 import { EVENT } from './common';
 
-export type LeaveStatus =
-  | 'waiting'
-  | 'play'
-  | 'back_to_top';
+export type LeaveStatus = 'waiting' | 'play' | 'back_to_top';
 
 const usePong = () => {
   const { client } = useContext(SocketContext);
@@ -45,6 +42,19 @@ const usePong = () => {
       if (client) {
         client.pong.once(EVENT.MATCH_AUTO, callback);
         client.pong.emit(EVENT.MATCH_AUTO, {});
+      }
+    },
+    [client],
+  );
+
+  const watchMatch = useCallback(
+    (
+      roomId: string,
+      callback: (response: { isSucceeded: boolean, match: Match }) => void,
+    ) => {
+      if (client) {
+        client.pong.once(EVENT.MATCH_WATCH, callback);
+        client.pong.emit(EVENT.MATCH_WATCH, { roomId });
       }
     },
     [client],
@@ -92,26 +102,26 @@ const usePong = () => {
   );
 
   const sendMyPosition = useCallback(
-    (roomId: string, position: Vector) => {
+    (roomId: string, position: Vector, isHost: boolean) => {
       if (client) {
-        client.pong.emit(EVENT.PONG_MY_POSITION, { roomId, position });
+        client.pong.emit(EVENT.PONG_MY_POSITION, { roomId, position, isHost });
       }
     },
     [client],
   );
 
-  const subscribeEnemyPosition = useCallback(
-    (callback: (position: Vector) => void) => {
+  const subscribePlayerPosition = useCallback(
+    (callback: (payload: { isHost: boolean; position: Vector }) => void) => {
       if (client) {
-        client.pong.on(EVENT.PONG_ENEMY_POSITION, callback);
+        client.pong.on(EVENT.PONG_PLAYER_POSITION, callback);
       }
     },
     [client],
   );
 
-  const unsubscribeEnemyPosition = useCallback(() => {
+  const unsubscribePlayerPosition = useCallback(() => {
     if (client) {
-      client.pong.off(EVENT.PONG_ENEMY_POSITION);
+      client.pong.off(EVENT.PONG_PLAYER_POSITION);
     }
   }, [client]);
 
@@ -143,13 +153,14 @@ const usePong = () => {
     createMatch,
     joinMatch,
     autoMatch,
+    watchMatch,
     readyMatch,
     gainPoint,
     subscribeMatchStatus,
     subscribeMatchFinish,
     sendMyPosition,
-    subscribeEnemyPosition,
-    unsubscribeEnemyPosition,
+    subscribePlayerPosition,
+    unsubscribePlayerPosition,
     subscribeBallPosition,
     unsubscribeBallPosition,
     leaveRoom,

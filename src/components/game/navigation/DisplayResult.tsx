@@ -15,8 +15,16 @@ const DisplayPoints = ({ context, dispatch }: Props) => {
 
   useEffect(() => {
     const isHost = context.hostPlayer?.id === authUser?.id;
+    const isGuest = context.guestPlayer?.id === authUser?.id;
     const hostWin = context.hostPoints > context.guestPoints;
-    if ((isHost && hostWin) || (!isHost && !hostWin)) {
+
+    if (!isHost && !isGuest) {
+      if (hostWin) {
+        setResult(`${context.hostPlayer?.username} WIN`);
+      } else {
+        setResult(`${context.guestPlayer?.username} WIN`);
+      }
+    } else if ((isHost && hostWin) || (isGuest && !hostWin)) {
       setResult('WIN');
     } else {
       setResult('LOSE');

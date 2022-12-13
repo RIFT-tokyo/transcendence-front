@@ -25,8 +25,6 @@ interface State {
 }
 
 const GameCanvas = ({ context, dispatch, tick, setTick }: Props) => {
-  // const { sendMyPosition, /* subscribePositions, unsubscribePositions */ } = usePong();
-
   const controls = useControls();
 
   const [state, setState] = useState<State>({
@@ -40,17 +38,18 @@ const GameCanvas = ({ context, dispatch, tick, setTick }: Props) => {
       } else {
         setState({ ...state, cameraPosition: [0, 3, -15] });
       }
-      // subscribePositions(handlePositions);
     } else if (context.gameStatus === 'watch') {
       setState({ ...state, cameraPosition: [7, 9, 0] });
-    } else if (context.gameStatus === 'end') {
-      // unsubscribePositions();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context.gameStatus]);
 
   useFrame(() => {
     const { left, right } = controls.current;
+
+    if (context.gameStatus !== 'play') {
+      return;
+    }
 
     if (context.isHost) {
       if (left && context.hostPosition[X] > -(STAGE_X - PADDLE_X) / 2) {
@@ -95,10 +94,6 @@ const GameCanvas = ({ context, dispatch, tick, setTick }: Props) => {
         });
       }
     }
-    // sendMyPosition(
-    //   context.roomId,
-    //   context.isHost ? context.hostPosition : context.guestPosition,
-    // );
     setTick(!tick);
   });
 

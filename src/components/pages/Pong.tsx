@@ -25,8 +25,8 @@ const Pong = () => {
   const [tick, setTick] = useState(false);
   const {
     sendMyPosition,
-    subscribeEnemyPosition,
-    unsubscribeEnemyPosition,
+    subscribePlayerPosition,
+    unsubscribePlayerPosition,
     subscribeBallPosition,
     unsubscribeBallPosition,
     leaveRoom,
@@ -49,11 +49,14 @@ const Pong = () => {
 
   const stateRef = useRef<GameState>();
 
-  const handleEnemyPosition = (position: Vector) => {
-    if (state.isHost) {
-      dispatch({ type: 'SET_GUEST_POSITION', payload: position });
+  const handlePlayerPosition = (payload: {
+    isHost: boolean;
+    position: Vector;
+  }) => {
+    if (payload.isHost) {
+      dispatch({ type: 'SET_HOST_POSITION', payload: payload.position });
     } else {
-      dispatch({ type: 'SET_HOST_POSITION', payload: position });
+      dispatch({ type: 'SET_GUEST_POSITION', payload: payload.position });
     }
   };
 
@@ -77,18 +80,18 @@ const Pong = () => {
       sendMyPosition(
         state.roomId,
         state.isHost ? state.hostPosition : state.guestPosition,
+        state.isHost,
       );
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, tick]);
 
   useEffect(() => {
-    if (state.gameStatus === 'play') {
-      subscribeEnemyPosition(handleEnemyPosition);
+    if (state.gameStatus === 'play' || state.gameStatus === 'watch') {
+      subscribePlayerPosition(handlePlayerPosition);
       subscribeBallPosition(handleBallPosition);
     } else if (state.gameStatus === 'end') {
-      unsubscribeEnemyPosition();
+      unsubscribePlayerPosition();
       unsubscribeBallPosition();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -119,20 +122,20 @@ const Pong = () => {
 
   useEffect(
     () => () => {
-        unsubscribeEnemyPosition();
-        unsubscribeBallPosition();
-        if (stateRef.current?.roomId) {
-          if (
-            stateRef.current?.gameStatus === 'waiting' ||
-            stateRef.current?.gameStatus === 'play'
-          ) {
-            leaveRoom(
-              stateRef.current?.roomId,
-              stateRef.current?.gameStatus as LeaveStatus,
-            );
-          }
+      unsubscribePlayerPosition();
+      unsubscribeBallPosition();
+      if (stateRef.current?.roomId) {
+        if (
+          stateRef.current?.gameStatus === 'waiting' ||
+          stateRef.current?.gameStatus === 'play'
+        ) {
+          leaveRoom(
+            stateRef.current?.roomId,
+            stateRef.current?.gameStatus as LeaveStatus,
+          );
         }
-      },
+      }
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
