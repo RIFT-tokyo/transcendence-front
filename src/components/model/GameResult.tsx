@@ -44,7 +44,7 @@ const GameResult = () => {
           id="game-result-0"
           aria-controls="game-result-tabpanel-0"
         />
-        <Tab
+        {/* <Tab
           label="ranking"
           id="game-result-1"
           aria-controls="game-result-tabpanel-1"
@@ -53,17 +53,17 @@ const GameResult = () => {
           label="level"
           id="game-result-2"
           aria-controls="game-result-tabpanel-2"
-        />
+        /> */}
       </Tabs>
       <TabPanel value={value} index={0}>
         <MatchHistory />
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      {/* <TabPanel value={value} index={1}>
         ranking
       </TabPanel>
       <TabPanel value={value} index={2}>
         level
-      </TabPanel>
+      </TabPanel> */}
     </Box>
   );
 };
