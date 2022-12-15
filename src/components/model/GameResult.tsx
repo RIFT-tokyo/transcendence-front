@@ -32,7 +32,7 @@ const TabPanel = (props: TabPanelProps) => {
 
 const GameResult = () => {
   const [value, setValue] = React.useState(0);
-  const handleChange = (_: React.ChangeEvent<{}>, newValue: number) => {
+  const handleChange = (_: React.ChangeEvent<unknown>, newValue: number) => {
     setValue(newValue);
   };
 

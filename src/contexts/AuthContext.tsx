@@ -1,7 +1,6 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import React, { FC, useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { User, UserApi } from '../api/generated/api';
-import { TWO_FA_URL } from '../components/config/constants';
 
 interface IAuthContext {
   authUser: User | null;
@@ -55,6 +54,7 @@ export const AuthProvider: FC<React.PropsWithChildren<unknown>> = ({ children })
 
   const memo = useMemo(
     () => ({ authUser, isLoading, login, logout, setAuthUser }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [authUser, isLoading],
   );
 

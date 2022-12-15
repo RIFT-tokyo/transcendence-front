@@ -29,6 +29,7 @@ const DisplayPoints = ({ context, dispatch }: Props) => {
     } else {
       setResult('LOSE');
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
