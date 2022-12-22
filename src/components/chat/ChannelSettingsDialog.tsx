@@ -13,7 +13,13 @@ import {
 } from '@mui/material';
 import Axios from 'axios';
 import { useSnackbar } from 'notistack';
-import { Dispatch, MouseEvent, SetStateAction, useReducer, useEffect } from 'react';
+import {
+  Dispatch,
+  MouseEvent,
+  SetStateAction,
+  useReducer,
+  useEffect,
+} from 'react';
 import { Channel, ChannelApi, ChannelUser, Role } from '../../api/generated';
 import ModerationSettings from './ModerationSettings';
 import OverviewSettings from './OverviewSettings';
@@ -23,6 +29,7 @@ type Props = {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
   channel: Channel;
+  update: (channel: Channel) => void;
 };
 
 type State = {
@@ -54,7 +61,7 @@ const reducer = (state: State, action: Actions) => {
 const channelApi = new ChannelApi();
 
 const ChannelSettingsDialog = (props: Props) => {
-  const { open, setOpen, channel } = props;
+  const { open, setOpen, channel, update } = props;
   const { enqueueSnackbar } = useSnackbar();
   const [state, dispatch] = useReducer(reducer, {
     selectedIndex: 0,
@@ -72,7 +79,11 @@ const ChannelSettingsDialog = (props: Props) => {
       if (!channel.id) {
         return;
       }
-      const { data } = await channelApi.putChannelsChannelIDUsers(channel.id, newValue, { withCredentials: true });
+      const { data } = await channelApi.putChannelsChannelIDUsers(
+        channel.id,
+        newValue,
+        { withCredentials: true },
+      );
       dispatch({ type: 'SET_CHANNEL_USERS', payload: data });
       enqueueSnackbar('Permission updated', { variant: 'success' });
     } catch (err: unknown) {
@@ -83,20 +94,58 @@ const ChannelSettingsDialog = (props: Props) => {
     dispatch({ type: 'SET_IS_LOADING', payload: false });
   };
 
+  const updateChannel = async (name: string, password: string | null) => {
+    if (state.isLoading) {
+      return;
+    }
+    dispatch({ type: 'SET_IS_LOADING', payload: true });
+
+    try {
+      if (!channel.id) {
+        return;
+      }
+      await channelApi.putChannelsChannelID(
+        channel.id,
+        { name, password: password ?? undefined },
+        { withCredentials: true },
+      );
+      update({ ...channel, name });
+      enqueueSnackbar('Channel Overview updated', { variant: 'success' });
+    } catch (err: unknown) {
+      if (Axios.isAxiosError(err) && err.response) {
+        enqueueSnackbar('Channel Overview failed', { variant: 'error' });
+      }
+    }
+    dispatch({ type: 'SET_IS_LOADING', payload: false });
+  };
+
   const listItems = [
     {
       name: 'Overview',
-      component: <OverviewSettings channel={channel} />,
+      component: (
+        <OverviewSettings channel={channel} updateChannel={updateChannel} />
+      ),
       visible: () => true,
     },
     {
       name: 'Moderation',
-      component: <ModerationSettings role={channel.role} channelUsers={state.channelUsers} setPermission={setPermission} />,
+      component: (
+        <ModerationSettings
+          role={channel.role}
+          channelUsers={state.channelUsers}
+          setPermission={setPermission}
+        />
+      ),
       visible: () => true,
     },
     {
       name: 'Roles',
-      component: <RolesSettings channelUsers={state.channelUsers} setPermission={setPermission} />,
+      component: (
+        <RolesSettings
+          channelUsers={state.channelUsers}
+          setPermission={setPermission}
+        />
+      ),
       visible: () => channel.role === Role.Owner,
     },
   ];

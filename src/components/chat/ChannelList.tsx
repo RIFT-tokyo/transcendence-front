@@ -13,6 +13,7 @@ type Props = {
   selectedChannel: Channel | null;
   channels: Channel[];
   addChannel: (channel: Channel) => void;
+  updateChannels: (channels: Channel[]) => void;
 };
 
 type State = {
@@ -43,16 +44,25 @@ const reducer = (state: State, action: Actions) => {
     default:
       return state;
   }
-};
+}
 
 const ChannelList = (props: Props) => {
-  const { selectedChannel, channels, addChannel } = props;
+  const { selectedChannel, channels, addChannel, updateChannels } = props;
 
   const [state, dispatch] = useReducer(reducer, {
     openCreateChannelDialog: false,
     openJoinChannelDialog: false,
     openChannels: true,
   });
+
+  const handleUpdateChannel = (channel: Channel) => {
+    const newChannels = channels;
+    const updateIndex = newChannels.findIndex((c) => c.id === channel.id);
+    if (updateIndex >= 0) {
+      newChannels.splice(updateIndex, 1, channel);
+      updateChannels(newChannels);
+    }
+  };
 
   return (
     <Stack direction="column" spacing={0.5} width={220} flexShrink={0}>
@@ -101,6 +111,7 @@ const ChannelList = (props: Props) => {
               key={channel.id}
               channel={channel}
               selected={channel.id === selectedChannel?.id}
+              update={handleUpdateChannel}
             />
           ))}
         </Stack>

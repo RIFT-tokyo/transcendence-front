@@ -2,6 +2,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {
   Box,
+  Button,
   Collapse,
   FormControlLabel,
   IconButton,
@@ -12,9 +13,8 @@ import { ChangeEvent, Dispatch, SetStateAction, useReducer } from 'react';
 import { Channel } from '../../api/generated';
 
 type Props = {
-  // open: boolean;
-  // setOpen: Dispatch<SetStateAction<boolean>>;
   channel: Channel;
+  updateChannel: (name: string, password: string | null) => void;
 };
 
 type State = {
@@ -70,7 +70,7 @@ const reducer = (state: State, action: Actions) => {
 };
 
 const OverviewSettings = (props: Props) => {
-  const { channel } = props;
+  const { channel, updateChannel } = props;
   const [state, dispatch] = useReducer(reducer, {
     name: channel.name ?? '',
     password: '',
@@ -150,6 +150,15 @@ const OverviewSettings = (props: Props) => {
           }}
         />
       </Collapse>
+      <Button
+        fullWidth
+        variant="contained"
+        color="primary"
+        size="medium"
+        onClick={() => {updateChannel(state.name, state.password)}}
+      >
+        Update Channel
+      </Button>
     </Box>
   );
 };

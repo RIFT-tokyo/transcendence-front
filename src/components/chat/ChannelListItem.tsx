@@ -9,6 +9,7 @@ import ChannelSettingsDialog from './ChannelSettingsDialog';
 type Props = {
   channel: Channel;
   selected: boolean;
+  update: (channel: Channel) => void;
 };
 
 type State = {
@@ -30,7 +31,7 @@ const reducer = (state: State, action: Actions) => {
 };
 
 const ChannelListItem = (props: Props) => {
-  const { channel, selected } = props;
+  const { channel, selected, update } = props;
   const [state, dispatch] = useReducer(reducer, {
     openDialog: false,
   });
@@ -56,6 +57,7 @@ const ChannelListItem = (props: Props) => {
           open={state.openDialog}
           setOpen={() => dispatch({ type: 'TOGGLE_OPEN_DIALOG' })}
           channel={channel}
+          update={update}
         />
       </Stack>
     </Link>

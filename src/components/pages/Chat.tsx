@@ -165,6 +165,9 @@ const Chat = () => {
                 });
                 navigate(`${CHANNELS_URL}/${channel.id}`);
               }}
+              updateChannels={(channels) => {
+                dispatch({type: 'SET_CHANNELS', payload: channels})
+              }}
             />
             <PMList
               selectedUser={state.selectedPmUser}
