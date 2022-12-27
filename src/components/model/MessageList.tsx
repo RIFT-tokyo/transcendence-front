@@ -1,6 +1,4 @@
 import { Stack, Typography } from '@mui/material';
-import TagIcon from '@mui/icons-material/Tag';
-import LockIcon from '@mui/icons-material/Lock';
 import { useOutletContext } from 'react-router-dom';
 import { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Channel, User } from '../../api/generated';
@@ -10,22 +8,11 @@ import { CHAT_MESSAGE_CONTENT_HEIGHT } from '../config/constants';
 import useChannel from '../../api/websocket/useChannel';
 import useMessage, { Message } from '../../api/websocket/useMessage';
 import { AuthContext } from '../../contexts/AuthContext';
-import UserAvatar from './UserAvatar';
 
 type Context = {
   channel: Channel | null;
   toUser: User | null;
   blockUserIds: number[];
-};
-
-const chatIcon = (toUser: User | null, isProtected: boolean) => {
-  if (toUser) {
-    return <UserAvatar user={toUser} size={20} />
-  }
-  if (isProtected) {
-    return <LockIcon />;
-  }
-  return <TagIcon />;
 };
 
 const MessageList = () => {
@@ -94,18 +81,7 @@ const MessageList = () => {
   }, [messages]);
 
   return (
-    <Stack width={880}>
-      <Stack
-        direction="row"
-        alignItems="center"
-        spacing={0.5}
-        paddingBottom={1.5}
-      >
-        {chatIcon(toUser, channel?.is_protected ?? false)}
-        <Typography sx={{ fontWeight: 'bold' }} variant="h5">
-          {toUser ? toUser.username : channel?.name}
-        </Typography>
-      </Stack>
+    <>
       <Stack
         spacing={2}
         height={CHAT_MESSAGE_CONTENT_HEIGHT}
@@ -125,7 +101,7 @@ const MessageList = () => {
         <div ref={scrollBottomRef} />
       </Stack>
       <MessageInput />
-    </Stack>
+    </>
   );
 };
 

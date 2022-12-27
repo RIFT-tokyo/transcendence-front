@@ -1,13 +1,23 @@
-import { Container, Divider, Stack } from '@mui/material';
+import { Container, Divider, Stack, Typography } from '@mui/material';
 import { useContext, useEffect, useReducer } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import Axios from 'axios';
+import TagIcon from '@mui/icons-material/Tag';
+import LockIcon from '@mui/icons-material/Lock';
+import LogoutIcon from '@mui/icons-material/Logout';
 import ChannelList from '../chat/ChannelList';
-import { BlockApi, Channel, ChannelApi, PmApi, User } from '../../api/generated';
+import {
+  BlockApi,
+  Channel,
+  ChannelApi,
+  PmApi,
+  User,
+} from '../../api/generated';
 import ErrorRouter from '../ui/ErrorRouter';
 import { CHANNELS_URL, PMS_URL } from '../config/constants';
 import PMList from '../chat/PMList';
 import { AuthContext } from '../../contexts/AuthContext';
+import UserAvatar from '../model/UserAvatar';
 
 type State = {
   channels: Channel[];
@@ -29,15 +39,27 @@ type Actions =
 const reducer = (state: State, action: Actions): State => {
   switch (action.type) {
     case 'SET_CHANNELS':
-      return { ...state, channels: action.payload };
+      return {
+        ...state,
+        channels: action.payload,
+        selectedChannel: action.payload.find((channel) => channel.id === state.selectedChannel?.id) ?? null
+      };
     case 'SET_PM_USERS':
       return { ...state, pmUsers: action.payload };
     case 'SET_BLOCK_USER_IDS':
       return { ...state, blockUserIds: action.payload };
     case 'SELECT_CHANNEL':
-      return { ...state, selectedChannel: action.payload, selectedPmUser: null };
+      return {
+        ...state,
+        selectedChannel: action.payload,
+        selectedPmUser: null,
+      };
     case 'SELECT_PM_USER':
-      return { ...state, selectedPmUser: action.payload, selectedChannel: null };
+      return {
+        ...state,
+        selectedPmUser: action.payload,
+        selectedChannel: null,
+      };
     case 'SET_STATUS_CODE':
       return { ...state, statusCode: action.payload };
     default:
@@ -48,6 +70,16 @@ const reducer = (state: State, action: Actions): State => {
 const channelApi = new ChannelApi();
 const pmApi = new PmApi();
 const blockApi = new BlockApi();
+
+const chatIcon = (toUser: User | null, isProtected: boolean) => {
+  if (toUser) {
+    return <UserAvatar user={toUser} size={20} />
+  }
+  if (isProtected) {
+    return <LockIcon />;
+  }
+  return <TagIcon />;
+};
 
 const Chat = () => {
   const { channelId, toUserId } = useParams();
@@ -62,9 +94,16 @@ const Chat = () => {
     statusCode: 0,
   });
 
-  const openChatFromURL = async (channelIdValue: string | undefined, toUserIdValue: string | undefined, allChannel: Channel[], allPmUsers: User[]) => {
+  const openChatFromURL = async (
+    channelIdValue: string | undefined,
+    toUserIdValue: string | undefined,
+    allChannel: Channel[],
+    allPmUsers: User[],
+  ) => {
     if (channelIdValue) {
-      const channel = allChannel.find((c) => c.id?.toString() === channelIdValue);
+      const channel = allChannel.find(
+        (c) => c.id?.toString() === channelIdValue,
+      );
       if (channel) {
         dispatch({ type: 'SELECT_CHANNEL', payload: channel });
       } else {
@@ -76,12 +115,14 @@ const Chat = () => {
         dispatch({ type: 'SELECT_PM_USER', payload: pmUser });
       } else {
         try {
-          const res = await pmApi.putMePmsUserid(
-            Number(toUserIdValue),
-            { withCredentials: true },
-          );
-          dispatch({ type: 'SET_PM_USERS', payload: [...allPmUsers, res.data]})
-          dispatch({ type: 'SELECT_PM_USER', payload: res.data})
+          const res = await pmApi.putMePmsUserid(Number(toUserIdValue), {
+            withCredentials: true,
+          });
+          dispatch({
+            type: 'SET_PM_USERS',
+            payload: [...allPmUsers, res.data],
+          });
+          dispatch({ type: 'SELECT_PM_USER', payload: res.data });
         } catch (err: unknown) {
           if (Axios.isAxiosError(err) && err.response) {
             dispatch({ type: 'SET_STATUS_CODE', payload: err.response.status });
@@ -115,8 +156,29 @@ const Chat = () => {
 
   const fetchBlockUserIds = async () => {
     try {
-      const res = await blockApi.getUsersUserIDBlock(authUser!.id!, {withCredentials: true});
-      dispatch({ type: 'SET_BLOCK_USER_IDS', payload: res.data.map((u) => u.id!) });
+      const res = await blockApi.getUsersUserIDBlock(authUser!.id!, {
+        withCredentials: true,
+      });
+      dispatch({
+        type: 'SET_BLOCK_USER_IDS',
+        payload: res.data.map((u) => u.id!),
+      });
+    } catch (err: unknown) {
+      if (Axios.isAxiosError(err) && err.response) {
+        dispatch({ type: 'SET_STATUS_CODE', payload: err.response.status });
+      }
+    }
+  };
+
+  const exitChannel = async () => {
+    try {
+      const res = await blockApi.getUsersUserIDBlock(authUser!.id!, {
+        withCredentials: true,
+      });
+      dispatch({
+        type: 'SET_BLOCK_USER_IDS',
+        payload: res.data.map((u) => u.id!),
+      });
     } catch (err: unknown) {
       if (Axios.isAxiosError(err) && err.response) {
         dispatch({ type: 'SET_STATUS_CODE', payload: err.response.status });
@@ -145,10 +207,13 @@ const Chat = () => {
         });
       }
     }
-    if ((state.channels.length > 0 && channelId) || (state.pmUsers.length > 0 && toUserId)) {
+    if (
+      (state.channels.length > 0 && channelId) ||
+      (state.pmUsers.length > 0 && toUserId)
+    ) {
       openChatFromURL(channelId, toUserId, state.channels, state.pmUsers);
     }
-  }, [channelId, toUserId, state.channels, state.pmUsers, navigate])
+  }, [channelId, toUserId, state.channels, state.pmUsers, navigate]);
 
   return (
     <ErrorRouter statusCode={state.statusCode}>
@@ -166,7 +231,7 @@ const Chat = () => {
                 navigate(`${CHANNELS_URL}/${channel.id}`);
               }}
               updateChannels={(channels) => {
-                dispatch({type: 'SET_CHANNELS', payload: channels})
+                dispatch({ type: 'SET_CHANNELS', payload: channels });
               }}
             />
             <PMList
@@ -183,7 +248,46 @@ const Chat = () => {
           </div>
           <Divider orientation="vertical" flexItem variant="middle" />
           {(state.selectedChannel || state.selectedPmUser) && (
-            <Outlet context={{ channel: state.selectedChannel, toUser: state.selectedPmUser, blockUserIds: state.blockUserIds }} />
+            <Stack width={880}>
+              <Stack
+                direction="row"
+                alignItems="center"
+                spacing={0.5}
+                paddingBottom={1.5}
+                justifyContent='space-between'
+              >
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  spacing={0.5}
+                  paddingBottom={1.5}
+                >
+                  {chatIcon(state.selectedPmUser, state.selectedChannel?.is_protected ?? false)}
+                  <Typography sx={{ fontWeight: 'bold' }} variant="h5">
+                    {state.selectedPmUser ? state.selectedPmUser.username : state.selectedChannel?.name}
+                  </Typography>
+                </Stack>
+                {
+                  state.selectedChannel &&
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    spacing={0.5}
+                    paddingBottom={1.5}
+                    onClick={() => exitChannel()}
+                  >
+                    <LogoutIcon/>
+                  </Stack>
+                }
+              </Stack>
+              <Outlet
+                context={{
+                  channel: state.selectedChannel,
+                  toUser: state.selectedPmUser,
+                  blockUserIds: state.blockUserIds,
+                }}
+              />
+            </Stack>
           )}
         </Stack>
       </Container>
