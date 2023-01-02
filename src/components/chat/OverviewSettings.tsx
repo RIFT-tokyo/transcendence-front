@@ -155,7 +155,7 @@ const OverviewSettings = (props: Props) => {
         variant="contained"
         color="primary"
         size="medium"
-        onClick={() => {updateChannel(state.name, state.password)}}
+        onClick={() => {updateChannel(state.name, state.isPrivate ? state.password : null)}}
       >
         Update Channel
       </Button>

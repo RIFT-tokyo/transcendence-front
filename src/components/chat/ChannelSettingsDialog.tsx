@@ -109,7 +109,7 @@ const ChannelSettingsDialog = (props: Props) => {
         { name, password: password ?? undefined },
         { withCredentials: true },
       );
-      update({ ...channel, name });
+      update({ ...channel, name, is_protected: !!password });
       enqueueSnackbar('Channel Overview updated', { variant: 'success' });
     } catch (err: unknown) {
       if (Axios.isAxiosError(err) && err.response) {
