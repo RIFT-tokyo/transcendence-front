@@ -34,7 +34,8 @@ type Actions =
   | { type: 'SELECT_PM_USER'; payload: User | null }
   | { type: 'SET_PM_USERS'; payload: User[] }
   | { type: 'SET_BLOCK_USER_IDS'; payload: number[] }
-  | { type: 'SET_STATUS_CODE'; payload: number };
+  | { type: 'SET_STATUS_CODE'; payload: number }
+  | { type: 'EXIT_CHANNEL'; payload: number };
 
 const reducer = (state: State, action: Actions): State => {
   switch (action.type) {
@@ -42,7 +43,10 @@ const reducer = (state: State, action: Actions): State => {
       return {
         ...state,
         channels: action.payload,
-        selectedChannel: action.payload.find((channel) => channel.id === state.selectedChannel?.id) ?? null
+        selectedChannel:
+          action.payload.find(
+            (channel) => channel.id === state.selectedChannel?.id,
+          ) ?? null,
       };
     case 'SET_PM_USERS':
       return { ...state, pmUsers: action.payload };
@@ -62,6 +66,14 @@ const reducer = (state: State, action: Actions): State => {
       };
     case 'SET_STATUS_CODE':
       return { ...state, statusCode: action.payload };
+    case 'EXIT_CHANNEL':
+      return {
+        ...state,
+        selectedChannel: null,
+        channels: state.channels.filter(
+          (channel) => channel.id !== action.payload,
+        ),
+      };
     default:
       return state;
   }
@@ -73,7 +85,7 @@ const blockApi = new BlockApi();
 
 const chatIcon = (toUser: User | null, isProtected: boolean) => {
   if (toUser) {
-    return <UserAvatar user={toUser} size={20} />
+    return <UserAvatar user={toUser} size={20} />;
   }
   if (isProtected) {
     return <LockIcon />;
@@ -171,20 +183,27 @@ const Chat = () => {
   };
 
   const exitChannel = async () => {
+    if (!state.selectedChannel?.id) {
+      return;
+    }
     try {
-      const res = await blockApi.getUsersUserIDBlock(authUser!.id!, {
+      const exitChannelId = state.selectedChannel.id;
+      navigate(`${CHANNELS_URL}/${state.channels[0].id}`, {
+        replace: true,
+      });
+      await channelApi.deleteMeChannelsChannelId(exitChannelId, {
         withCredentials: true,
       });
       dispatch({
-        type: 'SET_BLOCK_USER_IDS',
-        payload: res.data.map((u) => u.id!),
+        type: 'EXIT_CHANNEL',
+        payload: exitChannelId,
       });
     } catch (err: unknown) {
       if (Axios.isAxiosError(err) && err.response) {
         dispatch({ type: 'SET_STATUS_CODE', payload: err.response.status });
       }
     }
-  }
+  };
 
   useEffect(() => {
     (async () => {
@@ -254,7 +273,7 @@ const Chat = () => {
                 alignItems="center"
                 spacing={0.5}
                 paddingBottom={1.5}
-                justifyContent='space-between'
+                justifyContent="space-between"
               >
                 <Stack
                   direction="row"
@@ -262,13 +281,17 @@ const Chat = () => {
                   spacing={0.5}
                   paddingBottom={1.5}
                 >
-                  {chatIcon(state.selectedPmUser, state.selectedChannel?.is_protected ?? false)}
+                  {chatIcon(
+                    state.selectedPmUser,
+                    state.selectedChannel?.is_protected ?? false,
+                  )}
                   <Typography sx={{ fontWeight: 'bold' }} variant="h5">
-                    {state.selectedPmUser ? state.selectedPmUser.username : state.selectedChannel?.name}
+                    {state.selectedPmUser
+                      ? state.selectedPmUser.username
+                      : state.selectedChannel?.name}
                   </Typography>
                 </Stack>
-                {
-                  state.selectedChannel &&
+                {state.selectedChannel && (
                   <Stack
                     direction="row"
                     alignItems="center"
@@ -276,9 +299,9 @@ const Chat = () => {
                     paddingBottom={1.5}
                     onClick={() => exitChannel()}
                   >
-                    <LogoutIcon/>
+                    <LogoutIcon />
                   </Stack>
-                }
+                )}
               </Stack>
               <Outlet
                 context={{
