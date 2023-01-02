@@ -14,7 +14,7 @@ import {
   User,
 } from '../../api/generated';
 import ErrorRouter from '../ui/ErrorRouter';
-import { CHANNELS_URL, PMS_URL } from '../config/constants';
+import { CHANNELS_URL, PMS_URL, CHAT_URL } from '../config/constants';
 import PMList from '../chat/PMList';
 import { AuthContext } from '../../contexts/AuthContext';
 import UserAvatar from '../model/UserAvatar';
@@ -188,9 +188,6 @@ const Chat = () => {
     }
     try {
       const exitChannelId = state.selectedChannel.id;
-      navigate(`${CHANNELS_URL}/${state.channels[0].id}`, {
-        replace: true,
-      });
       await channelApi.deleteMeChannelsChannelId(exitChannelId, {
         withCredentials: true,
       });
@@ -198,6 +195,7 @@ const Chat = () => {
         type: 'EXIT_CHANNEL',
         payload: exitChannelId,
       });
+      navigate(CHAT_URL, { replace: true });
     } catch (err: unknown) {
       if (Axios.isAxiosError(err) && err.response) {
         dispatch({ type: 'SET_STATUS_CODE', payload: err.response.status });
